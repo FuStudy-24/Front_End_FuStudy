@@ -4,7 +4,7 @@ import "./globals.css";
 import Banner from "@/pages/LandingPage/Banner/banner";
 import Companies from "@/pages/LandingPage/Companies/companies"
 import Course from "@/pages/LandingPage/Courses/courses"
-import Footer from "@/pages/LandingPage/Footer/Footer"
+import Footer from "@/pages/LandingPage/Footer/footer"
 import Navbar from "@/pages/LandingPage/Navbar/index";
 const inter = Inter({ subsets: ["latin"] });
 
