@@ -6,6 +6,7 @@ import Drawer from "./Drawer";
 import Drawerdata from "./Drawerdata";
 import Signdialog from "./Signdialog";
 import Registerdialog from "./Registerdialog";
+import { Button } from '@/components/ui/button';
 
 interface NavigationItem {
     name: string;
@@ -14,10 +15,10 @@ interface NavigationItem {
 }
 
 const navigation: NavigationItem[] = [
-    { name: 'Home', href: '#/', current: true },
+    { name: 'Home', href: '/', current: true },
     { name: 'Courses', href: '#courses', current: false },
     { name: 'Mentor', href: '#mentor', current: false },
-    { name: 'Group', href: '/', current: false },
+    { name: 'Group', href: '#group', current: false },
     { name: 'Testimonial', href: '#testimonial', current: false },
 ];
 
@@ -97,12 +98,18 @@ const Navbar = () => {
 
                         {/* SIGNIN DIALOG */}
 
-                        <Signdialog />
+                        {/* <Signdialog /> */}
+                        <Link href="/login">
+                            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105
+                            py-5 px-9">
+                                Login
+                            </Button>
+                        </Link> 
 
 
                         {/* REGISTER DIALOG */}
 
-                        <Registerdialog />
+                        {/* <Registerdialog /> */}
 
 
                         {/* DRAWER FOR MOBILE VIEW */}
