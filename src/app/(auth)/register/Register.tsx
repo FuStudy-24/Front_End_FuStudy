@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -268,7 +268,9 @@ const RegisterInput = ({
   const handleDOBChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const dobString = event.target.value;
     // Parse the string into a Date object (replace with your preferred parsing library)
-    const dobDate = new Date(dobString);
+    const dobDate = new Date(dobString.split("/").reverse().join("-")); // Reverse order and convert to yyyy-MM-dd
+    console.log(dobDate);
+
     setFormData({ ...formData, DOB: dobDate });
   };
 
@@ -284,7 +286,7 @@ const RegisterInput = ({
             id="username"
             name="username"
             type="text"
-            className={`w-40 border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
+            className={`border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
               formData.username ? "border-border-blue-70 border-b-2" : ""
             }`}
             value={formData.username}
@@ -299,12 +301,15 @@ const RegisterInput = ({
             Username
           </label>
         </div>
+      </div>
+
+      <div className="flex items-center justify-center pb-2 pt-8">
         <div className="relative">
           <input
             id="password"
             name="password"
             type="password"
-            className={`w-40 border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
+            className={` border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
               formData.password ? "border-border-blue-70 border-b-2" : ""
             }`}
             value={formData.password}
@@ -326,7 +331,7 @@ const RegisterInput = ({
             id="email"
             name="email"
             type="email"
-            className={`w-40 border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
+            className={`border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
               formData.email ? "border-border-blue-70 border-b-2" : ""
             }`}
             value={formData.email}
@@ -341,35 +346,15 @@ const RegisterInput = ({
             Email
           </label>
         </div>
-        <div className="relative">
-          <input
-            id="DOB"
-            name="DOB"
-            type="date"
-            className={`w-40 border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
-              formData.DOB ? "border-border-blue-70 border-b-2" : ""
-            }`}
-            value={formData.DOB.toString()}
-            onChange={handleDOBChange}
-          />
-          <label
-            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
-              formData.DOB ? "text-xs -top-4 text-border-blue-70" : ""
-            }`}
-            htmlFor="DOB"
-          >
-            DOB
-          </label>
-        </div>
       </div>
-      
+
       <div className="flex items-center justify-center pb-2 pt-8">
         <div className="relative">
           <input
             id="fullname"
             name="fullname"
             type="fullname"
-            className={`w-40 border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
+            className={`border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
               formData.fullname ? "border-border-blue-70 border-b-2" : ""
             }`}
             value={formData.fullname}
@@ -382,6 +367,30 @@ const RegisterInput = ({
             htmlFor="fullname"
           >
             FullName
+          </label>
+        </div>
+      </div>
+      <div className="flex items-center justify-center pb-2 pt-8">
+        <div className="relative">
+          <input
+            id="DOB"
+            name="DOB"
+            type="date"
+            className={` w-50 border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
+              formData.DOB ? "border-border-blue-70 border-b-2" : ""
+            }`}
+            value={
+              formData.DOB ? formData.DOB.toISOString().substring(0, 10) : ""
+            }
+            onChange={handleDOBChange}
+          />
+          <label
+            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
+              formData.DOB ? "text-xs -top-4 text-border-blue-70" : ""
+            }`}
+            htmlFor="DOB"
+          >
+            DOB
           </label>
         </div>
       </div>

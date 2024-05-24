@@ -78,7 +78,8 @@ const Login = () => {
           </p>
 
           <form action="" className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto">
-            {/* <div className="pb-2 pt-4 ml-28">
+            {/* form login 1
+            <div className="pb-2 pt-4 ml-28">
               <div>
                 <label className="block text-gray-400 font-semibold text-sm">
                   Username
@@ -107,52 +108,11 @@ const Login = () => {
               </div>
             </div> */}
 
+
+            {/* form login 2 */}
             <LoginInput formData={formData} setFormData={setFormData} />
 
-            {/* <div className="flex items-center justify-center pb-2 pt-8">
-              <div className="relative">
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  className={`border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
-                    username ? "border-border-blue-700" : ""
-                  }`}
-                  value={username}
-                  onChange={handleUsernameChange}
-                />
-                <label
-                  className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-3 transition-all peer-focus:text-blue-700 ${
-                    username ? "text-xs -top-3 text-blue-700" : ""
-                  }`}
-                  htmlFor="username"
-                >
-                  Username
-                </label>
-              </div>
-            </div>
-            <div className="flex items-center justify-center pb-2 pt-8">
-              <div className="relative">
-                <input
-                  id="username"
-                  name="username"
-                  type="password"
-                  className={`border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit ${
-                    username ? "border-border-blue-700" : ""
-                  }`}
-                  value={username}
-                  onChange={handleUsernameChange}
-                />
-                <label
-                  className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-3 transition-all peer-focus:text-blue-700 ${
-                    username ? "text-xs -top-3 text-blue-700" : ""
-                  }`}
-                  htmlFor="username"
-                >
-                  Password
-                </label>
-              </div>
-            </div> */}
+           
 
             <div className="ml-24 pb-2 pt-4 text-xs text-gray-400 space-x-10">
               <span>
