@@ -1,12 +1,16 @@
 
+import Register from '@/app/(auth)/register/Register';
 import React from 'react';
-import Register from '@/app/(auth)/register/Resgister'
+
 
 
 export default function LoginPage() {
   return (
     <div>
+      <main>
       <Register/>
+      </main>
+    
     </div>
   )
 }
