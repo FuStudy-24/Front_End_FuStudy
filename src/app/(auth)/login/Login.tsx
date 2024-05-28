@@ -1,8 +1,21 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import {postLogin} from "@/lib/service/authService"
 // import "./login.css";
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = async () => {
+    try {
+      const response = await postLogin({ username, password });
+      // Xử lý phản hồi ở đây, chẳng hạn như điều hướng trang hoặc hiển thị thông báo
+      console.log(response);
+    } catch (error) {
+      // Xử lý lỗi ở đây
+      console.error("Login error:", error);
+    }
+  };
   return (
     <div className="dialog" id="dialog">
       <div className="card w-full p-0">
@@ -87,6 +100,8 @@ const Login = () => {
                           className="w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
                           type=""
                           placeholder="Enter your username"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
                         />
                       </div>
                       <div className="mt-8 content-center">
@@ -97,6 +112,8 @@ const Login = () => {
                           className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
                           type=""
                           placeholder="Enter your password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
                         />
                       </div>
                       <div className="flex items-center justify-between">
@@ -132,6 +149,7 @@ const Login = () => {
                         <button
                           type="button"
                           className="w-full flex justify-center text-lg text-Blueviolet font-medium px-[30px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                          onClick={handleLogin}
                         >
                           Sign in
                         </button>

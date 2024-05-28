@@ -36,18 +36,18 @@ export const authSlice = createSlice({
       state.accessToken = "";
       state.refreshToken = "";
     },
-    update: (state, { payload }) => {
-      delete payload.password;
-      state.userInfo = {
-        ...state.userInfo,
-        ...payload,
-      };
-    },
+    // update: (state, { payload }) => {
+    //   delete payload.password;
+    //   state.userInfo = {
+    //     ...state.userInfo,
+    //     ...payload,
+    //   };
+    // },
 
-    updateToken: (state, { payload }) => {
-      state.accessToken = payload.accessToken;
-      state.refreshToken = payload.refreshToken;
-    },
+    // updateToken: (state, { payload }) => {
+    //   state.accessToken = payload.accessToken;
+    //   state.refreshToken = payload.refreshToken;
+    // },
   },
 });
 
