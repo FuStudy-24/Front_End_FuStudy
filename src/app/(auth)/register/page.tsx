@@ -1,11 +1,10 @@
-import Link from 'next/link';
-import React from 'react';
-import Register from './Register';
+import Register from "@/app/(auth)/register/Register";
+import React from "react";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   return (
     <div>
-      <Register/>
+      <Register />
     </div>
   );
 }
