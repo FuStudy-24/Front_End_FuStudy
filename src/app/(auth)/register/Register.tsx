@@ -1,4 +1,5 @@
 "use client";
+"use client";
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -117,6 +118,9 @@ const RegisterInput = ({
     const dobDate = new Date(dobString.split("/").reverse().join("-")); // Reverse order and convert to yyyy-MM-dd
     console.log(dobDate);
 
+    const dobDate = new Date(dobString.split("/").reverse().join("-")); // Reverse order and convert to yyyy-MM-dd
+    console.log(dobDate);
+
     setFormData({ ...formData, DOB: dobDate });
   };
 
@@ -145,6 +149,9 @@ const RegisterInput = ({
             Username
           </label>
         </div>
+      </div>
+
+      <div className="flex items-center justify-center pb-2 pt-8">
       </div>
 
       <div className="flex items-center justify-center pb-2 pt-8">
@@ -187,6 +194,7 @@ const RegisterInput = ({
           </label>
         </div>
       </div>
+
 
       <div className="flex items-center justify-center pb-2 pt-8">
         <div className="relative">
