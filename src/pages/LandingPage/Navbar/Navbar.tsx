@@ -113,21 +113,7 @@ const Navbar = () => {
                 </button>
               </Link>
             </div>
-            {/* <Signdialog /> */}
-
-            {/* REGISTER DIALOG */}
-            {/* 
-                        <Registerdialog /> */}
-
-            {/* DRAWER FOR MOBILE VIEW */}
-
-            {/* DRAWER ICON */}
-
-            {/* <div className='block lg:hidden'>
-                            <Bars3Icon className="block h-6 w-6" aria-hidden="true" onClick={() => setIsOpen(true)} />
-                        </div> */}
-
-            {/* DRAWER LINKS DATA */}
+           
 
             <Drawer isOpen={isOpen} setIsOpen={setIsOpen}>
               <Drawerdata />
