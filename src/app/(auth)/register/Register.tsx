@@ -1,146 +1,235 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    email: "",
+    DOB: new Date(),
+    fullname: "",
+  });
+
+  const handleRegister = () => {
+    console.log(formData);
+  };
+
   return (
-    <div className="dialog" id="dialog">
-      <div className="card w-full p-0">
-        <div className="card-body w-full p-0">
-          <div className="view non-login-view">
-            <div className="h-auto flex">
-              <div className="flex w-full lg:w-1/2 justify-center items-center bg-white rounded-[8px]">
-                <div className="relative flex items-center">
-                  <div className="w-full z-10">
-                    <div className="text-center">
-                      <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                        Sign up
-                      </h2>
-                      <p className="mt-2 text-xl text-gray-500">
-                        Please regist to your account
-                      </p>
-                    </div>
-                    <form className="mt-8 space-y-6" action="#" method="POST">
-                      <input type="hidden" name="remember" value="true" />
-
-                      <div className="mt-8 content-center">
-                        <label className="text-sm font-bold text-gray-700 tracking-wide">
-                          Username
-                        </label>
-                        <input
-                          className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                          type=""
-                          placeholder="Enter your username"
-                        />
-                      </div>
-                      <div className="mt-8 content-center">
-                        <label className="text-sm font-bold text-gray-700 tracking-wide">
-                          Password
-                        </label>
-                        <input
-                          className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                          type="password"
-                          placeholder="Enter your password"
-                        />
-                      </div>
-                      <div className="relative">
-                        {/* <div className="absolute right-0 mt-4">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-green-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                            ></path>
-                          </svg>
-                        </div> */}
-                        <label className="text-sm font-bold text-gray-700 tracking-wide">
-                          Email
-                        </label>
-                        <input
-                          className="w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                          type="email"
-                          placeholder="mail@gmail.com"
-                        />
-                      </div>
-                      <div className="mt-8 content-center">
-                        <label className="text-sm font-bold text-gray-700 tracking-wide">
-                          DOB
-                        </label>
-                        <input
-                          className="w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                          type="date"
-                          placeholder="Enter your password"
-                        />
-                      </div>
-
-                      <div>
-                        <button
-                          type="button"
-                          className="w-full flex justify-center text-lg text-Blueviolet font-medium px-[30px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
-                        >
-                          Register
-                        </button>
-                      </div>
-                      <p className="flex items-center justify-center mt-10 text-center text-md text-gray-500 text-xs">
-                        Already using FuStudy?{" "}
-                        <Link href="/login" passHref>
-                          <span className="text-indigo-500 hover:text-indigo-500 no-underline hover:underline cursor-pointer transition ease-in duration-300 ml-1 ">
-                            Log In
-                          </span>
-                        </Link>
-                      </p>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="login-img-section lg:flex w-full lg:w-1/2 justify-around items-center"
-                style={{
-                  backgroundImage: `url('/image/bg-login.jpg')`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  width: "50%",
-                  height: "650px",
-                  opacity: "0.7",
-                }}
-              >
-                <div className="inset-0 z-0"></div>
-                <div className="w-full mx-auto px-20 flex-col items-center space-y-6">
-                  <h1 className="text-black font-bold text-4xl font-sans text-center">
-                    FuStudy
-                  </h1>
-                  <p className="text-black mt-1 text-2xl text-center">
-                    Study for the bright future
-                  </p>
-                  <img
-                    className="w-7/12 h-6/12 mx-auto"
-                    src="loginShow"
-                    alt=""
-                  />
-                  <div className="flex justify-center mt-6">
-                    <Link href="/" passHref>
-                      <button
-                        type="button"
-                        className="text-lg text-Blueviolet font-medium px-[30px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
-                      >
-                        Get Started
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <section className="min-h-screen flex items-stretch">
+      <div
+        className="lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center "
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1577495508048-b635879837f1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80')`,
+        }}
+      >
+        <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
+        <div className="w-full px-24 z-10">
+          <h1 className="text-5xl font-bold text-left tracking-wide text-white">
+            FuStudy
+          </h1>
+          <p className="text-3xl my-4 text-white">
+            Study for the bright future
+          </p>
         </div>
       </div>
-    </div>
+      <div className="lg:w-1/2 w-full flex items-center justify-center  md:px-16 px-0 z-0 bg-white">
+        <div
+          className="absolute lg:hidden z-10 inset-0 bg-gray-500 bg-no-repeat bg-cover items-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1577495508048-b635879837f1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80')`,
+          }}
+        >
+          <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
+        </div>
+        <div className="w-full py-6 z-20 text-gray-600">
+          <h2 className="mt-3 text-3xl font-bold text-center">Sign up</h2>
+          <p className="mt-2 text-sm text-gray-600 text-center">
+            Please regist to your account
+          </p>
+
+          <form
+            className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleRegister();
+            }}
+          >
+            <RegisterInput formData={formData} setFormData={setFormData} />
+
+            <div className="pb-2 pt-4 px-4 ml-28">
+              <button
+                type="submit"
+                className="text-sm text-Blueviolet font-medium px-[70px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+              >
+                Register
+              </button>
+            </div>
+
+            <div className="ml-28 pb-2 pt-4 text-xs text-gray-400 space-x-1">
+              <span>Already have an account? </span>
+              <Link
+                className="hover:underline hover:text-blue-500 "
+                href="/login"
+              >
+                Log in
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 };
 
 export default Register;
+
+interface FormDataState {
+  username: string;
+  password: string;
+  email: string;
+  DOB: Date;
+  fullname: string;
+}
+
+const RegisterInput = ({
+  formData,
+  setFormData,
+}: {
+  formData: FormDataState;
+  setFormData: React.Dispatch<React.SetStateAction<FormDataState>>;
+}) => {
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, username: event.target.value });
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, password: event.target.value });
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, email: event.target.value });
+  };
+
+  const handleDOBChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const dobString = event.target.value;
+    // Parse the string into a Date object (replace with your preferred parsing library)
+    const dobDate = new Date(dobString.split("/").reverse().join("-")); // Reverse order and convert to yyyy-MM-dd
+    console.log(dobDate);
+
+    setFormData({ ...formData, DOB: dobDate });
+  };
+
+  const handleFullNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, fullname: event.target.value });
+  };
+
+  return (
+    <>
+      <div className="flex items-center justify-center pb-2 pt-8 space-x-10">
+        <div className="relative">
+          <input
+            id="username"
+            name="username"
+            type="text"
+            className="border-b border-gray-300 py-1 focus:border-b-2 focus:text-blue-700 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
+            value={formData.username}
+            onChange={handleUsernameChange}
+          />
+          <label
+            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
+              formData.username ? "text-xs !-top-4 text-blue-700" : ""
+            }`}
+            htmlFor="username"
+          >
+            Username
+          </label>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center pb-2 pt-8">
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            className=" border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
+            value={formData.password}
+            onChange={handlePasswordChange}
+          />
+          <label
+            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
+              formData.password ? "text-xs !-top-4 text-blue-700" : ""
+            }`}
+            htmlFor="password"
+          >
+            Password
+          </label>
+        </div>
+      </div>
+      <div className="flex items-center justify-center pb-2 pt-8 space-x-10">
+        <div className="relative">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            className="border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
+            value={formData.email}
+            onChange={handleEmailChange}
+          />
+          <label
+            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
+              formData.email ? "text-xs !-top-4 text-border-blue-70" : ""
+            }`}
+            htmlFor="email"
+          >
+            Email
+          </label>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center pb-2 pt-8">
+        <div className="relative">
+          <input
+            id="fullname"
+            name="fullname"
+            type="text"
+            className="border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
+            value={formData.fullname}
+            onChange={handleFullNameChange}
+          />
+          <label
+            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
+              formData.fullname ? "text-xs !-top-4 text-border-blue-70" : ""
+            }`}
+            htmlFor="fullname"
+          >
+            FullName
+          </label>
+        </div>
+      </div>
+      <div className="flex items-center justify-center pb-2 pt-8">
+        <div className="relative">
+          <input
+            id="DOB"
+            name="DOB"
+            type="date"
+            className="border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
+            value={
+              formData.DOB ? formData.DOB.toISOString().substring(0, 10) : ""
+            }
+            onChange={handleDOBChange}
+          />
+          <label
+            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
+              formData.DOB ? "text-xs !-top-4 text-border-blue-70" : ""
+            }`}
+            htmlFor="DOB"
+          >
+            DOB
+          </label>
+        </div>
+      </div>
+    </>
+  );
+};
