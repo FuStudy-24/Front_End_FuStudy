@@ -2,18 +2,32 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { postRegis } from "@/lib/service/authService";
 
 const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     email: "",
-    DOB: new Date(),
     fullname: "",
+    avatar: "string",
+    gender: "male",
+    roleId: 3,
+    identityCard: "079202035866",
+    phone: "0773850946",
   });
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     console.log(formData);
+    try {
+      const response = await postRegis(formData);
+
+      console.log(response);
+      // Handle successful registration, e.g., navigate to login page or show a success message
+    } catch (error) {
+      console.error(error);
+      // Handle registration error, e.g., show an error message
+    }
   };
 
   return (
@@ -89,8 +103,12 @@ interface FormDataState {
   username: string;
   password: string;
   email: string;
-  DOB: Date;
   fullname: string;
+  avatar: string;
+  gender: string;
+  roleId: number;
+  identityCard: string;
+  phone: string;
 }
 
 const RegisterInput = ({
@@ -110,18 +128,6 @@ const RegisterInput = ({
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, email: event.target.value });
-  };
-
-  const handleDOBChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const dobString = event.target.value;
-    // Parse the string into a Date object (replace with your preferred parsing library)
-    const dobDate = new Date(dobString.split("/").reverse().join("-")); // Reverse order and convert to yyyy-MM-dd
-    console.log(dobDate);
-
-    const dobDate = new Date(dobString.split("/").reverse().join("-")); // Reverse order and convert to yyyy-MM-dd
-    console.log(dobDate);
-
-    setFormData({ ...formData, DOB: dobDate });
   };
 
   const handleFullNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,10 +156,6 @@ const RegisterInput = ({
           </label>
         </div>
       </div>
-
-      <div className="flex items-center justify-center pb-2 pt-8">
-      </div>
-
       <div className="flex items-center justify-center pb-2 pt-8">
         <div className="relative">
           <input
@@ -195,7 +197,6 @@ const RegisterInput = ({
         </div>
       </div>
 
-
       <div className="flex items-center justify-center pb-2 pt-8">
         <div className="relative">
           <input
@@ -213,28 +214,6 @@ const RegisterInput = ({
             htmlFor="fullname"
           >
             FullName
-          </label>
-        </div>
-      </div>
-      <div className="flex items-center justify-center pb-2 pt-8">
-        <div className="relative">
-          <input
-            id="DOB"
-            name="DOB"
-            type="date"
-            className="border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
-            value={
-              formData.DOB ? formData.DOB.toISOString().substring(0, 10) : ""
-            }
-            onChange={handleDOBChange}
-          />
-          <label
-            className={`absolute left-0 top-1.5 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700 ${
-              formData.DOB ? "text-xs !-top-4 text-border-blue-70" : ""
-            }`}
-            htmlFor="DOB"
-          >
-            DOB
           </label>
         </div>
       </div>

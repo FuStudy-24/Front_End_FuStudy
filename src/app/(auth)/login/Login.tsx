@@ -1,15 +1,41 @@
 "use client";
+import useAuthStore from "@/lib/hooks/useUserStore";
 import Link from "next/link";
-import React, { useState } from "react";
-// import "./login.css";
+import { postLogin } from "@/lib/service/authService";
+import { useRouter } from "next/navigation";
+import React, { use, useState } from "react";
+
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const hanndleLogin = () => {
+  const login = useAuthStore((state) => state.login);
+
+  const hanndleLogin = async () => {
     console.log(formData);
+    setLoading(true);
+    setError("");
+    try {
+      const response = await postLogin(formData);
+
+      const { token, user } = response.data.data; // Chú ý thay đổi đường dẫn để truy cập `data`
+
+      console.log(token, user);
+      
+
+      const userInfo = { ...user, token };
+      login(token, userInfo);
+      router.push('/');
+    } catch (error) {
+      setError("Login failed. Please check your credentials.");
+      console.error("Login error:", error);
+    }
+    setLoading(false);
   };
 
   return (
