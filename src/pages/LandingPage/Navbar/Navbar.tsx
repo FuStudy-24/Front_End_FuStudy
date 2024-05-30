@@ -150,6 +150,7 @@ import useAuthStore from "@/lib/hooks/useUserStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
+
 interface NavigationItem {
   name: string;
   href: string;
@@ -204,7 +205,7 @@ const Navbar = () => {
     logout(); // Call the logout function from useAuthStore
     setPopoverOpen(false); // Close the popover after logout
   };
-
+// console.log(userInfo.username)
   return (
     <Disclosure as="nav" className="navbar">
       <>
@@ -258,7 +259,7 @@ const Navbar = () => {
                   <PopoverTrigger asChild>
                     <div className="relative">
                       <Avatar>
-                        <AvatarImage src={ "https://github.com/shadcn.png"} />
+                        <AvatarImage src={"https://github.com/shadcn.png"} />
                         <AvatarFallback>
                           {userInfo.username ? userInfo.username[0].toUpperCase() : "CN"}
                         </AvatarFallback>

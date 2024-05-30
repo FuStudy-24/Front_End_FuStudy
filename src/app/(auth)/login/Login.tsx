@@ -23,10 +23,11 @@ const Login = () => {
         const response = await postLogin({username, password});
     
         const { token, user } = response.data.data;  // Chú ý thay đổi đường dẫn để truy cập `data`
+     
         const userInfo = { ...user, token };
         
     //console.log("userInfo before login:", userInfo);
-    login(userInfo);
+    login(token, userInfo);
     // const storedUserInfo = useAuthStore.getState().userInfo;
     // console.log("Stored userInfo:", storedUserInfo);
     // console.log("Stored userInfo username:", storedUserInfo.username);
@@ -102,7 +103,7 @@ const Login = () => {
                 </button>
                 {error && <p className="text-sm font-light text-red-500">{error}</p>}
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                  Don’t have an account yet? <a href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
                 </p>
               </form>
             </div>
