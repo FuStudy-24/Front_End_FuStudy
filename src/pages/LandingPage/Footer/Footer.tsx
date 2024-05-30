@@ -1,5 +1,7 @@
+
 import Link from "next/link";
 import Image from "next/image";
+// 
 
 interface ProductType {
     id: number;
@@ -52,13 +54,15 @@ const products: ProductType[] = [
 ]
 
 const Footer = () => {
+    
     return (
-
+        
         <div className="mx-auto max-w-2xl sm:pt-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <div className="my-12 grid grid-cols-1 gap-y-10 sm:grid-cols-6 lg:grid-cols-12">
-
+          
+          
                 {/* COLUMN-1 */}
-
+                    
                 <div className='sm:col-span-6 lg:col-span-5'>
                     <div className="flex flex-shrink-0 items-center border-right">
                         <Image src="/assets/logo/logo.svg" alt="logo" width={214} height={66} />
