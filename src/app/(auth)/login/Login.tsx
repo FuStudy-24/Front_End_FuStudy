@@ -4,13 +4,16 @@
   import {postLogin} from "@/lib/service/authService"
   import useAuthStore from "@/lib/hooks/useUserStore"
   import { useRouter } from 'next/navigation'
-  import { useDispatch } from 'react-redux';
+  import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+  
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const router = useRouter()
+
     // const dispatch = useDispatch()
     const login = useAuthStore((state) => state.login);
     // Function to handle form submission
@@ -33,11 +36,17 @@ const Login = () => {
     // console.log("Stored userInfo username:", storedUserInfo.username);
         router.push('/')
 
-      } catch (error) {
+      } catch (error : any) {
         // Handle login error
-        setError("Login failed. Please check your credentials.");
-        console.error("Login error:", error);
+        if (error.response && error.response.data && error.response.data.message) {
+          const err = error.response.data.message   
+          toast.error(err);     
+          setError(error.response.data.message);
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
       }
+      
 
       setLoading(false);
     };
@@ -101,10 +110,11 @@ const Login = () => {
                 font-medium rounded-xl text-sm px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-primary-700 dark:focus:ring-sky-800" disabled={loading}>
                   {loading ? "Logging in..." : "Sign in"}
                 </button>
-                {error && <p className="text-sm font-light text-red-500">{error}</p>}
+              
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don’t have an account yet? <a href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
                 </p>
+                <ToastContainer/>
               </form>
             </div>
           </div>
