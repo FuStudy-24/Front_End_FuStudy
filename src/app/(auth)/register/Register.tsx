@@ -2,7 +2,9 @@
   import Link from "next/link";
   import React, { useState } from "react";
   import { postRegis } from "@/lib/service/authService";
-  import * as Yup from 'yup';
+  import { useRouter } from 'next/navigation'
+  import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
   const Register = () => {
     const [formData, setFormData] = useState({
       email: "",
@@ -15,13 +17,9 @@
       identityCard: "079202035866",
       phone: "0773850946",
     });
-    const validationSchema = Yup.object().shape({
-      email: Yup.string().email('Invalid email').required('Email is required'),
-      fullname: Yup.string().required('Full name is required'),
-      username: Yup.string().required('Username is required'),
-      password: Yup.string().required('Password is required'),
-    });
-
+    
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter()
     const handleChange = (e: any) => {
       const { name, value } = e.target;
       setFormData((prevData) => ({
@@ -32,20 +30,26 @@
 
     const handleRegister = async (e: any) => {
       e.preventDefault();
-
-      // if (formData.password !== formData.confirmPassword) {
-      //   alert("Passwords do not match!");
-      //   return;
-      // }
-
       try {
-            await validationSchema.validate(formData, { abortEarly: false });
+           
         const response = await postRegis(formData);
         
-        console.log(response);
+        //console.log(response);
         // Handle successful registration, e.g., navigate to login page or show a success message
-      } catch (error) {
-        console.error(error);
+        toast.success("Registration successful!"); // Display success toast
+      router.push('/login');
+      } catch (error : any) {
+        if (error.response && error.response.data && error.response.data.message) {
+          const err = error.response.data.message   
+          toast.error(err);     
+          setError(error.response.data.message);
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
+      
+        
+      
+
         // Handle registration error, e.g., show an error message
       }
     };
@@ -296,6 +300,7 @@
                         Login here
                       </Link>
                     </p>
+                    <ToastContainer />
                   </form>
                 </div>
               </div>
@@ -303,6 +308,7 @@
           </section>
         </div>
       </section>
+      
     );
   };
 
