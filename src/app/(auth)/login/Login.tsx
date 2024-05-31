@@ -4,7 +4,8 @@ import Link from "next/link";
 import { postLogin } from "@/lib/service/authService";
 import { useRouter } from "next/navigation";
 import React, { use, useState } from "react";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -30,10 +31,19 @@ const Login = () => {
 
       const userInfo = { ...user, token };
       login(token, userInfo);
-      router.push('/');
-    } catch (error) {
-      setError("Login failed. Please check your credentials.");
-      console.error("Login error:", error);
+      toast.success("Login Successful")
+      setTimeout(() => {
+        router.push('/');
+      }, 1000)
+    } catch (error : any) {
+      // Handle login error
+      if (error.response && error.response.data && error.response.data.message) {
+        const err = error.response.data.message   
+        toast.error(err);     
+        setError(error.response.data.message);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
     setLoading(false);
   };
@@ -111,6 +121,7 @@ const Login = () => {
                 Sign up
               </Link>
             </div>
+            <ToastContainer/>
           </form>
         </div>
       </div>

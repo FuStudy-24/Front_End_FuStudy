@@ -1,12 +1,158 @@
+// "use client"
+// import { Disclosure } from "@headlessui/react";
+// import Link from "next/link";
+// import React, { useState } from "react";
+// import Drawer from "./Drawer";
+// import Drawerdata from "./Drawerdata";
+// import useAuthStore from "@/lib/hooks/useUserStore";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+// interface NavigationItem {
+//   name: string;
+//   href: string;
+//   current: boolean;
+// }
+
+// const navigation: NavigationItem[] = [
+//   { name: "Home", href: "/", current: true },
+//   { name: "Courses", href: "#courses", current: false },
+//   { name: "Mentor", href: "#mentor", current: false },
+//   { name: "Group", href: "", current: false },
+//   { name: "Testimonial", href: "#testimonial", current: false },
+// ];
+
+// function classNames(...classes: string[]) {
+//   return classes.filter(Boolean).join(" ");
+// }
+
+// const CustomLink = ({
+//   href,
+//   onClick,
+//   children,
+// }: {
+//   href: string;
+//   onClick: () => void;
+//   children: React.ReactNode;
+// }) => {
+//   return (
+//     <Link href={href} passHref>
+//       <span onClick={onClick} className="px-3 py-4 text-lg font-normal">
+//         {children}
+//       </span>
+//     </Link>
+//   );
+// };
+
+// const Navbar = () => {
+//   const [isOpen, setIsOpen] = React.useState(false);
+//   const [currentLink, setCurrentLink] = useState("/");
+
+//   const { isLoggedIn, userInfo } = useAuthStore((state) => ({
+//     isLoggedIn: state.isLoggedIn,
+//     userInfo: state.userInfo,
+//   }));
+
+//   const handleLinkClick = (href: string) => {
+//     setCurrentLink(href);
+//   };
+//   const handleLogout = () => {
+//     // Do logout logic here
+//   };
+
+//   return (
+//     <Disclosure as="nav" className="navbar">
+//       <>
+//         <div className="mx-auto max-w-7xl px-6 py-4 lg:px-8">
+//           <div className="relative flex h-12 md:h-20 items-center justify-between">
+//             <div className="flex flex-1 items-center sm:items-stretch sm:justify-start">
+//               {/* LOGO */}
+//               <div className="flex flex-shrink-0 items-center">
+//                 <img
+//                   className="block h-12 w-40 lg:hidden"
+//                   src={"/assets/logo/logo.svg"}
+//                   alt="dsign-logo"
+//                 />
+//                 <img
+//                   className="hidden h-full w-full lg:block"
+//                   src={"/assets/logo/logo.svg"}
+//                   alt="dsign-logo"
+//                 />
+//               </div>
+
+//               {/* LINKS */}
+//               <div className="hidden lg:block m-auto">
+//                 <div className="flex space-x-4">
+//                   {navigation.map((item) => (
+//                     <CustomLink
+//                       key={item.name}
+//                       href={item.href}
+//                       onClick={() => handleLinkClick(item.href)}
+//                     >
+//                       <span
+//                         className={classNames(
+//                           item.href === currentLink
+//                             ? "underline-links"
+//                             : "text-slategray",
+//                           "px-3 py-4 text-lg font-normal opacity-75 hover:opacity-100"
+//                         )}
+//                         aria-current={item.href ? "page" : undefined}
+//                       >
+//                         {item.name}
+//                       </span>
+//                     </CustomLink>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* SIGNIN / WELCOME */}
+//             <div className="flex items-center">
+//       <Popover open={open} onOpenChange={setOpen}>
+//         <PopoverTrigger asChild>
+//           <div className="relative">
+//             <Avatar>
+//               <AvatarImage
+//                 src={"https://github.com/shadcn.png"}
+//               />
+//               <AvatarFallback>
+//                 {userInfo.username ? userInfo.username[0].toUpperCase() : "CN"}
+//               </AvatarFallback>
+//             </Avatar>
+//           </div>
+//         </PopoverTrigger>
+//         <PopoverContent className="w-[200px] p-0">
+//           <div className="p-4">
+//             <button onClick={handleLogout} className="block w-full py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+//           </div>
+//         </PopoverContent>
+//       </Popover>
+//     </div>
+
+//             <Drawer isOpen={isOpen} setIsOpen={setIsOpen}>
+//               <Drawerdata />
+//             </Drawer>
+//           </div>
+//         </div>
+//       </>
+//     </Disclosure>
+//   );
+// };
+
+// export default Navbar;
+// Navbar.tsx
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 import React, { useState } from "react";
-//import { Bars3Icon } from '@heroicons/react/24/outline';
 import Drawer from "./Drawer";
 import Drawerdata from "./Drawerdata";
-import Signdialog from "./Signdialog";
-import Registerdialog from "./Registerdialog";
-import { Button } from '@/components/ui/button';
+import useAuthStore from "@/lib/hooks/useUserStore";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useRouter } from "next/navigation";
 
 interface NavigationItem {
   name: string;
@@ -45,14 +191,26 @@ const CustomLink = ({
 };
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
+  const [isOpen, setIsOpen] = useState(false); // Add state for drawer
+  const [popoverOpen, setPopoverOpen] = useState(false); // Add state for popover
   const [currentLink, setCurrentLink] = useState("/");
+  const router = useRouter();
+  const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
+    isLoggedIn: state.isLoggedIn,
+    userInfo: state.userInfo,
+    logout: state.logout,
+  }));
 
   const handleLinkClick = (href: string) => {
     setCurrentLink(href);
   };
 
+  const handleLogout = () => {
+    logout(); // Call the logout function from useAuthStore
+    setPopoverOpen(false); // Close the popover after logout
+    router.push("/");
+  };
+  // console.log(userInfo.username)
   return (
     <Disclosure as="nav" className="navbar">
       <>
@@ -60,7 +218,6 @@ const Navbar = () => {
           <div className="relative flex h-12 md:h-20 items-center justify-between">
             <div className="flex flex-1 items-center sm:items-stretch sm:justify-start">
               {/* LOGO */}
-
               <div className="flex flex-shrink-0 items-center">
                 <img
                   className="block h-12 w-40 lg:hidden"
@@ -75,7 +232,6 @@ const Navbar = () => {
               </div>
 
               {/* LINKS */}
-
               <div className="hidden lg:block m-auto">
                 <div className="flex space-x-4">
                   {navigation.map((item) => (
@@ -101,19 +257,52 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* SIGNIN DIALOG */}
+            {/* SIGNIN / WELCOME */}
+            <div className="flex items-center">
+              {isLoggedIn ? ( // Check if user is logged in
+                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <div className="relative">
+                      <Avatar>
+                        <AvatarImage src={"https://github.com/shadcn.png"} />
+                        <AvatarFallback>
+                          {userInfo.username
+                            ? userInfo.username[0].toUpperCase()
+                            : "CN"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-28 p-0 block text-center rounded-2xl space-y-2">
+                    <Link href="/profile" passHref>
+                      <div className="border-b border-gray-200">
+                        <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                          Edit Profile
+                        </button>
+                      </div>
+                    </Link>
 
-            <div className="pb-2 pt-4 px-4 ml-28">
-              <Link href='/login' passHref>
-                <button
-                  type="button"
-                  className="text-sm text-Blueviolet font-medium px-[40px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
-                >
-                  Log In
-                </button>
-              </Link>
+                    <div className="">
+                      <button
+                        onClick={handleLogout}
+                        className="text-sm py-1 text-gray-700 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <Link href="/login" passHref>
+                  <button
+                    type="button"
+                    className="text-sm text-Blueviolet font-medium px-[40px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                  >
+                    Log In
+                  </button>
+                </Link>
+              )}
             </div>
-           
 
             <Drawer isOpen={isOpen} setIsOpen={setIsOpen}>
               <Drawerdata />

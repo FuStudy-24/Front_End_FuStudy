@@ -1,8 +1,13 @@
+
+import Login from '@/app/(auth)/login/Login'
 import React from 'react'
-import Login from './Login'
 
 export default function LoginPage() {
   return (
-    <Login/>
+    <div>
+      <main>
+        <Login/>
+      </main>
+    </div>
   )
 }

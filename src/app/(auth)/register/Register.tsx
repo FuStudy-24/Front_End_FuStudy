@@ -3,8 +3,11 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { postRegis } from "@/lib/service/authService";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation'
 const Register = () => {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -23,10 +26,18 @@ const Register = () => {
       const response = await postRegis(formData);
 
       console.log(response);
+      toast.success("Registration successful!"); // Display success toast
+      setTimeout(() => {
+        router.push('/login');
+      }, 1000)
       // Handle successful registration, e.g., navigate to login page or show a success message
-    } catch (error) {
-      console.error(error);
-      // Handle registration error, e.g., show an error message
+    } catch (error : any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        const err = error.response.data.message   
+        toast.error(err);     
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
   };
 
@@ -90,6 +101,7 @@ const Register = () => {
                 Log in
               </Link>
             </div>
+            <ToastContainer/>
           </form>
         </div>
       </div>

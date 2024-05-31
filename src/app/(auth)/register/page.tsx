@@ -6,5 +6,5 @@ export default function LoginPage() {
     <div>
       <Register />
     </div>
-  );
+  )
 }
