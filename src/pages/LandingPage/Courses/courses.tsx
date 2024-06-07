@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import React, { Component } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import axios from "axios";
 //import { StarIcon } from '@heroicons/react/24/solid'
 
 // CAROUSEL DATA
@@ -82,6 +83,12 @@ const postData: DataType[] = [
 ]
 
 // CAROUSEL SETTINGS
+
+const subcription =  async () => {
+    const data = await axios.get('http://localhost:8081/api/StudentSubcription/GetAllStudentSubcription')
+    console.log(data);
+    
+}   
 
 
 export default class MultipleItems extends Component {
@@ -174,8 +181,11 @@ export default class MultipleItems extends Component {
                                                 <h3 className="text-base font-medium text-black opacity-75">{items.classes} classes</h3>
                                             </div>
                                             <div className="flex gap-4">
-                                                <Image src={'/assets/courses/users.svg'} alt="users" width={24} height={24} className="inline-block m-auto" />
-                                                <h3 className="text-base font-medium text-black opacity-75">{items.students} students</h3>
+                                                {/* <Image src={'/assets/courses/users.svg'} alt="users" width={24} height={24} className="inline-block m-auto" />
+                                                <h3 className="text-base font-medium text-black opacity-75">{items.students} students</h3> */}
+                                                <button>
+                                                    Buy
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

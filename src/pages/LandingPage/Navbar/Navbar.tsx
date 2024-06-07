@@ -13,7 +13,6 @@
 //   current: boolean;
 // }
 
-
 // const navigation: NavigationItem[] = [
 //   { name: "Home", href: "/", current: true },
 //   { name: "Courses", href: "#courses", current: false },
@@ -148,8 +147,12 @@ import Drawer from "./Drawer";
 import Drawerdata from "./Drawerdata";
 import useAuthStore from "@/lib/hooks/useUserStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useRouter } from "next/navigation";
 
 interface NavigationItem {
   name: string;
@@ -191,6 +194,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Add state for drawer
   const [popoverOpen, setPopoverOpen] = useState(false); // Add state for popover
   const [currentLink, setCurrentLink] = useState("/");
+  const router = useRouter();
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     userInfo: state.userInfo,
@@ -204,8 +208,9 @@ const Navbar = () => {
   const handleLogout = () => {
     logout(); // Call the logout function from useAuthStore
     setPopoverOpen(false); // Close the popover after logout
+    router.push("/");
   };
-// console.log(userInfo.username)
+  // console.log(userInfo.username)
   return (
     <Disclosure as="nav" className="navbar">
       <>
@@ -261,14 +266,29 @@ const Navbar = () => {
                       <Avatar>
                         <AvatarImage src={"https://github.com/shadcn.png"} />
                         <AvatarFallback>
-                          {userInfo.username ? userInfo.username[0].toUpperCase() : "CN"}
+                          {userInfo.username
+                            ? userInfo.username[0].toUpperCase()
+                            : "CN"}
                         </AvatarFallback>
                       </Avatar>
                     </div>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <div className="p-4">
-                      <button onClick={handleLogout} className="block w-full py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                  <PopoverContent className="w-28 p-0 block text-center rounded-2xl space-y-2">
+                    <Link href="/profile" passHref>
+                      <div className="border-b border-gray-200">
+                        <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                          Edit Profile
+                        </button>
+                      </div>
+                    </Link>
+
+                    <div className="">
+                      <button
+                        onClick={handleLogout}
+                        className="text-sm py-1 text-gray-700 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
                     </div>
                   </PopoverContent>
                 </Popover>
@@ -295,4 +315,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

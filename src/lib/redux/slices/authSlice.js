@@ -3,7 +3,16 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isAuthenticated: false,
   userInfo: {
+    id: "",
+    fullname: "",
     username: "",
+    email: "",
+    identityCard: "",
+    phone: "",
+    avatar: "",
+    gender: "",
+    permission_id: "",
+    roleId: -1,
   },
   token: "",
   // refreshToken: "",
@@ -19,25 +28,26 @@ export const authSlice = createSlice({
         ...payload.userCredentials,
       };
       state.accessToken = payload.accessToken;
-      //state.refreshToken = payload.refreshToken;
+      state.refreshToken = payload.refreshToken;
     },
-    // logout: (state) => {
-    //   state.isAuthenticated = false;
-    //   state.userInfo = initialState.userInfo;
-    //   state.accessToken = "";
-    //   state.refreshToken = "";
-    // },
-    // update: (state, { payload }) => {
-    //   delete payload.password;
-    //   state.userInfo = {
-    //     ...state.userInfo,
-    //     ...payload,
-    //   };
-    // },
-    // updateToken: (state, { payload }) => {
-    //   state.accessToken = payload.accessToken;
-    //   state.refreshToken = payload.refreshToken;
-    // },
+    logout: (state) => {
+      state.isAuthenticated = false;
+      state.userInfo = initialState.userInfo;
+      state.accessToken = "";
+      state.refreshToken = "";
+    },
+    update: (state, { payload }) => {
+      delete payload.password;
+      state.userInfo = {
+        ...state.userInfo,
+        ...payload,
+      };
+    },
+
+    updateToken: (state, { payload }) => {
+      state.accessToken = payload.accessToken;
+      state.refreshToken = payload.refreshToken;
+    },
   },
 });
 
