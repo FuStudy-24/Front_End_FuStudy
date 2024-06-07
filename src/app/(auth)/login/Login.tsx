@@ -1,11 +1,11 @@
 "use client";
 import useAuthStore from "@/lib/hooks/useUserStore";
-import Link from "next/link";
 import { postLogin } from "@/lib/service/authService";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { use, useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -27,19 +27,22 @@ const Login = () => {
       const { token, user } = response.data.data; // Chú ý thay đổi đường dẫn để truy cập `data`
 
       console.log(token, user);
-      
 
       const userInfo = { ...user, token };
       login(token, userInfo);
-      toast.success("Login Successful")
+      toast.success("Login Successful");
       setTimeout(() => {
-        router.push('/');
-      }, 1000)
-    } catch (error : any) {
+        router.push("/");
+      }, 1000);
+    } catch (error: any) {
       // Handle login error
-      if (error.response && error.response.data && error.response.data.message) {
-        const err = error.response.data.message   
-        toast.error(err);     
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const err = error.response.data.message;
+        toast.error(err);
         setError(error.response.data.message);
       } else {
         console.error("An unexpected error occurred:", error);
@@ -66,6 +69,7 @@ const Login = () => {
           </p>
         </div>
       </div>
+
       <div className="lg:w-1/2 w-full flex items-center justify-center  md:px-16 px-0 z-0 bg-white">
         <div
           className="absolute lg:hidden z-10 inset-0 bg-gray-500 bg-no-repeat bg-cover items-center"
@@ -75,6 +79,7 @@ const Login = () => {
         >
           <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
         </div>
+
         <div className="w-full py-6 z-20 text-gray-600">
           <h2 className="mt-3 text-3xl font-bold text-center">
             Welcome to FuStudy!
@@ -92,18 +97,23 @@ const Login = () => {
           >
             <LoginInput formData={formData} setFormData={setFormData} />
 
-            <div className="ml-24 pb-2 pt-4 text-xs text-gray-400 space-x-10">
+            <div className="flex items-center justify-center pb-2 pt-4 text-xs text-gray-400 space-x-10">
               <span>
                 {" "}
                 <input type="checkbox" id="remember-me" className="mr-2" />
                 <label>Remember Me</label>
               </span>
-              <a className="hover:underline hover:text-blue-500 " href="#">
+              <Link
+                className="hover:underline hover:text-blue-500 "
+                href="/forgetpass"
+                passHref
+              >
                 Forgot password?
-              </a>
+              </Link>
+              {/* <ForgetPass/> */}
             </div>
 
-            <div className="pb-2 pt-4 px-4 ml-28">
+            <div className="pb-2 pt-4 px-4 flex items-center justify-center">
               <button
                 type="submit"
                 className="text-sm text-Blueviolet font-medium px-[70px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
@@ -112,7 +122,7 @@ const Login = () => {
               </button>
             </div>
 
-            <div className="ml-28 pb-2 pt-4 text-xs text-gray-400 space-x-1">
+            <div className="flex items-center justify-center pb-2 pt-4 text-xs text-gray-400 space-x-1">
               <span>Don’t have an account yet? </span>
               <Link
                 className="hover:underline hover:text-blue-500 "
@@ -121,7 +131,7 @@ const Login = () => {
                 Sign up
               </Link>
             </div>
-            <ToastContainer/>
+            <ToastContainer />
           </form>
         </div>
       </div>
@@ -159,7 +169,7 @@ const LoginInput = ({
             id="username"
             name="username"
             type="text"
-            className="border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
+            className="border-b border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none  bg-inherit"
             value={formData.username}
             onChange={handleUsernameChange}
           />

@@ -83,7 +83,7 @@ const Register = () => {
           >
             <RegisterInput formData={formData} setFormData={setFormData} />
 
-            <div className="pb-2 pt-4 px-4 ml-28">
+            <div className="pb-2 pt-4 px-4 flex items-center justify-center">
               <button
                 type="submit"
                 className="text-sm text-Blueviolet font-medium px-[70px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
@@ -92,7 +92,7 @@ const Register = () => {
               </button>
             </div>
 
-            <div className="ml-28 pb-2 pt-4 text-xs text-gray-400 space-x-1">
+            <div className="flex items-center justify-center pb-2 pt-4 text-xs text-gray-400 space-x-1">
               <span>Already have an account? </span>
               <Link
                 className="hover:underline hover:text-blue-500 "
