@@ -11,28 +11,50 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function ResetPassword() {
   const [formData, setformData] = useState({
     newPassword: "",
-    confirmPassword: "",
+    confirmedNewPassword: "",
+    email: "",
+    token: "",
   });
 
   const handleChange = (key: any, e: any) => {
     setformData((prev) => ({ ...prev, [key]: e.target.value }));
   };
 
-  const handleResetpass = async() => {
+  const handleResetpass = async () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    setformData({
+      ...formData,
+      email: urlParams.get("email") || "",
+      token: urlParams.get("token") || "",
+    });
     console.log(formData);
+
     try {
-      const res = await resetPass(formData)
-      toast.success("Reset Password Success!")
-    } catch (error:any) {
-      
+      const res = await resetPass(formData);
+      console.log(res);
+      toast.success("Reset Password Success!");
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const err = error.response.data.message;
+        console.log(error);
+        
+        toast.error(err);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
-    
   };
+
   return (
     <div className="flex justify-center">
       <Card className="w-[450px] block content-center px-7">
@@ -62,7 +84,7 @@ export default function ResetPassword() {
                 <Label>Confirm Password</Label>
                 <Input
                   onChange={(e) => {
-                    handleChange("confirmPassword", e);
+                    handleChange("confirmedNewPassword", e);
                   }}
                   type="password"
                   placeholder="Confirm Password"
@@ -84,6 +106,7 @@ export default function ResetPassword() {
           </span>
         </CardFooter>
       </Card>
+      <ToastContainer/>
     </div>
   );
 }

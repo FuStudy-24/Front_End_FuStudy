@@ -3,7 +3,7 @@ import Image from 'next/image';
 const Banner = () => {
 
     return (
-        <div id="home-section" className='bg-lightkblue'>
+        <div id="home-section" className='bg-lightkblue mt-20'>
             <div className="mx-auto max-w-7xl pt-20 sm:pb-24 px-6">
 
                 <div className='grid grid-cols-1 lg:grid-cols-12 space-x-1'>

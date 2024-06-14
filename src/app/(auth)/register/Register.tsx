@@ -3,11 +3,11 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { postRegis } from "@/lib/service/authService";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/navigation'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 const Register = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -15,10 +15,14 @@ const Register = () => {
     fullname: "",
     avatar: "string",
     gender: "male",
-    roleId: 3,
+    roleName: "Student",
     identityCard: "079202035866",
     phone: "0773850946",
   });
+
+  const handleTutor = () => {
+    setFormData({ ...formData, roleName: "Mentor" });
+  };
 
   const handleRegister = async () => {
     console.log(formData);
@@ -33,8 +37,8 @@ const Register = () => {
       // Handle successful registration, e.g., navigate to login page or show a success message
     } catch (error : any) {
       if (error.response && error.response.data && error.response.data.message) {
-        const err = error.response.data.message   
-        toast.error(err);     
+        const err = error.response.data.message
+        toast.error(err);
       } else {
         console.error("An unexpected error occurred:", error);
       }
@@ -42,7 +46,7 @@ const Register = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-stretch">
+    <section className="min-h-screen flex items-stretch mt-20">
       <div
         className="lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center "
         style={{
@@ -83,6 +87,10 @@ const Register = () => {
           >
             <RegisterInput formData={formData} setFormData={setFormData} />
 
+            <div className="pb-2 pt-4 px-[104px] flex items-center justify-items-start space-x-2">
+              <input type="checkbox" onClick={handleTutor} />
+              <div>I'm a Teacher</div>
+            </div>
             <div className="pb-2 pt-4 px-4 flex items-center justify-center">
               <button
                 type="submit"
@@ -101,7 +109,7 @@ const Register = () => {
                 Log in
               </Link>
             </div>
-            <ToastContainer/>
+            <ToastContainer />
           </form>
         </div>
       </div>
@@ -118,7 +126,7 @@ interface FormDataState {
   fullname: string;
   avatar: string;
   gender: string;
-  roleId: number;
+  roleName: string;
   identityCard: string;
   phone: string;
 }

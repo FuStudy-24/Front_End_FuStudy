@@ -23,7 +23,8 @@ const Login = () => {
     setError("");
     try {
       const response = await postLogin(formData);
-
+      console.log(response);
+      
       const { token, user } = response.data.data; // Chú ý thay đổi đường dẫn để truy cập `data`
 
       console.log(token, user);
@@ -42,6 +43,8 @@ const Login = () => {
         error.response.data.message
       ) {
         const err = error.response.data.message;
+        console.log(error);
+        
         toast.error(err);
         setError(error.response.data.message);
       } else {
@@ -52,7 +55,7 @@ const Login = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-stretch">
+    <section className="min-h-screen flex items-stretch mt-20">
       <div
         className="lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center "
         style={{

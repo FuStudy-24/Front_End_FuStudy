@@ -1,4 +1,4 @@
-// "use client"
+"use client";
 // import { Disclosure } from "@headlessui/react";
 // import Link from "next/link";
 // import React, { useState } from "react";
@@ -274,6 +274,16 @@ const Navbar = () => {
                     </div>
                   </PopoverTrigger>
                   <PopoverContent className="w-28 p-0 block text-center rounded-2xl space-y-2">
+                    {userInfo.username == "admin1" && (
+                      <Link href="/profile" passHref>
+                        <div className="border-b border-gray-200">
+                          <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                            Dashboard
+                          </button>
+                        </div>
+                      </Link>
+                    )}
+
                     <Link href="/profile" passHref>
                       <div className="border-b border-gray-200">
                         <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">

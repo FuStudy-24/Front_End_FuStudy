@@ -16,24 +16,36 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function ForgetPassword() {
-  const [email, setEmail] = useState("");
+  const [data, setdata] = useState({
+    email: "",
+  });
 
   const handleChange = (e: any) => {
-    setEmail((prev) => (prev = e.target.value));
+    setdata((prev) => (prev = { email: e.target.value }));
   };
 
   const handleForgetPass = async () => {
-    console.log(email);
+    console.log(data);
     try {
-      const reponse = await forgetPass(email)
-      toast.success("Please check your email!")
-    } catch (error:any) {
+      const reponse = await forgetPass(data);
+      toast.success("Please check your email!");
+    } catch (error: any) {
+      console.log(error);
       
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const err = error.response.data.message;
+        toast.error("Your email not exist in the system");
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
-   
   };
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mt-40">
       <Card className="w-[450px] block content-center px-7">
         <CardHeader>
           <CardTitle className="flex justify-center items-center text-xl">
@@ -81,7 +93,7 @@ function ForgetPassword() {
           </div>
         </CardFooter>
       </Card>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }

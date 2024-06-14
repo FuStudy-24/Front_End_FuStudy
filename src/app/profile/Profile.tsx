@@ -15,8 +15,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAuthStore from "@/lib/hooks/useUserStore";
 import { getProfile, updateProfile } from "@/lib/service/profileService";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Profile = () => {
   const [checkEdit, setcheckEdit] = useState(false);
   //update form
@@ -99,8 +99,8 @@ const Profile = () => {
     try {
       const res = await updateProfile(userInfo.id, jsonData, config);
       console.log(res);
-      setcheckEdit(!checkEdit)
-      toast.success("Update Successful!")
+      setcheckEdit(!checkEdit);
+      toast.success("Update Successful!");
     } catch (error) {
       console.log(error);
     }
@@ -108,7 +108,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mt-40">
         <Tabs defaultValue="account" className="w-[700px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="account">Account</TabsTrigger>
@@ -134,13 +134,19 @@ const Profile = () => {
                   <div className="flex space-x-2">
                     <div className="space-y-1">
                       <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" defaultValue={accountProfile.fullname} />
+                      <Input
+                        id="name"
+                        defaultValue={accountProfile.fullname}
+                        disabled
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="name">Password</Label>
                       <Input
                         id="password"
+                        type="password"
                         defaultValue={accountProfile.password}
+                        disabled
                       />
                     </div>
                   </div>
@@ -150,21 +156,34 @@ const Profile = () => {
                       <Input
                         id="ID"
                         defaultValue={accountProfile.identityCard}
+                        disabled
                       />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="name">Gender</Label>
-                      <Input id="Gender" defaultValue={accountProfile.gender} />
+                      <Input
+                        id="Gender"
+                        defaultValue={accountProfile.gender}
+                        disabled
+                      />
                     </div>
                   </div>
                   <div className="flex space-x-2">
                     <div className="space-y-1">
                       <Label htmlFor="name">Email</Label>
-                      <Input id="Email" defaultValue={accountProfile.email} />
+                      <Input
+                        id="Email"
+                        defaultValue={accountProfile.email}
+                        disabled
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="username">Phone</Label>
-                      <Input id="Phone" defaultValue={accountProfile.phone} />
+                      <Input
+                        id="Phone"
+                        defaultValue={accountProfile.phone}
+                        disabled
+                      />
                     </div>
                   </div>
                 </div>
@@ -206,6 +225,7 @@ const Profile = () => {
                       <Label htmlFor="name">Password</Label>
                       <Input
                         id="password"
+                        type="password"
                         onChange={(e) => {
                           handleChange("password", e);
                         }}
@@ -265,7 +285,7 @@ const Profile = () => {
             </Card>
           </TabsContent>
         </Tabs>
-        <ToastContainer/>
+        <ToastContainer />
       </div>
     </>
   );
