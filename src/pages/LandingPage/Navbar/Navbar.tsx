@@ -281,6 +281,13 @@ const Navbar = () => {
                         </button>
                       </div>
                     </Link>
+                    <Link href="/question" passHref>
+                      <div className="border-b border-gray-200">
+                        <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                          Question
+                        </button>
+                      </div>
+                    </Link>
 
                     <div className="">
                       <button
