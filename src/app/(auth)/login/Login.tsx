@@ -134,10 +134,10 @@ const Login = () => {
                 Sign up
               </Link>
             </div>
-            <ToastContainer />
           </form>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 };
