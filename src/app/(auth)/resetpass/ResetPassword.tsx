@@ -1,6 +1,6 @@
 "use client";
 import "@/lib/service/forgetPassService";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { resetPass } from "@/lib/service/forgetPassService";
 import {
   Card,
@@ -22,35 +22,33 @@ export default function ResetPassword() {
     token: "",
   });
 
-  const handleChange = (key:any, e: any) => {
-    setformData({...formData, [key]:e.target.value});
+  const handleChange = (key: string, e: any) => {
+    setformData((prevFormData) => ({
+      ...prevFormData,
+      [key]: e.target.value,
+    }));
   };
 
   const handleResetpass = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    console.log(urlParams.get("email"));
-    
-    setformData({
+
+    const updatedFormData = {
       ...formData,
       email: urlParams.get("email") || "",
       token: urlParams.get("token") || "",
-    });
-    console.log(formData);
+    };
+
+    setformData(updatedFormData); // Update state with new formData
+
+    console.log("formData:", updatedFormData); // Log updated formData
 
     try {
-      const res = await resetPass(formData);
-      console.log(res);
+      const res = await resetPass(updatedFormData);
       toast.success("Reset Password Success!");
     } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response && error.response.data && error.response.data.message) {
         const err = error.response.data.message;
-        console.log(error);
-        
         toast.error(err);
       } else {
         console.error("An unexpected error occurred:", error);
@@ -58,9 +56,9 @@ export default function ResetPassword() {
     }
   };
   console.log(formData);
-  
-
-
+  useEffect(() => {
+    handleResetpass();
+  }, []);
   return (
     <div className="flex justify-center mt-40">
       <Card className="w-[450px] block content-center px-7">
@@ -112,7 +110,8 @@ export default function ResetPassword() {
           </div>
         </CardFooter>
       </Card>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }
+
