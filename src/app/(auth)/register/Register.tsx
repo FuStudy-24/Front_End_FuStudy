@@ -109,10 +109,10 @@ const Register = () => {
                 Log in
               </Link>
             </div>
-            <ToastContainer />
           </form>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 };
