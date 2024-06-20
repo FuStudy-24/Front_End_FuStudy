@@ -1,30 +1,31 @@
 import { create } from 'zustand';
 
+interface UserInfo {
+  id?: string;
+  username?: string;
+  email?: string;
+  permission_id?: string;
+  token?: string;
+}
+
 interface AuthState {
   isLoggedIn: boolean;
-  userInfo: {
-    id?: string;
-    username?: string;
-    email?: string;
-    permission_id?: string;
-    token?: string;
-    // ...các thông tin khác
-  };
+  userInfo: UserInfo;
   token: string | null;
-  login: (token: string, userInfo: AuthState['userInfo']) => void;
+  login: (token: string, userInfo: UserInfo) => void;
   logout: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => {
+const useAuthStore = create<AuthState>((set, get) => {
   const storedToken = localStorage.getItem('authToken');
   const storedUserInfo = localStorage.getItem('userInfo');
-  let initialUserInfo = {};
+  let initialUserInfo: UserInfo = {};
   try {
-    if (storedUserInfo) { // Kiểm tra xem storedUserInfo có giá trị hay không
+    if (storedUserInfo) {
       initialUserInfo = JSON.parse(storedUserInfo);
     }
   } catch (error) {
-    console.error("Lỗi khi phân tích JSON userInfo:", error);
+    console.error("Error parsing JSON userInfo:", error);
   }
 
   const isLoggedIn = !!storedToken;
@@ -47,6 +48,3 @@ const useAuthStore = create<AuthState>((set) => {
 });
 
 export default useAuthStore;
-
-// store/authStore.ts
-// store/authStore.ts
