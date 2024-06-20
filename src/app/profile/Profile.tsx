@@ -9,16 +9,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+("@/components/ui/select");
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAuthStore from "@/lib/hooks/useUserStore";
+import { getUserSubcription } from "@/lib/service/subcriptionService";
 import { getProfile, updateProfile } from "@/lib/service/profileService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Profile = () => {
   const [checkEdit, setcheckEdit] = useState(false);
+
+  const [subcriptionData, setsubcriptionData] = useState({
+    status:"",
+    startDate:"",
+    endDate:"",
+    currentQuestion: 0,
+    currentMeeting:0,
+    type:""
+  })
+
   //update form
   const [formData, setformData] = useState({
     fullname: "",
@@ -80,6 +92,17 @@ const Profile = () => {
           password,
         };
       });
+      const response = await getUserSubcription(userInfo.id)
+      const subData = response.data.data;
+      console.log(subData);
+      
+      subcriptionData.status = subData.status;
+      // subcriptionData.type = subData.subcription.subcriptionName;
+      subcriptionData.currentMeeting = subData.currentMeeting;
+      subcriptionData.currentQuestion = subData.currentQuestion;
+      subcriptionData.startDate = subData.startDate;
+      subcriptionData.endDate = subData.endDate;
+      console.log(subcriptionData);
     };
     fetchData();
   }, [checkEdit]);
@@ -108,7 +131,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center mt-40">
+      <div className="flex items-center justify-center mt-40 space-x-5">
         <Tabs defaultValue="account" className="w-[700px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="account">Account</TabsTrigger>
@@ -285,6 +308,59 @@ const Profile = () => {
             </Card>
           </TabsContent>
         </Tabs>
+        <Card className="w-[350px] mt-10">
+          <CardHeader>
+            <CardTitle>Subcription Orders</CardTitle>
+            <CardDescription>Detail of subcription in use:</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid w-full items-center gap-4">
+              <table className="table-auto">
+                {/* <thead>
+                  <tr>
+                    <th>Song</th>
+                    <th>Artist</th>
+                    <th>Year</th>
+                  </tr>
+                </thead> */}
+                <tbody>
+                  <tr>
+                    <td>Type</td>
+                    <td>Premium</td>
+                  </tr>
+                  <tr>
+                    <td>Terms</td>
+                    <td>$10 / Monthly</td>
+                  </tr>
+                  <tr>
+                    <td>status</td>
+                    <td>active</td>
+                  </tr>
+                  <tr>
+                    <td>currentMeeting</td>
+                    <td>10</td>
+                  </tr>
+                  <tr>
+                    <td>currentQuestion</td>
+                    <td>10</td>
+                  </tr>
+                  <tr>
+                    <td>Start Date</td>
+                    <td>20/12/2024</td>
+                  </tr>
+                  <tr>
+                    <td>Renewal Date</td>
+                    <td>20/12/2024</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+          {/* <CardFooter className="flex justify-between">
+            <Button variant="outline">Cancel</Button>
+            <Button>Deploy</Button>
+          </CardFooter> */}
+        </Card>
         <ToastContainer />
       </div>
     </>

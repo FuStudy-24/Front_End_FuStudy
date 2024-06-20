@@ -1,145 +1,4 @@
 "use client";
-// import { Disclosure } from "@headlessui/react";
-// import Link from "next/link";
-// import React, { useState } from "react";
-// import Drawer from "./Drawer";
-// import Drawerdata from "./Drawerdata";
-// import useAuthStore from "@/lib/hooks/useUserStore";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-// interface NavigationItem {
-//   name: string;
-//   href: string;
-//   current: boolean;
-// }
-
-// const navigation: NavigationItem[] = [
-//   { name: "Home", href: "/", current: true },
-//   { name: "Courses", href: "#courses", current: false },
-//   { name: "Mentor", href: "#mentor", current: false },
-//   { name: "Group", href: "", current: false },
-//   { name: "Testimonial", href: "#testimonial", current: false },
-// ];
-
-// function classNames(...classes: string[]) {
-//   return classes.filter(Boolean).join(" ");
-// }
-
-// const CustomLink = ({
-//   href,
-//   onClick,
-//   children,
-// }: {
-//   href: string;
-//   onClick: () => void;
-//   children: React.ReactNode;
-// }) => {
-//   return (
-//     <Link href={href} passHref>
-//       <span onClick={onClick} className="px-3 py-4 text-lg font-normal">
-//         {children}
-//       </span>
-//     </Link>
-//   );
-// };
-
-// const Navbar = () => {
-//   const [isOpen, setIsOpen] = React.useState(false);
-//   const [currentLink, setCurrentLink] = useState("/");
-
-//   const { isLoggedIn, userInfo } = useAuthStore((state) => ({
-//     isLoggedIn: state.isLoggedIn,
-//     userInfo: state.userInfo,
-//   }));
-
-//   const handleLinkClick = (href: string) => {
-//     setCurrentLink(href);
-//   };
-//   const handleLogout = () => {
-//     // Do logout logic here
-//   };
-
-//   return (
-//     <Disclosure as="nav" className="navbar">
-//       <>
-//         <div className="mx-auto max-w-7xl px-6 py-4 lg:px-8">
-//           <div className="relative flex h-12 md:h-20 items-center justify-between">
-//             <div className="flex flex-1 items-center sm:items-stretch sm:justify-start">
-//               {/* LOGO */}
-//               <div className="flex flex-shrink-0 items-center">
-//                 <img
-//                   className="block h-12 w-40 lg:hidden"
-//                   src={"/assets/logo/logo.svg"}
-//                   alt="dsign-logo"
-//                 />
-//                 <img
-//                   className="hidden h-full w-full lg:block"
-//                   src={"/assets/logo/logo.svg"}
-//                   alt="dsign-logo"
-//                 />
-//               </div>
-
-//               {/* LINKS */}
-//               <div className="hidden lg:block m-auto">
-//                 <div className="flex space-x-4">
-//                   {navigation.map((item) => (
-//                     <CustomLink
-//                       key={item.name}
-//                       href={item.href}
-//                       onClick={() => handleLinkClick(item.href)}
-//                     >
-//                       <span
-//                         className={classNames(
-//                           item.href === currentLink
-//                             ? "underline-links"
-//                             : "text-slategray",
-//                           "px-3 py-4 text-lg font-normal opacity-75 hover:opacity-100"
-//                         )}
-//                         aria-current={item.href ? "page" : undefined}
-//                       >
-//                         {item.name}
-//                       </span>
-//                     </CustomLink>
-//                   ))}
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* SIGNIN / WELCOME */}
-//             <div className="flex items-center">
-//       <Popover open={open} onOpenChange={setOpen}>
-//         <PopoverTrigger asChild>
-//           <div className="relative">
-//             <Avatar>
-//               <AvatarImage
-//                 src={"https://github.com/shadcn.png"}
-//               />
-//               <AvatarFallback>
-//                 {userInfo.username ? userInfo.username[0].toUpperCase() : "CN"}
-//               </AvatarFallback>
-//             </Avatar>
-//           </div>
-//         </PopoverTrigger>
-//         <PopoverContent className="w-[200px] p-0">
-//           <div className="p-4">
-//             <button onClick={handleLogout} className="block w-full py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-//           </div>
-//         </PopoverContent>
-//       </Popover>
-//     </div>
-
-//             <Drawer isOpen={isOpen} setIsOpen={setIsOpen}>
-//               <Drawerdata />
-//             </Drawer>
-//           </div>
-//         </div>
-//       </>
-//     </Disclosure>
-//   );
-// };
-
-// export default Navbar;
-// Navbar.tsx
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -153,6 +12,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import { faCoins } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface NavigationItem {
   name: string;
@@ -165,7 +26,7 @@ const navigation: NavigationItem[] = [
   { name: "Courses", href: "#courses", current: false },
   { name: "Mentor", href: "#mentor", current: false },
   { name: "Group", href: "", current: false },
-  { name: "Testimonial", href: "#testimonial", current: false },
+  { name: "Subcription", href: "#testimonial", current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -260,55 +121,67 @@ const Navbar = () => {
             {/* SIGNIN / WELCOME */}
             <div className="flex items-center">
               {isLoggedIn ? ( // Check if user is logged in
-                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <div className="relative">
-                      <Avatar>
-                        <AvatarImage src={"https://github.com/shadcn.png"} />
-                        <AvatarFallback>
-                          {userInfo.username
-                            ? userInfo.username[0].toUpperCase()
-                            : "CN"}
-                        </AvatarFallback>
-                      </Avatar>
+                <div className="flex justify-between space-x-5">
+                  <div className="flex justify-between mt-2 space-x-2">
+                    <div>100</div>
+                    <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                      $
                     </div>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-28 p-0 block text-center rounded-2xl space-y-2">
-                    {userInfo.username == "admin1" && (
-                      <Link href="/admin/dashboard" passHref>
-                        <div className="border-b border-gray-200">
-                          <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
-                            Dashboard
+                  </div>
+                  <div>
+                    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <div className="relative">
+                          <Avatar>
+                            <AvatarImage
+                              src={"https://github.com/shadcn.png"}
+                            />
+                            <AvatarFallback>
+                              {userInfo.username
+                                ? userInfo.username[0].toUpperCase()
+                                : "CN"}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-28 p-0 block text-center rounded-2xl space-y-2">
+                        {userInfo.username == "admin1" && (
+                          <Link href="/admin/dashboard" passHref>
+                            <div className="border-b border-gray-200">
+                              <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                                Dashboard
+                              </button>
+                            </div>
+                          </Link>
+                        )}
+
+                        <Link href="/profile" passHref>
+                          <div className="border-b border-gray-200">
+                            <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                              Edit Profile
+                            </button>
+                          </div>
+                        </Link>
+                        <Link href="/question" passHref>
+                          <div className="border-b border-gray-200">
+                            <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                              Question
+                            </button>
+                          </div>
+                        </Link>
+
+                        <div className="">
+                          <button
+                            onClick={handleLogout}
+                            className="text-sm py-1 text-gray-700 hover:bg-gray-100"
+                          >
+                            Logout
                           </button>
                         </div>
-                      </Link>
-                    )}
-
-                    <Link href="/profile" passHref>
-                      <div className="border-b border-gray-200">
-                        <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
-                          Edit Profile
-                        </button>
-                      </div>
-                    </Link>
-                    <Link href="/question" passHref>
-                      <div className="border-b border-gray-200">
-                        <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
-                          Question
-                        </button>
-                      </div>
-                    </Link>
-
-                    <div className="">
-                      <button
-                        onClick={handleLogout}
-                        className="text-sm py-1 text-gray-700 hover:bg-gray-100"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
               ) : (
                 <Link href="/login" passHref>
                   <button
