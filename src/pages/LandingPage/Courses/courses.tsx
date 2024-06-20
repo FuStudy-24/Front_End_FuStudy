@@ -1,27 +1,18 @@
 "use client"
 import Slider from "react-slick";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component } from "react";
 import Link from "next/link";
 import Image from 'next/image'
-import axios from "axios";
-//import { StarIcon } from '@heroicons/react/24/solid'
-
-// Import getQuestion function from service file
 import { getQuestion } from "@/lib/service/questionService";
 
 interface DataType {
     heading: string;
     heading2: string;
     imgSrc: string;
-    name: string;
-    students: number;
-    classes: number;
-    price: number;
-    rating: number;
+    category: string;
 }
 
 export default class MultipleItems extends Component {
-
     state = {
         postData: [] as DataType[],
         loading: true,
@@ -30,21 +21,23 @@ export default class MultipleItems extends Component {
 
     async componentDidMount() {
         try {
-            const response = await getQuestion();
-            if (response.status === 200) {
-                const questionData = response.data.data.map((item: any) => ({
+            // Fetch questions
+            const questionResponse = await getQuestion();
+            if (questionResponse.status === 200) {
+                const questionData = questionResponse.data.data;
+                
+                const formattedQuestionData = questionData.map((item: any) => ({
                     heading: item.content,
-                 
-                    imgSrc: "",
-                    name: "Colt Steele", // Example placeholder
-                    students: item.totalRating, // Example placeholder
-                    classes: 12, // Example placeholder
-                    price: 20, // Example placeholder
-                    rating: 4.7, // Example placeholder
+                    heading2: "", // Assuming heading2 is not available
+                    imgSrc: item.image ? item.image : "",
+                    category: item.categoryName, // Use category name instead of ID
                 }));
-                this.setState({ postData: questionData, loading: false });
+
+                console.log('Formatted Question Data:', formattedQuestionData);
+
+                this.setState({ postData: formattedQuestionData, loading: false });
             } else {
-                this.setState({ error: "Failed to fetch data", loading: false });
+                this.setState({ error: "Failed to fetch questions", loading: false });
             }
         } catch (error: any) {
             this.setState({ error: error.message, loading: false });
@@ -88,7 +81,6 @@ export default class MultipleItems extends Component {
         return (
             <div id="courses">
                 <div className='mx-auto max-w-7xl sm:py-8 px-4 lg:px-8 '>
-
                     <div className="sm:flex justify-between items-center">
                         <h3 className="text-midnightblue text-4xl lg:text-55xl font-semibold mb-5 sm:mb-0">Popular Question</h3>
                         <Link href={'/question'} className="text-Blueviolet text-lg font-medium space-links">Explore&nbsp;&gt;&nbsp;</Link>
@@ -115,39 +107,7 @@ export default class MultipleItems extends Component {
                                             <h4 className='text-2xl font-bold pt-1 text-black'>{items.heading2}</h4>
 
                                             <div>
-                                                <h3 className='text-base font-normal pt-6 opacity-75'>{items.name}</h3>
-                                            </div>
-
-                                            <div className="flex justify-between items-center py-6">
-                                                <div className="flex gap-4">
-                                                    <h3 className="text-red text-22xl font-medium">{items.rating}</h3>
-                                                    <div className="flex">
-                                                        {/* <StarIcon className="h-5 w-5 text-gold" />
-                                                        <StarIcon className="h-5 w-5 text-gold" />
-                                                        <StarIcon className="h-5 w-5 text-gold" />
-                                                        <StarIcon className="h-5 w-5 text-gold" />
-                                                        <StarIcon className="h-5 w-5 text-gold" /> */}
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <h3 className="text-3xl font-medium">${items.price}</h3>
-                                                </div>
-                                            </div>
-
-                                            <hr style={{ color: "#C4C4C4" }} />
-
-                                            <div className="flex justify-between pt-6">
-                                                <div className="flex gap-4">
-                                                    <Image src={""} alt="users" width={24} height={24} className="inline-block m-auto" />
-                                                    <h3 className="text-base font-medium text-black opacity-75">{items.classes} classes</h3>
-                                                </div>
-                                                <div className="flex gap-4">
-                                                    {/* <Image src={'/assets/courses/users.svg'} alt="users" width={24} height={24} className="inline-block m-auto" />
-                                                    <h3 className="text-base font-medium text-black opacity-75">{items.students} students</h3> */}
-                                                    <button>
-                                                        Buy
-                                                    </button>
-                                                </div>
+                                                <h3 className='text-base font-normal pt-6 opacity-75'>{items.category}</h3>
                                             </div>
                                         </div>
                                     </div>
