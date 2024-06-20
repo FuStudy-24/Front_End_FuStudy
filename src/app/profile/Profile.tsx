@@ -22,14 +22,15 @@ import "react-toastify/dist/ReactToastify.css";
 const Profile = () => {
   const [checkEdit, setcheckEdit] = useState(false);
 
-  const [subcriptionData, setsubcriptionData] = useState({
-    status:"",
-    startDate:"",
-    endDate:"",
+  const [subcription, setsubcription] = useState({
+    status: "",
+    startDate: "",
+    endDate: "",
     currentQuestion: 0,
-    currentMeeting:0,
-    type:""
-  })
+    currentMeeting: 0,
+    type: "",
+    price: 0,
+  });
 
   //update form
   const [formData, setformData] = useState({
@@ -58,6 +59,20 @@ const Profile = () => {
     userInfo: state.userInfo,
     logout: state.logout,
   }));
+
+  const formatDate = (stringDate: string) => {
+    const datePart = stringDate.split("T")[0];
+
+    // Create a Date object from the date string
+    const date = new Date(datePart);
+
+    // Get the day, month (0-indexed!), and year
+    const day = date.getDate();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Add leading zero if necessary
+    const year = date.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+    return formattedDate;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,17 +107,33 @@ const Profile = () => {
           password,
         };
       });
-      const response = await getUserSubcription(userInfo.id)
-      const subData = response.data.data;
-      console.log(subData);
-      
-      subcriptionData.status = subData.status;
-      // subcriptionData.type = subData.subcription.subcriptionName;
-      subcriptionData.currentMeeting = subData.currentMeeting;
-      subcriptionData.currentQuestion = subData.currentQuestion;
-      subcriptionData.startDate = subData.startDate;
-      subcriptionData.endDate = subData.endDate;
-      console.log(subcriptionData);
+      // Subcription
+      try {
+        const response = await getUserSubcription(userInfo.id);
+        const subData = response.data.data[0];
+        console.log(subData);
+
+        const subcriptionData = {
+          status: "",
+          startDate: "",
+          endDate: "",
+          currentQuestion: 0,
+          currentMeeting: 0,
+          type: "",
+          price: 0,
+        };
+        subcriptionData.status = subData.status.toString();
+        subcriptionData.type = subData.subcription.subcriptionName;
+        subcriptionData.currentMeeting = subData.currentMeeting;
+        subcriptionData.currentQuestion = subData.currentQuestion;
+        subcriptionData.startDate = formatDate(subData.startDate);
+        subcriptionData.endDate = formatDate(subData.endDate);
+        subcriptionData.price = subData.subcription.subcriptionPrice;
+        console.log(subcriptionData);
+        setsubcription(subcriptionData);
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchData();
   }, [checkEdit]);
@@ -311,7 +342,11 @@ const Profile = () => {
         <Card className="w-[350px] mt-10">
           <CardHeader>
             <CardTitle>Subcription Orders</CardTitle>
-            <CardDescription>Detail of subcription in use:</CardDescription>
+            <CardDescription>
+              {subcription.type === ""
+                ? "You haven't subcribe the subcription yet"
+                : "Detail of subcription in use:"}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
@@ -325,32 +360,32 @@ const Profile = () => {
                 </thead> */}
                 <tbody>
                   <tr>
-                    <td>Type</td>
-                    <td>Premium</td>
+                    <td>Type:</td>
+                    <td>{subcription.type}</td>
                   </tr>
                   <tr>
-                    <td>Terms</td>
-                    <td>$10 / Monthly</td>
+                    <td>Terms:</td>
+                    <td>${subcription.price} / Monthly</td>
                   </tr>
                   <tr>
-                    <td>status</td>
-                    <td>active</td>
+                    <td>status:</td>
+                    <td>{subcription.status}</td>
                   </tr>
                   <tr>
-                    <td>currentMeeting</td>
-                    <td>10</td>
+                    <td>Start Date:</td>
+                    <td>{subcription.startDate}</td>
                   </tr>
                   <tr>
-                    <td>currentQuestion</td>
-                    <td>10</td>
+                    <td>Renewal Date:</td>
+                    <td>{subcription.endDate}</td>
                   </tr>
                   <tr>
-                    <td>Start Date</td>
-                    <td>20/12/2024</td>
+                    <td>Current Meeting:</td>
+                    <td>{subcription.currentMeeting}</td>
                   </tr>
                   <tr>
-                    <td>Renewal Date</td>
-                    <td>20/12/2024</td>
+                    <td>Current Question:</td>
+                    <td>{subcription.currentQuestion}</td>
                   </tr>
                 </tbody>
               </table>

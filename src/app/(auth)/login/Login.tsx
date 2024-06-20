@@ -27,13 +27,13 @@ const Login = () => {
       
       const { token, user } = response.data.data; // Chú ý thay đổi đường dẫn để truy cập `data`
 
-      console.log(token, user);
+      console.log(token, user.username);
 
       const userInfo = { ...user, token };
       login(token, userInfo);
       toast.success("Login Successful");
       setTimeout(() => {
-        router.push("/");
+        user.username === 'admin1' ?  router.push("/admin/dashboard"):router.push("/")
       }, 1000);
     } catch (error: any) {
       // Handle login error
