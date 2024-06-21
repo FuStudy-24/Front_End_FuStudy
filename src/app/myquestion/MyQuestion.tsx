@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { createQuestionByCoin, getQuestionByUserId, updateQuestion, deleteQuestion } from "@/lib/service/questionService";
+import { createQuestionByCoin,createQuestionBySubscription, getQuestionByUserId, updateQuestion, deleteQuestion } from "@/lib/service/questionService";
 import { getAllCategory } from "@/lib/service/categoryService";
 import useAuthStore from '@/lib/hooks/useUserStore'; // Ensure this import path matches your project structure
 import { Button } from '@headlessui/react';

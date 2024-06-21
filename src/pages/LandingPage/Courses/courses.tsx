@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import Slider from "react-slick";
 import React, { Component } from "react";
 import Link from "next/link";
-import Image from 'next/image'
+import Image from 'next/image';
 import { getQuestion } from "@/lib/service/questionService";
 
 interface DataType {
@@ -21,16 +21,15 @@ export default class MultipleItems extends Component {
 
     async componentDidMount() {
         try {
-            // Fetch questions
             const questionResponse = await getQuestion();
             if (questionResponse.status === 200) {
                 const questionData = questionResponse.data.data;
-                
+
                 const formattedQuestionData = questionData.map((item: any) => ({
                     heading: item.content,
                     heading2: "", // Assuming heading2 is not available
                     imgSrc: item.image ? item.image : "",
-                    category: item.categoryName, // Use category name instead of ID
+                    category: item.categoryName,
                 }));
 
                 console.log('Formatted Question Data:', formattedQuestionData);
@@ -96,7 +95,8 @@ export default class MultipleItems extends Component {
                                 <div key={i}>
                                     <div className='bg-white m-3 px-3 pt-3 pb-12 my-20 shadow-courses rounded-2xl'>
                                         <div className="relative rounded-3xl">
-                                            <Image src={items.imgSrc} alt="gaby" width={389} height={262} className="m-auto clipPath" />
+                                            <Image src={items.imgSrc} alt="gaby" width={389} height={262} className="m-auto clipPath" 
+                                            style={{ objectFit: 'cover', width: '100%', height: '300px' }} />
                                             <div className="absolute right-5 -bottom-2 bg-ultramarine rounded-full p-6">
                                                 <h3 className="text-white uppercase text-center text-sm font-medium">best <br /> seller</h3>
                                             </div>
