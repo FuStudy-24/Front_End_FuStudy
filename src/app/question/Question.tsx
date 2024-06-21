@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { getQuestion } from "@/lib/service/questionService";
 import Link from 'next/link';
 import 'tailwindcss/tailwind.css';
+import Comments from '@/app/myquestion/Comments'; // Import the Comments component
+
 
 interface QuestionData {
   studentId: number;
@@ -16,6 +18,8 @@ const Question = () => {
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<QuestionData | null>(null);
+  const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -35,6 +39,16 @@ const Question = () => {
 
     fetchQuestions();
   }, []);
+
+  const handleImageClick = (question: QuestionData) => {
+    setSelectedQuestion(question);
+    setShowComments(true);
+  };
+
+  const handleCloseComments = () => {
+    setShowComments(false);
+    setSelectedQuestion(null);
+  };
 
   if (loading) {
     return <div className="flex items-center justify-center h-screen text-2xl font-semibold">Loading...</div>;
@@ -57,14 +71,24 @@ const Question = () => {
         {questions.map((question, index) => (
           <div 
             key={index} 
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-            {question.image && <img src={question.image} alt="Question" className="w-full h-40 object-cover mb-4 rounded-lg shadow-md" />}
+            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 relative">
+            {question.image && <img src={question.image} alt="Question" className="w-full h-40 object-cover mb-4 rounded-lg shadow-md cursor-pointer" onClick={() => handleImageClick(question)} />}
             <h2 className="text-2xl font-bold text-gray-800 mb-2">{question.content}</h2>
-             <p className="text-gray-600 mb-2">{question.categoryName}</p>
-          
+            <p className="text-gray-600 mb-2">{question.categoryName}</p>
+            <div className="flex items-center space-x-4 mt-4">
+              
+              <button 
+                onClick={() => handleImageClick(question)}
+                className="text-gray-500">  
+              </button>
+            </div>
           </div>
         ))}
       </div>
+      {showComments && selectedQuestion && (
+        <Comments 
+         question={selectedQuestion} onClose={handleCloseComments} />
+      )}
     </div>
   );
 };
