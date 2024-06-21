@@ -78,11 +78,11 @@ const NavDashboard = () => {
                     </Avatar>
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-28 p-0 block text-center rounded-2xl space-y-2">
+                <PopoverContent className="bg-white w-28 p-0 block text-center rounded-2xl space-y-2">
                   {userInfo.username == "admin1" && (
                     <Link href="/admin/dashboard" passHref>
                       <div className="border-b border-gray-200">
-                        <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                        <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
                           Dashboard
                         </button>
                       </div>
@@ -91,14 +91,14 @@ const NavDashboard = () => {
 
                   <Link href="/profile" passHref>
                     <div className="border-b border-gray-200">
-                      <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                      <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
                         Edit Profile
                       </button>
                     </div>
                   </Link>
                   <Link href="/question" passHref>
                     <div className="border-b border-gray-200">
-                      <button className="text-sm py-2 text-gray-700 hover:bg-gray-100">
+                      <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
                         Question
                       </button>
                     </div>
@@ -107,7 +107,7 @@ const NavDashboard = () => {
                   <div className="">
                     <button
                       onClick={handleLogout}
-                      className="text-sm py-1 text-gray-700 hover:bg-gray-100"
+                      className="text-sm py-1 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2"
                     >
                       Logout
                     </button>
