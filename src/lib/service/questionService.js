@@ -12,6 +12,18 @@ const createQuestionByCoin = async (formData, token) => {
   };
   return await axios.post("Question/CreateQuestionByCoin", formData, config);
 };
+const createQuestionBySubscription = async (formData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return await axios.post(
+    "Question/CreateQuestionWithSubscription",
+    formData,
+    config
+  );
+};
 
 const updateQuestion = async (id, formData, token) => {
   const config = {
@@ -41,4 +53,5 @@ export {
   getQuestionByUserId,
   updateQuestion,
   deleteQuestion,
+  createQuestionBySubscription,
 };
