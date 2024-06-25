@@ -1,3 +1,4 @@
+"use client"
 import { create } from 'zustand';
 
 interface UserInfo {
@@ -17,8 +18,8 @@ interface AuthState {
 }
 
 const useAuthStore = create<AuthState>((set, get) => {
-  const storedToken = localStorage.getItem('authToken');
-  const storedUserInfo = localStorage.getItem('userInfo');
+  const storedToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+  const storedUserInfo = typeof window !== 'undefined' ? localStorage.getItem('userInfo') : null;
   let initialUserInfo: UserInfo = {};
   try {
     if (storedUserInfo) {

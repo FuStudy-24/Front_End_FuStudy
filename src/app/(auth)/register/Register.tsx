@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import Link from "next/link";
 import React, { useState } from "react";
 import { postRegis } from "@/lib/service/authService";
@@ -89,7 +88,7 @@ const Register = () => {
 
             <div className="pb-2 pt-4 px-[104px] flex items-center justify-items-start space-x-2">
               <input type="checkbox" onClick={handleTutor} />
-              <div>I'm a Teacher</div>
+              <div>I am a Teacher</div>
             </div>
             <div className="pb-2 pt-4 px-4 flex items-center justify-center">
               <button

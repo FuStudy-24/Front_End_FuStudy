@@ -28,6 +28,7 @@ const Testimonials = () => {
   ]);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  const [subId, setsubId] = useState(0)
   useEffect(() => {
     const fetchData = async () => {
       const response = await getAllSubcription();
@@ -41,7 +42,7 @@ const Testimonials = () => {
     if (isLoggedIn) {
       setShowModal(true);
       console.log(id);
-      localStorage.setItem("Subcription", id);
+      setsubId(id)
       return;
     }
     toast.warning("Please Login!");
@@ -51,10 +52,9 @@ const Testimonials = () => {
   };
 
   const handleSubcription = async () => {
-    const token = localStorage.getItem("authToken");
+    const token = userInfo.token;   
     console.log(token);
-
-    const subId = Number(localStorage.getItem("Subcription"));
+    console.log(subId);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -126,7 +126,7 @@ const Testimonials = () => {
                   </p>
                   <p className="mt-6 flex items-baseline gap-x-1">
                     <span className="line-through text-2xl font-sans text-gray-500/70">
-                      $59
+                      {items.subcriptionName === "Free" ? "" :"$2"}
                     </span>
                     <span className="text-5xl font-bold tracking-tight text-gray-900">
                       {items.subcriptionPrice}
@@ -190,7 +190,7 @@ const Testimonials = () => {
                                 type="button"
                                 className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
                               >
-                                Yes, I'm sure
+                                Yes, I am sure
                               </button>
                               <button
                                 onClick={() => setShowModal(false)}

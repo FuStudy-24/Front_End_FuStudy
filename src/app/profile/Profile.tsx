@@ -252,7 +252,7 @@ const Profile = () => {
               <CardHeader>
                 <CardTitle>Edit Profile</CardTitle>
                 <CardDescription>
-                  Make changes to your account here. Click save when you're
+                  Make changes to your account here. Click save when you are
                   done.
                 </CardDescription>
               </CardHeader>

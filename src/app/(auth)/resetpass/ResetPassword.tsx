@@ -56,9 +56,6 @@ export default function ResetPassword() {
     }
   };
   console.log(formData);
-  useEffect(() => {
-    handleResetpass();
-  }, []);
   return (
     <div className="flex justify-center mt-40">
       <Card className="w-[450px] block content-center px-7">

@@ -1,21 +1,18 @@
 "use client";
-import Slidebar from "@/components/Slidebar";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import useAuthStore from "@/lib/hooks/useUserStore";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useRouter } from "next/navigation";
-import { getAllUser } from "@/lib/service/adminService";
 import NavDashboard from "@/components/NavDashboard";
+import Slidebar from "@/components/Slidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import useAuthStore from "@/lib/hooks/useUserStore";
+import { getAllUser } from "@/lib/service/adminService";
+import { tree } from "next/dist/build/templates/app-page";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const Dashboard = () => {
+  const [showModal, setShowModal] = useState(false);
   const [data, setdata] = useState([
     {
       fullname: "",
@@ -28,7 +25,20 @@ export const Dashboard = () => {
       username: "",
     },
   ]);
-  const [popoverOpen, setPopoverOpen] = useState(false); // Add state for popover
+
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    email: "",
+    fullname: "",
+    avatar: "string",
+    gender: "male",
+    roleName: "Student",
+    identityCard: "079202035866",
+    phone: "0773850946",
+  });
+
+  const [popoverOpen, setPopoverOpen] = useState(true); // Add state for popover
   const router = useRouter();
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
@@ -45,20 +55,20 @@ export const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getAllUser();
-      console.log(response.data.data);
+      // console.log(response.data.data);
       const users = response.data.data;
       setdata(users);
     };
     fetchData();
   }, []);
-  console.log(data);
+  console.log(showModal);
 
   return (
     <>
       <div className="min-h-screen bg-gray-50/50">
-        <Slidebar/>
+        <Slidebar />
         <div className="p-4 xl:ml-80">
-          <NavDashboard/>
+          <NavDashboard />
           <div className="mt-12">
             <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
               <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -81,10 +91,10 @@ export const Dashboard = () => {
                 </div>
                 <div className="p-4 text-right">
                   <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                    Today's Money
+                    Today Money
                   </p>
                   <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    $53k
+                    $53
                   </h4>
                 </div>
                 <div className="border-t border-blue-gray-50 p-4">
@@ -112,10 +122,10 @@ export const Dashboard = () => {
                 </div>
                 <div className="p-4 text-right">
                   <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                    Today's Users
+                    Today Users
                   </p>
                   <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    2,300
+                    3
                   </h4>
                 </div>
                 <div className="border-t border-blue-gray-50 p-4">
@@ -142,7 +152,7 @@ export const Dashboard = () => {
                     New Clients
                   </p>
                   <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    3,462
+                    4
                   </h4>
                 </div>
                 <div className="border-t border-blue-gray-50 p-4">
@@ -169,7 +179,7 @@ export const Dashboard = () => {
                     Sales
                   </p>
                   <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    $103,430
+                    $100
                   </h4>
                 </div>
                 <div className="border-t border-blue-gray-50 p-4">
@@ -207,32 +217,186 @@ export const Dashboard = () => {
                       <strong>30 done</strong> this month
                     </p> */}
                   </div>
-                  <button
-                    aria-expanded="false"
-                    aria-haspopup="menu"
-                    id=":r5:"
-                    className="relative middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
-                    type="button"
-                  >
-                    <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currenColor"
-                        viewBox="0 0 24 24"
-                        stroke-width="3"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className="h-6 w-6"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
-                        ></path>
-                      </svg>
-                    </span>
-                  </button>
+                  <div className="flex space-x-5 items-center">
+                    <button
+                      onClick={() => {
+                        setShowModal(true);
+                      }}
+                      type="submit"
+                      className="text-sm text-Blueviolet font-medium px-[28px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                    >
+                      Add User
+                    </button>
+                    <button
+                      aria-expanded="false"
+                      aria-haspopup="menu"
+                      id=":r5:"
+                      className="relative middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
+                      type="button"
+                    >
+                      <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currenColor"
+                          viewBox="0 0 24 24"
+                          stroke-width="3"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+                          ></path>
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
                 </div>
+                {showModal ? (
+                  <>
+                    <div className=" fixed left-1/3 top-16 flex items-center justify-center w-[550px]">
+                      <div className="relative p-4 w-full max-h-full">
+                        <div className="relative bg-white rounded-3xl shadow ">
+                          <button
+                            type="button"
+                            className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                            onClick={() => setShowModal(false)}
+                          >
+                            <svg
+                              className="w-3 h-3"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 14 14"
+                            >
+                              <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                              />
+                            </svg>
+                            <span className="sr-only">Close modal</span>
+                          </button>
+                          <div className="p-5">
+                            <h3 className="text-lg font-bold text-black ">
+                              Create User
+                            </h3>
+                          </div>
+                          <div className="flex px-16">
+                            <div className="pr-10 border-r-2">
+                              <Avatar className="h-40 w-40">
+                                <AvatarImage src="https://github.com/shadcn.png" />
+                                <AvatarFallback>CN</AvatarFallback>
+                              </Avatar>
+
+                              <div className="flex flex-col items-center justify-center mt-4">
+                                <label
+                                  htmlFor="file"
+                                  className="inline-flex items-center px-4 py-2 bg-[#2ba8fb] text-white rounded-xl hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer"
+                                >
+                                  {" "}
+                                  Browse file
+                                </label>
+                                <input
+                                  id="file"
+                                  type="file"
+                                  className="hidden"
+                                />
+                              </div>
+
+                              <div className="pt-6 space-y-3">
+                                <label className="block text-gray-800 font-semibold text-sm">
+                                  ID
+                                </label>
+                                <div className="mt-2">
+                                  <input
+                                    type="text"
+                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                  />
+                                </div>
+                                <label className="block text-gray-800 font-semibold text-sm">
+                                  Phone
+                                </label>
+                                <div className="mt-2">
+                                  <input
+                                    type="text"
+                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="pl-10 pb-10 space-y-3">
+                              <label className="block text-gray-800 font-semibold text-sm">
+                                Username
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                />
+                              </div>
+                              <label className="block text-gray-800 font-semibold text-sm">
+                                Password
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                />
+                              </div>
+                              <label className="block text-gray-800 font-semibold text-sm">
+                                Fullname
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                />
+                              </div>
+                              <label className="block text-gray-800 font-semibold text-sm">
+                                Email
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                />
+                              </div>
+                              <label className="block text-gray-800 font-semibold text-sm">
+                                Gender
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex justify-end pb-4 pr-14">
+                            <button
+                              type="button"
+                              className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
+                            >
+                              Create
+                            </button>
+                            {/* <button
+                              onClick={() => setShowModal(false)}
+                              type="button"
+                              className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
+                            >
+                              Cancel
+                            </button> */}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
                 <div className="p-6 overflow-x-scroll px-0 pt-0 pb-2">
                   <div className="p-3">
                     {/* Table */}

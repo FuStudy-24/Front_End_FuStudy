@@ -24,7 +24,7 @@ const Login = () => {
     try {
       const response = await postLogin(formData);
       console.log(response);
-      
+
       const { token, user } = response.data.data; // Chú ý thay đổi đường dẫn để truy cập `data`
 
       console.log(token, user.username);
@@ -33,7 +33,9 @@ const Login = () => {
       login(token, userInfo);
       toast.success("Login Successful");
       setTimeout(() => {
-        user.username === 'admin1' ?  router.push("/admin/dashboard"):router.push("/")
+        user.username === "admin1"
+          ? router.push("/admin/dashboard")
+          : router.push("/");
       }, 1000);
     } catch (error: any) {
       // Handle login error
@@ -44,7 +46,7 @@ const Login = () => {
       ) {
         const err = error.response.data.message;
         console.log(error);
-        
+
         toast.error(err);
         setError(error.response.data.message);
       } else {

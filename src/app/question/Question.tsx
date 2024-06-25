@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { getQuestion } from "@/lib/service/questionService";
 import Link from 'next/link';
-import 'tailwindcss/tailwind.css';
 import Comments from '@/app/myquestion/Comments'; // Import the Comments component
 
 
