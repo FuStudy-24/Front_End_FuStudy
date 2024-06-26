@@ -1,20 +1,28 @@
+// Question.tsx
 "use client";
 import React, { useEffect, useState } from 'react';
-import { getQuestion } from "@/lib/service/questionService";
+import { getQuestion, getAllQuestionComments} from "@/lib/service/questionService";
 import Link from 'next/link';
 import 'tailwindcss/tailwind.css';
-import Comments from '@/app/myquestion/Comments'; // Import the Comments component
+import CommentsPopup from '@/app/question/CommentsPopup';
 
+interface CommentData {
+  id: number; // Ensure that CommentData includes an ID field
+  content: string;
+  user: string;
+}
 
 interface QuestionData {
-  studentId: number;
+  id: number;
   categoryName: string;
   content: string;
   image: string;
   totalRating: number;
+  questionId: string;
+  comments: CommentData[];
 }
 
-const Question = () => {
+const Question: React.FC = () => {
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,10 +93,7 @@ const Question = () => {
           </div>
         ))}
       </div>
-      {showComments && selectedQuestion && (
-        <Comments 
-         question={selectedQuestion} onClose={handleCloseComments} />
-      )}
+      {showComments && <CommentsPopup question={selectedQuestion} onClose={handleCloseComments} />}
     </div>
   );
 };
