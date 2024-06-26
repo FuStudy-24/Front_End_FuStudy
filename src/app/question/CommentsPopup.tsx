@@ -7,7 +7,7 @@ import useAuthStore from '@/lib/hooks/useUserStore';
 interface CommentData {
   id: number; // Ensure that CommentData includes an ID field
   content: string;
-  user: string;
+  userId: string; // Ensure each comment has a userId
 }
 
 interface QuestionData {
@@ -67,8 +67,7 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
   if (!question) return null;
 
   const getUsername = (userId: string) => {
-    const user = userInfo;
-    return user ? user.username : 'Unknown User';
+    return userId === userInfo.id ? userInfo.username : 'Unknown User';
   };
 
   const handleNextPage = () => setPageIndex((prev) => prev + 1);
@@ -89,15 +88,16 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
     const commentData = {
       questionId: question?.id,
       content: newComment.trim(),
+      userId: userInfo.id, // Add userId to the comment data
     };
 
     try {
       const response = await CreateQuestionComment(commentData, token);
       if (response.status === 201) {
         setNewComment(""); // Clear the comment input field
-        //await fetchComments(); // Reload comments after successful creation
+        await fetchComments(); // Reload comments after successful creation
       } else {
-        await fetchComments();
+        setError("Failed to create comment. Please try again later.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -108,9 +108,9 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
     try {
       const response = await DeleteQuestionComment(commentId, token);
       if (response.status === 200) {
-       // Reload comments after successful deletion
+        await fetchComments(); // Reload comments after successful deletion
       } else {
-        await fetchComments();
+        setError("Failed to delete comment. Please try again later.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -167,23 +167,25 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
               comments.map((comment, index) => (
                 <div key={index} className="mb-4 flex justify-between items-start group">
                   <div>
-                    <p className="text-gray-800"><strong>{getUsername(comment.user)}</strong></p>
+                    <p className="text-gray-800"><strong>{getUsername(comment.userId)}</strong></p>
                     <p className="text-gray-600">{comment.content}</p>
                   </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button
-                      onClick={() => handleEditComment(comment)}
-                      className="text-blue-600 hover:text-blue-800 mr-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  {comment.userId === userInfo.id && (
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <button
+                        onClick={() => handleEditComment(comment)}
+                        className="text-blue-600 hover:text-blue-800 mr-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             ) : (

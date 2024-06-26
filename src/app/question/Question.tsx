@@ -9,7 +9,7 @@ import CommentsPopup from '@/app/question/CommentsPopup';
 interface CommentData {
   id: number; // Ensure that CommentData includes an ID field
   content: string;
-  user: string;
+  userId: string;
 }
 
 interface QuestionData {
