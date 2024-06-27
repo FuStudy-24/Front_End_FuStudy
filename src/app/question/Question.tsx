@@ -3,13 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import { getQuestion, getAllQuestionComments} from "@/lib/service/questionService";
 import Link from 'next/link';
-import 'tailwindcss/tailwind.css';
+
 import CommentsPopup from '@/app/question/CommentsPopup';
 
 interface CommentData {
-  id: number; // Ensure that CommentData includes an ID field
+  id: number;
   content: string;
   userId: string;
+  username: string; // Add username field
 }
 
 interface QuestionData {
@@ -81,7 +82,7 @@ const Question: React.FC = () => {
             key={index} 
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 relative">
             {question.image && <img src={question.image} alt="Question" className="w-full h-40 object-cover mb-4 rounded-lg shadow-md cursor-pointer" onClick={() => handleImageClick(question)} />}
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">{question.content}</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2 line-clamp-1">{question.content}</h2>
             <p className="text-gray-600 mb-2">{question.categoryName}</p>
             <div className="flex items-center space-x-4 mt-4">
               
