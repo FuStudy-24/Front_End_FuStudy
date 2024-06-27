@@ -1,13 +1,14 @@
-// CommentsPopup.tsx
 "use client";
 import React, { useEffect, useState } from 'react';
 import { GetAllQuestionCommentsByQuestionId, CreateQuestionComment, DeleteQuestionComment, UpdateQuestionComment } from '@/lib/service/questionService';
 import useAuthStore from '@/lib/hooks/useUserStore';
+import { FaPaperPlane, FaStar, FaRegSmile, FaCamera, FaGift, FaStickyNote } from 'react-icons/fa'; // Import icons
 
 interface CommentData {
-  id: number; // Ensure that CommentData includes an ID field
+  id: number;
   content: string;
-  userId: string; // Ensure each comment has a userId
+  userId: string;
+  username: string; // Add username field
 }
 
 interface QuestionData {
@@ -66,10 +67,6 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
 
   if (!question) return null;
 
-  const getUsername = (userId: string) => {
-    return userId === userInfo.id ? userInfo.username : 'Unknown User';
-  };
-
   const handleNextPage = () => setPageIndex((prev) => prev + 1);
   const handlePrevPage = () => setPageIndex((prev) => Math.max(prev - 1, 1));
 
@@ -89,15 +86,15 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
       questionId: question?.id,
       content: newComment.trim(),
       userId: userInfo.id, // Add userId to the comment data
+      username: userInfo.username // Add username to the comment data
     };
 
     try {
       const response = await CreateQuestionComment(commentData, token);
       if (response.status === 201) {
-        setNewComment(""); // Clear the comment input field
-        await fetchComments(); // Reload comments after successful creation
+        setNewComment(""); // Clear the comment input field    
       } else {
-        setError("Failed to create comment. Please try again later.");
+        await fetchComments(); // Reload comments after successful creation
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -108,9 +105,8 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
     try {
       const response = await DeleteQuestionComment(commentId, token);
       if (response.status === 200) {
-        await fetchComments(); // Reload comments after successful deletion
       } else {
-        setError("Failed to delete comment. Please try again later.");
+        await fetchComments(); // Reload comments after successful deletion
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -136,9 +132,8 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
       if (response.status === 200) {
         setEditCommentId(null);
         setEditCommentContent(""); // Clear the edit input field
-        await fetchComments(); // Reload comments after successful update
       } else {
-        setError("Failed to update comment. Please try again later.");
+        await fetchComments(); 
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -167,7 +162,7 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
               comments.map((comment, index) => (
                 <div key={index} className="mb-4 flex justify-between items-start group">
                   <div>
-                    <p className="text-gray-800"><strong>{getUsername(comment.userId)}</strong></p>
+                    <p className="text-gray-800"><strong>{comment.username}</strong></p>
                     <p className="text-gray-600">{comment.content}</p>
                   </div>
                   {comment.userId === userInfo.id && (
@@ -192,55 +187,57 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
               <p className="text-gray-600">No comments available.</p>
             )}
             {!editCommentId && (
-              <form onSubmit={handleCommentSubmit} className="mt-4">
+              <form onSubmit={handleCommentSubmit} className="mt-4 flex flex-col items-end">
                 <textarea
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg flex-grow mb-2"
                   value={newComment}
                   onChange={handleCommentChange}
                   placeholder="Add a comment..."
                   rows={3}
+                  style={{ resize: "vertical", maxHeight: "200px", overflowY: "auto" }}
                 />
                 <button
                   type="submit"
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 flex items-center justify-center"
                 >
-                  Submit
+                  <FaPaperPlane />
                 </button>
               </form>
             )}
             {editCommentId && (
-              <form onSubmit={handleUpdateComment} className="mt-4">
+              <form onSubmit={handleUpdateComment} className="mt-4 flex flex-col items-end">
                 <textarea
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg flex-grow mb-2"
                   value={editCommentContent}
                   onChange={handleEditCommentChange}
                   placeholder="Edit your comment..."
                   rows={3}
+                  style={{ resize: "vertical", maxHeight: "200px", overflowY: "auto" }}
                 />
                 <button
                   type="submit"
-                  className="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 flex items-center justify-center"
                 >
-                  Update
+                  <FaPaperPlane />
                 </button>
               </form>
             )}
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={handlePrevPage}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 mr-2"
+                disabled={pageIndex === 1}
+              >
+                &lt;&lt;&lt;
+              </button>
+              <button
+                onClick={handleNextPage}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+              >
+                &gt;&gt;&gt;
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="mt-4 flex justify-between">
-          <button
-            onClick={handlePrevPage}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50"
-            disabled={pageIndex === 1}
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNextPage}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-          >
-            Next
-          </button>
         </div>
       </div>
     </div>
