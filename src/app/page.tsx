@@ -9,7 +9,7 @@ import Testimonials from '@/pages/LandingPage/Testimonials/testimonials';
 import React from 'react'
 const page = () => {
   return (
-   
+
     <main>
       <Navbar/>
       <Banner/>

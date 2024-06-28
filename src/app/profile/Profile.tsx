@@ -240,6 +240,42 @@ const Profile = () => {
                       />
                     </div>
                   </div>
+                  {/* <div className="flex space-x-2">
+                    <div className="space-y-1">
+                      <Label htmlFor="name">Academic Level</Label>
+                      <Input
+                        id="Email"
+                        defaultValue={accountProfile.email}
+                        disabled
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="username">Work Place</Label>
+                      <Input
+                        id="Phone"
+                        defaultValue={accountProfile.phone}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <div className="space-y-1">
+                      <Label htmlFor="name">Skill</Label>
+                      <Input
+                        id="Email"
+                        defaultValue={accountProfile.email}
+                        disabled
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="username">Major</Label>
+                      <Input
+                        id="Phone"
+                        defaultValue={accountProfile.phone}
+                        disabled
+                      />
+                    </div>
+                  </div> */}
                 </div>
               </CardContent>
               {/* <CardFooter>

@@ -1,7 +1,7 @@
 "use client";
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Drawer from "./Drawer";
 import Drawerdata from "./Drawerdata";
 import useAuthStore from "@/lib/hooks/useUserStore";
@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { getWallet } from "@/lib/service/paymentService";
 interface NavigationItem {
   name: string;
   href: string;
@@ -56,6 +56,7 @@ const Navbar = () => {
   const [popoverOpen, setPopoverOpen] = useState(false); // Add state for popover
   const [currentLink, setCurrentLink] = useState("/");
   const router = useRouter();
+  const [fuCoin, setfuCoin] = useState(0);
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     userInfo: state.userInfo,
@@ -71,6 +72,16 @@ const Navbar = () => {
     setPopoverOpen(false); // Close the popover after logout
     router.push("/");
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getWallet(userInfo.id);
+      // console.log(data.data.data.balance);
+      setfuCoin(data.data.data.balance);
+    };
+    fetchData();
+  }, []);
+
   // console.log(userInfo.username)
   return (
     <Disclosure as="nav" className="navbar">
@@ -122,12 +133,14 @@ const Navbar = () => {
             <div className="flex items-center">
               {isLoggedIn ? ( // Check if user is logged in
                 <div className="flex justify-between space-x-5">
-                  <div className="flex justify-between mt-2 space-x-2">
-                    <div>100</div>
-                    <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
-                      $
+                  <Link href='/order' passHref>
+                    <div className="flex justify-between mt-2 space-x-2">
+                      <div>{fuCoin}</div>
+                      <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                        $
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                   <div>
                     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                       <PopoverTrigger asChild>
