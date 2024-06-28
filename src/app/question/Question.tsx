@@ -7,6 +7,7 @@ import Link from 'next/link';
 import CommentsPopup from '@/app/question/CommentsPopup';
 
 interface CommentData {
+  questionId: number | undefined;
   id: number;
   content: string;
   userId: string;

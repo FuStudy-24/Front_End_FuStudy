@@ -34,7 +34,7 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize] = useState(7); // Adjust page size as needed
+  const [pageSize] = useState(6); // Adjust page size as needed
   const { userInfo, token } = useAuthStore();
 
   const fetchComments = async () => {
@@ -132,8 +132,9 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
       if (response.status === 200) {
         setEditCommentId(null);
         setEditCommentContent(""); // Clear the edit input field
-      } else {
         await fetchComments(); 
+      } else {
+       // await fetchComments(); 
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
