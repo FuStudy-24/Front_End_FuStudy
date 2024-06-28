@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { getQuestion } from "@/lib/service/questionService";
 
 interface DataType {
-    heading: string;
-    heading2: string;
+    content: string;
+   
     imgSrc: string;
     category: string;
 }
@@ -26,7 +26,7 @@ export default class MultipleItems extends Component {
                 const questionData = questionResponse.data.data;
 
                 const formattedQuestionData = questionData.map((item: any) => ({
-                    heading: item.content,
+                    content: item.content,
                     heading2: "", // Assuming heading2 is not available
                     imgSrc: item.image ? item.image : "",
                     category: item.categoryName,
@@ -103,8 +103,8 @@ export default class MultipleItems extends Component {
                                         </div>
 
                                         <div className="px-3">
-                                            <h4 className='text-2xl font-bold pt-6 text-black'>{items.heading}</h4>
-                                            <h4 className='text-2xl font-bold pt-1 text-black'>{items.heading2}</h4>
+                                            <h4 className='text-2xl font-bold pt-6 text-black line-clamp-1'>{items.content}</h4>
+                                            {/* <h4 className='text-2xl font-bold pt-1 text-black'>{items.heading2}</h4> */}
 
                                             <div>
                                                 <h3 className='text-base font-normal pt-6 opacity-75'>{items.category}</h3>

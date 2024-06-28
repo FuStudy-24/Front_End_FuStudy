@@ -1,19 +1,30 @@
+// Question.tsx
 "use client";
 import React, { useEffect, useState } from 'react';
-import { getQuestion } from "@/lib/service/questionService";
+import { getQuestion, getAllQuestionComments} from "@/lib/service/questionService";
 import Link from 'next/link';
-import Comments from '@/app/myquestion/Comments'; // Import the Comments component
 
+import CommentsPopup from '@/app/question/CommentsPopup';
+
+interface CommentData {
+  questionId: number | undefined;
+  id: number;
+  content: string;
+  userId: string;
+  username: string; // Add username field
+}
 
 interface QuestionData {
-  studentId: number;
+  id: number;
   categoryName: string;
   content: string;
   image: string;
   totalRating: number;
+  questionId: string;
+  comments: CommentData[];
 }
 
-const Question = () => {
+const Question: React.FC = () => {
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +83,7 @@ const Question = () => {
             key={index} 
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 relative">
             {question.image && <img src={question.image} alt="Question" className="w-full h-40 object-cover mb-4 rounded-lg shadow-md cursor-pointer" onClick={() => handleImageClick(question)} />}
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">{question.content}</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2 line-clamp-1">{question.content}</h2>
             <p className="text-gray-600 mb-2">{question.categoryName}</p>
             <div className="flex items-center space-x-4 mt-4">
               
@@ -84,10 +95,7 @@ const Question = () => {
           </div>
         ))}
       </div>
-      {showComments && selectedQuestion && (
-        <Comments 
-         question={selectedQuestion} onClose={handleCloseComments} />
-      )}
+      {showComments && <CommentsPopup question={selectedQuestion} onClose={handleCloseComments} />}
     </div>
   );
 };
