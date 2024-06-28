@@ -28,12 +28,31 @@ const Testimonials = () => {
   ]);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
-  const [subId, setsubId] = useState(0)
+  const [subId, setsubId] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllSubcription();
-      const subcriptions = response.data.data;
-      setsubcriptionData(subcriptions);
+      try {
+        const response = await getAllSubcription();
+        const subcriptions = response.data.data;
+        setsubcriptionData(subcriptions);
+      } catch (error: any) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const err = error.response.data.message;
+          console.log(error);
+          setError(err);
+          toast.error(err);
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -42,7 +61,7 @@ const Testimonials = () => {
     if (isLoggedIn) {
       setShowModal(true);
       console.log(id);
-      setsubId(id)
+      setsubId(id);
       return;
     }
     toast.warning("Please Login!");
@@ -51,8 +70,22 @@ const Testimonials = () => {
     }, 1000);
   };
 
+  const subPrice = (name:any) => {
+    switch (name) {
+      case "Premium":
+        return "$4";
+        break;
+      case "Basic":
+        return "$2";
+        break
+      default:
+        return "";
+        break;
+    }
+  }
+
   const handleSubcription = async () => {
-    const token = userInfo.token;   
+    const token = userInfo.token;
     console.log(token);
     console.log(subId);
     const config = {
@@ -77,6 +110,7 @@ const Testimonials = () => {
       ) {
         const err = error.response.data.message;
         console.log(error);
+        setError(err);
         toast.error(err);
       } else {
         console.error("An unexpected error occurred:", error);
@@ -84,6 +118,14 @@ const Testimonials = () => {
     }
     setShowModal(false);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-2xl font-semibold">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="pt-40 pb-10 sm:pb-32 lg:py-32" id="testimonial">
@@ -126,7 +168,8 @@ const Testimonials = () => {
                   </p>
                   <p className="mt-6 flex items-baseline gap-x-1">
                     <span className="line-through text-2xl font-sans text-gray-500/70">
-                      {items.subcriptionName === "Free" ? "" :"$2"}
+                      {/* {items.subcriptionName === "Free" ? "" : "$2"} */}
+                      {subPrice(items.subcriptionName)}
                     </span>
                     <span className="text-5xl font-bold tracking-tight text-gray-900">
                       {items.subcriptionPrice}
@@ -137,7 +180,7 @@ const Testimonials = () => {
                     className="flex justify-center mt-4 text-sm text-Blueviolet font-medium px-[40px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
                     onClick={() => handleModel(items.id)}
                   >
-                    Buy Now
+                    {items.subcriptionName === 'Free' ? "Started":"Buy Now"}
                   </button>
                   {showModal ? (
                     <>

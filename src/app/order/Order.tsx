@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getWallet } from "@/lib/service/paymentService";
+import { getWallet, createPayment } from "@/lib/service/paymentService";
 import {
   Card,
   CardContent,
@@ -31,7 +31,8 @@ const Order = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getWallet(userInfo.id);
-      // console.log(data.data.data.balance);
+      console.log(data.data.data);
+      setformData({ ...formData, walletID: data.data.data.id });
     };
     fetchData();
   }, []);
@@ -47,6 +48,32 @@ const Order = () => {
   };
   console.log(formData);
 
+  const handlePayment = async () => {
+    const token = userInfo.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const response = await createPayment(formData, config);
+      const paymentUrl = response.data.data.checkoutUrl
+      if (paymentUrl) {
+        window.location.href = paymentUrl;
+      }
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const err = error.response.data.message;
+        console.log(error);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+    }
+  };
   return (
     <>
       <div className="flex justify-center mt-32">
@@ -191,13 +218,16 @@ const Order = () => {
               </div>
               <div className="text-blue-500">
                 By clicking the Pay Now button, You agree that this transaction
-                is non-refundable and non-cancelable.
+                is <br /> non-refundable and non-cancelable.
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
             <button
               type="button"
+              onClick={() => {
+                handlePayment();
+              }}
               className="text-sm text-Blueviolet font-medium w-full py-[12.5px] border-[0] rounded-xl bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
             >
               Pay now
