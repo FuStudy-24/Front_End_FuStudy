@@ -81,7 +81,19 @@ const Navbar = () => {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.id = "hs-script-loader";
+    script.async = true;
+    script.defer = true;
+    script.src = "//js-na1.hs-scripts.com/46643863.js";
+    document.head.appendChild(script);
 
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
   // console.log(userInfo.username)
   return (
     <Disclosure as="nav" className="navbar">
