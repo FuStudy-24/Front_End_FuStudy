@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getWallet } from "@/lib/service/paymentService";
+
 interface NavigationItem {
   name: string;
   href: string;
@@ -82,7 +83,20 @@ const Navbar = () => {
     fetchData();
   }, []);
 
-  // console.log(userInfo.username)
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.id = "hs-script-loader";
+    script.async = true;
+    script.defer = true;
+    script.src = "//js-na1.hs-scripts.com/46643863.js";
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <Disclosure as="nav" className="navbar">
       <>

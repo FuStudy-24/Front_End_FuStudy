@@ -116,7 +116,7 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
   const handleEditComment = (comment: CommentData) => {
     setEditCommentId(comment.id);
     setEditCommentContent(comment.content);
-  };
+  };  
 
   const handleUpdateComment = async (e: React.FormEvent) => {
     e.preventDefault();
