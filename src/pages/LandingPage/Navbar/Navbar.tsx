@@ -2,6 +2,7 @@
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+
 import Drawer from "./Drawer";
 import Drawerdata from "./Drawerdata";
 import useAuthStore from "@/lib/hooks/useUserStore";
@@ -12,9 +13,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
-import { faCoins } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getWallet } from "@/lib/service/paymentService";
+import { getUserById } from "@/lib/service/adminService";
 
 interface NavigationItem {
   name: string;
@@ -56,8 +56,10 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Add state for drawer
   const [popoverOpen, setPopoverOpen] = useState(false); // Add state for popover
   const [currentLink, setCurrentLink] = useState("/");
-  const router = useRouter();
   const [fuCoin, setfuCoin] = useState(0);
+  const [isMyRequestVisible, setIsMyRequestVisible] = useState(false);
+  const [isMyOrderVisible, setIsMyOrderVisible] = useState(false);
+  const router = useRouter();
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     userInfo: state.userInfo,
@@ -76,20 +78,38 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getWallet(userInfo.id);
-      // console.log(data.data.data.balance);
-      setfuCoin(data.data.data.balance);
+      try {
+        const walletResponse = await getWallet(userInfo.id);
+        setfuCoin(walletResponse.data.data.balance);
+
+        const userResponse = await getUserById(userInfo.id);
+        // console.log("id", userResponse.data.data.id);
+        // console.log("dât",userResponse);
+        // console.log("roleID",userResponse.data.data.roleId);
+
+        if (userResponse.data.data.roleId === 4) {
+          setIsMyRequestVisible(true);
+        }
+        if (userResponse.data.data.roleId === 3) {
+          setIsMyOrderVisible(true);
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
     };
-    fetchData();
-  }, []);
+
+    if (isLoggedIn && userInfo?.id) {
+      fetchData();
+    }
+  }, [isLoggedIn, userInfo?.id]);
 
   useEffect(() => {
     const script = document.createElement("script");
-    script.type="text/javascript"
-    script.id="hs-script-loader"
+    script.type = "text/javascript";
+    script.id = "hs-script-loader";
     script.async = true;
     script.defer = true;
-    script.src ="//js-na1.hs-scripts.com/46644174.js"
+    script.src = "//js-na1.hs-scripts.com/46644174.js";
     document.head.appendChild(script);
 
     return () => {
@@ -147,7 +167,7 @@ const Navbar = () => {
             <div className="flex items-center">
               {isLoggedIn ? ( // Check if user is logged in
                 <div className="flex justify-between space-x-5">
-                  <Link href='/order' passHref>
+                  <Link href="/order" passHref>
                     <div className="flex justify-between mt-2 space-x-2">
                       <div>{fuCoin}</div>
                       <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
@@ -172,7 +192,7 @@ const Navbar = () => {
                         </div>
                       </PopoverTrigger>
                       <PopoverContent className="bg-white w-28 p-0 block text-center rounded-2xl space-y-2">
-                        {userInfo.username == "admin1" && (
+                        {userInfo.username === "admin1" && (
                           <Link href="/admin/dashboard" passHref>
                             <div className="border-b border-gray-200">
                               <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
@@ -189,13 +209,25 @@ const Navbar = () => {
                             </button>
                           </div>
                         </Link>
-                        <Link href="/question" passHref>
-                          <div className="border-b border-gray-200">
-                            <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
-                              Question
-                            </button>
-                          </div>
-                        </Link>
+                        {isMyOrderVisible && (
+                          <Link href="/myorder" passHref>
+                            <div className="border-b border-gray-200">
+                              <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
+                                My Order
+                              </button>
+                            </div>
+                          </Link>
+                        )}
+
+                        {isMyRequestVisible && (
+                          <Link href="/myrequest" passHref>
+                            <div className="border-b border-gray-200">
+                              <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
+                                My Request
+                              </button>
+                            </div>
+                          </Link>
+                        )}
 
                         <div className="">
                           <button

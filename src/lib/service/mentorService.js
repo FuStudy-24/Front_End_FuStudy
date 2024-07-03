@@ -1,5 +1,8 @@
 import axios from "../axiosCustomize";
 
+const getAllMentorVerify = async () => {
+  return await axios.get("Mentor/GetAllMentorVerify");
+};
 const getMajor = async () => {
   return await axios.get("Major/GetAllMajor");
 };
@@ -9,7 +12,7 @@ const getMentor = async (id) => {
 };
 
 const updateMentor = async (id) => {
-    return await axios.patch(`Mentor/UpdateMentor/${id}`);
-  };
+  return await axios.patch(`Mentor/UpdateMentor/${id}`);
+};
 
-export { getMajor, getMentor, updateMentor };
+export { getMajor, getMentor, updateMentor, getAllMentorVerify };
