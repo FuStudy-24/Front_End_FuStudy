@@ -1,7 +1,9 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { GetAllStudentBookingByHttpContext, CancelBooking } from '@/lib/service/bookingService';
+import { getChatByUserID, getConversationMessagesByConversationId, createConversationMessage } from '@/lib/service/chatService';
 import useAuthStore from '@/lib/hooks/useUserStore';
+import { Conversation, Message } from "@/app/myorder/type"
 
 interface Order {
   id: string;
@@ -18,7 +20,11 @@ const MyOrder: React.FC = () => {
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [ordersPerPage] = useState<number>(5);
+  const ordersPerPage = 5;
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<number | null>(null);
+  const [newMessage, setNewMessage] = useState<string>('');
 
   const { userInfo, token } = useAuthStore((state) => ({
     userInfo: state.userInfo,
@@ -43,7 +49,24 @@ const MyOrder: React.FC = () => {
       }
     };
 
+    const fetchConversations = async () => {
+      if (token) {
+        try {
+          const response = await getChatByUserID(token);
+          if (response.status === 200) {
+            const data = Array.isArray(response.data) ? response.data : [];
+            setConversations(data.filter(conversation => !conversation.isClose));
+          } else {
+            console.error('Failed to fetch conversations: ', response.statusText);
+          }
+        } catch (error) {
+          console.error('Failed to fetch conversations:', error);
+        }
+      }
+    };
+
     fetchOrders();
+    fetchConversations();
   }, [token, userInfo]);
 
   useEffect(() => {
@@ -73,6 +96,38 @@ const MyOrder: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to cancel booking:', error);
+    }
+  };
+
+  const handleConversationClick = async (conversationId: number) => {
+    setCurrentConversationId(conversationId);
+    if (token) {
+      try {
+        const response = await getConversationMessagesByConversationId(conversationId, token);
+        if (response.status === 200) {
+          setMessages(response.data);
+        } else {
+          console.error('Failed to fetch messages: ', response.statusText);
+        }
+      } catch (error) {
+        console.error('Failed to fetch messages:', error);
+      }
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (currentConversationId && newMessage.trim() !== '') {
+      try {
+        const response = await createConversationMessage({ conversationId: currentConversationId, content: newMessage }, token);
+        if (response.status === 200) {
+          setMessages([...messages, response.data]);
+          setNewMessage('');
+        } else {
+          console.error('Failed to send message: ', response.statusText);
+        }
+      } catch (error) {
+        console.error('Failed to send message:', error);
+      }
     }
   };
 
@@ -154,6 +209,54 @@ const MyOrder: React.FC = () => {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Conversations</h2>
+        <div className="space-y-4">
+          {conversations.map((conversation) => (
+            <div key={conversation.id} className="p-4 border rounded-lg shadow-md bg-white">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p>Last Message: {conversation.lastMessage}</p>
+                </div>
+                <button
+                  onClick={() => handleConversationClick(conversation.id)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-full"
+                >
+                  Chat
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {currentConversationId && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold mb-4">Messages</h2>
+            <div className="space-y-4">
+              {messages.map((message, index) => (
+                <div key={index} className="p-4 border rounded-lg shadow-md bg-white">
+                  <p>{message.content}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4">
+              <textarea
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                className="border rounded p-2 w-full"
+                placeholder="Type your message"
+              ></textarea>
+              <button
+                onClick={handleSendMessage}
+                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-full"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

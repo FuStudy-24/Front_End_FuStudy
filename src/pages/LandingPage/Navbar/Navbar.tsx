@@ -57,8 +57,7 @@ const Navbar = () => {
   const [popoverOpen, setPopoverOpen] = useState(false); // Add state for popover
   const [currentLink, setCurrentLink] = useState("/");
   const [fuCoin, setfuCoin] = useState(0);
-  const [isMyRequestVisible, setIsMyRequestVisible] = useState(false);
-  const [isMyOrderVisible, setIsMyOrderVisible] = useState(false);
+  const [isMyRequestAndOrderVisible, setIsMyRequestAndOrderVisible] = useState(false);
   const router = useRouter();
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
@@ -83,15 +82,9 @@ const Navbar = () => {
         setfuCoin(walletResponse.data.data.balance);
 
         const userResponse = await getUserById(userInfo.id);
-        // console.log("id", userResponse.data.data.id);
-        // console.log("dât",userResponse);
-        // console.log("roleID",userResponse.data.data.roleId);
 
-        if (userResponse.data.data.roleId === 4) {
-          setIsMyRequestVisible(true);
-        }
-        if (userResponse.data.data.roleId === 3) {
-          setIsMyOrderVisible(true);
+        if (userResponse.data.data.roleId === 4 || userResponse.data.data.roleId === 3) {
+          setIsMyRequestAndOrderVisible(true);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -102,20 +95,6 @@ const Navbar = () => {
       fetchData();
     }
   }, [isLoggedIn, userInfo?.id]);
-
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.id = "hs-script-loader";
-    script.async = true;
-    script.defer = true;
-    script.src = "//js-na1.hs-scripts.com/46644174.js";
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
 
   return (
     <Disclosure as="nav" className="navbar">
@@ -209,21 +188,12 @@ const Navbar = () => {
                             </button>
                           </div>
                         </Link>
-                        {isMyOrderVisible && (
-                          <Link href="/myorder" passHref>
+                        
+                        {isMyRequestAndOrderVisible && (
+                          <Link href="/booking" passHref>
                             <div className="border-b border-gray-200">
                               <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
-                                My Order
-                              </button>
-                            </div>
-                          </Link>
-                        )}
-
-                        {isMyRequestVisible && (
-                          <Link href="/myrequest" passHref>
-                            <div className="border-b border-gray-200">
-                              <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
-                                My Request
+                               My Booking
                               </button>
                             </div>
                           </Link>
