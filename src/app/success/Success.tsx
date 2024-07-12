@@ -1,8 +1,24 @@
 "use client";
 import Link from "next/link";
-import React from "react";
-
+import React, { use, useEffect } from "react";
+import { addCoin } from "@/lib/service/paymentService";
+import useAuthStore from "@/lib/hooks/useUserStore";
 const Success = () => {
+  const { userInfo, token } = useAuthStore();
+  useEffect(() => {
+    const fetchData = async () => {
+      const orderId = localStorage.getItem("orderId");
+      console.log(orderId);
+      try {
+        const response = await addCoin(orderId, token);
+        console.log(response);
+        console.log(1);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <>
       <div className="bg-gradient-to-r mt-20 from-purple-300 to-blue-200">

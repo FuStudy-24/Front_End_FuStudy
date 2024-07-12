@@ -5,7 +5,7 @@ interface UserInfo {
   id?: string;
   username?: string;
   email?: string;
-  permission_id?: string;
+  roleName?: string;
   token?: string;
 }
 
