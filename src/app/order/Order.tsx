@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import useAuthStore from "@/lib/hooks/useUserStore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Order = () => {
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
@@ -50,6 +52,8 @@ const Order = () => {
 
   const handlePayment = async () => {
     const token = userInfo.token;
+    console.log(token);
+
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,10 +61,17 @@ const Order = () => {
     };
     try {
       const response = await createPayment(formData, config);
-      const paymentUrl = response.data.data.checkoutUrl
-      if (paymentUrl) {
-        window.location.href = paymentUrl;
-      }
+      console.log(response);
+
+      const paymentUrl = response.data.data.checkoutUrl;
+      const orderId = response.data.data.orderCode;
+      localStorage.setItem("orderId", orderId);
+      toast.success("Order Successful");
+      setTimeout(() => {
+        if (paymentUrl) {
+          window.location.href = paymentUrl;
+        }
+      }, 1000);
     } catch (error: any) {
       if (
         error.response &&
@@ -89,7 +100,7 @@ const Order = () => {
               <div
                 className="flex space-x-10 p-5 bg-black rounded-2xl w-72"
                 onClick={() => {
-                  handleData(49000);
+                  handleData(2000);
                   handlePackage(50, "49.000 VND");
                 }}
               >
@@ -234,6 +245,7 @@ const Order = () => {
             </button>
           </CardFooter>
         </Card>
+        <ToastContainer />
       </div>
     </>
   );

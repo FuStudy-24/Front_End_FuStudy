@@ -201,9 +201,9 @@ const Testimonials = () => {
                               >
                                 <path
                                   stroke="currentColor"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
                                   d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                                 />
                               </svg>
@@ -219,9 +219,9 @@ const Testimonials = () => {
                               >
                                 <path
                                   stroke="currentColor"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
                                   d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                                 />
                               </svg>
@@ -257,14 +257,14 @@ const Testimonials = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="1.5"
+                        strokeWidth="1.5"
                         stroke="currentColor"
                         aria-hidden="true"
                         className="h-6 w-5 flex-none text-blue-600"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         ></path>
                       </svg>
@@ -275,14 +275,14 @@ const Testimonials = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="1.5"
+                        strokeWidth="1.5"
                         stroke="currentColor"
                         aria-hidden="true"
                         className="h-6 w-5 flex-none text-blue-600"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         ></path>
                       </svg>
@@ -293,14 +293,14 @@ const Testimonials = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="1.5"
+                        strokeWidth="1.5"
                         stroke="currentColor"
                         aria-hidden="true"
                         className="h-6 w-5 flex-none text-blue-600"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         ></path>
                       </svg>

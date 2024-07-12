@@ -1,7 +1,11 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React from "react";
-
-const Slidebar = () => {
+interface NavDashboardProps {
+  page: string;
+}
+const Slidebar: React.FC<NavDashboardProps> = ({ page }) => {
+  const route = useRouter();
   return (
     <>
       <aside className="bg-stone-400 -translate-x-80 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0">
@@ -31,14 +35,14 @@ const Slidebar = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="2.5"
+                strokeWidth="2.5"
                 stroke="currentColor"
                 aria-hidden="true"
                 className="h-5 w-5 text-white"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M6 18L18 6M6 6l12 12"
                 ></path>
               </svg>
@@ -48,9 +52,20 @@ const Slidebar = () => {
         <div className="m-4">
           <ul className="mb-4 flex flex-col gap-1">
             <li>
-              <a aria-current="page" className="active" href="#">
+              <a
+                aria-current="page"
+                onClick={(e) => {
+                  e.preventDefault();
+                  route.push("/admin/dashboard");
+                }}
+                className="active"
+              >
                 <button
-                  className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
+                  className={
+                    page === "Home"
+                      ? "middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
+                      : "middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
+                  }
                   type="button"
                 >
                   <svg
@@ -70,9 +85,19 @@ const Slidebar = () => {
               </a>
             </li>
             <li>
-              <a className="" href="#">
+              <a
+                className=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  route.push("/admin/mentor");
+                }}
+              >
                 <button
-                  className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
+                  className={
+                    page === "Mentor"
+                      ? "middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
+                      : "middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
+                  }
                   type="button"
                 >
                   <svg
@@ -89,15 +114,25 @@ const Slidebar = () => {
                     ></path>
                   </svg>
                   <p className="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">
-                    profile
+                    Mentor
                   </p>
                 </button>
               </a>
             </li>
             <li>
-              <a className="" href="#">
+              <a
+                className=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  route.push("/admin/management");
+                }}
+              >
                 <button
-                  className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
+                  className={
+                    page === "Management"
+                      ? "middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
+                      : "middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
+                  }
                   type="button"
                 >
                   <svg
@@ -114,12 +149,12 @@ const Slidebar = () => {
                     ></path>
                   </svg>
                   <p className="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">
-                    tables
+                    Management
                   </p>
                 </button>
               </a>
             </li>
-            <li>
+            {/* <li>
               <a className="" href="#">
                 <button
                   className="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
@@ -143,7 +178,7 @@ const Slidebar = () => {
                   </p>
                 </button>
               </a>
-            </li>
+            </li> */}
           </ul>
           {/* <ul className="mb-4 flex flex-col gap-1">
             <li className="mx-3.5 mt-4 mb-2">

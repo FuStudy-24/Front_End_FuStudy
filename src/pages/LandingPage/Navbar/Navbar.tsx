@@ -77,9 +77,12 @@ const Navbar = () => {
     const fetchData = async () => {
       const data = await getWallet(userInfo.id);
       // console.log(data.data.data.balance);
+      localStorage.setItem("walletId",data.data.data.id);
       setfuCoin(data.data.data.balance);
     };
-    fetchData();
+    if(isLoggedIn){
+      fetchData();
+    }
   }, []);
   useEffect(() => {
     const script = document.createElement("script");
