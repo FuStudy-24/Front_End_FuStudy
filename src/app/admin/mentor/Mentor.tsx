@@ -3,27 +3,36 @@ import NavDashboard from "@/components/NavDashboard";
 import Slidebar from "@/components/Slidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useAuthStore from "@/lib/hooks/useUserStore";
-import { getAllUser, addUser } from "@/lib/service/adminService";
+import { getAllUser, addUser, getAllMentor } from "@/lib/service/adminService";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export const Dashboard = () => {
+export const Mentor = () => {
   const [showModal, setShowModal] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setdata] = useState([
     {
-      fullname: "",
-      password: "",
-      email: "",
-      avatar: "",
-      gender: "",
-      identityCard: "",
-      phone: "",
-      username: "",
-      role: {
+      id: 0,
+      userId: 0,
+      academicLevel: "",
+      workPlace: "",
+      skill: "",
+      onlineStatus: "",
+      video: "",
+      verifyStatus: true,
+      user: {
         id: 0,
-        roleName: "",
+        username: "",
+        fullname: "",
+        email: "",
+        identityCard: "",
+        gender: "",
+        avatar: "",
+        dob: "",
+        phone: "",
+        status: true,
+        role: null,
       },
     },
   ]);
@@ -83,7 +92,7 @@ export const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getAllUser();
+        const response = await getAllMentor();
         console.log(response.data.data);
         const users = response.data.data;
         setdata(users);
@@ -94,7 +103,7 @@ export const Dashboard = () => {
     };
     fetchData();
   }, []);
-  console.log(showModal);
+  console.log(data);
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-2xl font-semibold">
@@ -110,11 +119,11 @@ export const Dashboard = () => {
   return (
     <>
       <div className="min-h-screen bg-gray-50/50">
-        <Slidebar page={"Home"}/>
+        <Slidebar page={"Mentor"} />
         <div className="p-4 xl:ml-80">
-        <NavDashboard page={"Home"}/>
+          <NavDashboard page={"Mentor"} />
           <div className="mt-12">
-            <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
+            {/* <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
               <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
                 <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
                   <svg
@@ -233,14 +242,14 @@ export const Dashboard = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="mb-4 grid grid-cols-1 gap-6">
               <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none m-0 flex items-center justify-between p-6">
                   <div>
                     <h6 className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-1">
-                      Users
+                      Mentors
                     </h6>
                     {/* <p className="antialiased font-sans text-sm leading-normal flex items-center gap-1 font-normal text-blue-gray-600">
                       <svg
@@ -269,7 +278,7 @@ export const Dashboard = () => {
                       type="submit"
                       className="text-sm text-Blueviolet font-medium px-[28px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
                     >
-                      Add User
+                      Add Mentor
                     </button>
                     <button
                       aria-expanded="false"
@@ -327,7 +336,7 @@ export const Dashboard = () => {
                           </button>
                           <div className="p-5">
                             <h3 className="text-lg font-bold text-black ">
-                              Create User
+                              Create Mentor
                             </h3>
                           </div>
                           <div className="flex px-16">
@@ -471,34 +480,30 @@ export const Dashboard = () => {
                             </th>
                             <th className="p-2">
                               <div className="font-semibold text-center">
-                                Role
+                                Full Name
                               </div>
                             </th>
                             <th className="p-2">
                               <div className="font-semibold text-center">
-                                Fullname
+                                academic Level
                               </div>
                             </th>
                             <th className="p-2">
                               <div className="font-semibold text-center">
-                                Email
+                                skill
                               </div>
                             </th>
                             <th className="p-2">
                               <div className="font-semibold text-center">
-                                ID
+                                workPlace
                               </div>
                             </th>
                             <th className="p-2">
                               <div className="font-semibold text-center">
-                                Gender
+                                verify Status
                               </div>
                             </th>
-                            <th className="p-2">
-                              <div className="font-semibold text-center">
-                                Phone
-                              </div>
-                            </th>
+
                             <th className="p-2">
                               <div className="font-semibold text-center">
                                 action
@@ -533,39 +538,47 @@ export const Dashboard = () => {
                     </td>
                   </tr> */}
                           {data.map((user) => (
-                            <tr key={user.username}>
+                            <tr>
                               <td className="p-2">
                                 <div className="flex items-center">
                                   <input type="checkbox" className="mr-5" />{" "}
                                   <div className="text-black">
-                                    {user.username}
+                                    {user.user.username}
                                   </div>
                                 </div>
                               </td>
                               <td className="p-2">
                                 <div className="text-center">
-                                  {user.role.roleName}
+                                  {user.user.fullname}
                                 </div>
                               </td>
                               <td className="p-2">
                                 <div className="text-center">
-                                  {user.fullname}
+                                  {user.academicLevel}
                                 </div>
                               </td>
                               <td className="p-2">
-                                <div className="text-center">{user.email}</div>
+                                <div className="text-center">{user.skill}</div>
                               </td>
                               <td className="p-2">
                                 <div className="text-center">
-                                  {user.identityCard}
+                                  {user.workPlace}
                                 </div>
                               </td>
                               <td className="p-2">
-                                <div className="text-center">{user.gender}</div>
+                                <div className="text-center">
+                                  {user.verifyStatus === true ? (
+                                    <button className="text-sm text-Blueviolet font-medium px-3 py-[12.5px] border-[0] rounded-[100px] bg-green-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]">
+                                      Verified
+                                    </button>
+                                  ) : (
+                                    <button className="text-sm text-Blueviolet font-medium px-3  py-[12.5px] border-[0] rounded-[100px] bg-gray-700 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-600 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]">
+                                      Not verified
+                                    </button>
+                                  )}
+                                </div>
                               </td>
-                              <td className="p-2">
-                                <div className="text-center">{user.phone}</div>
-                              </td>
+
                               <td className="p-2">
                                 <div className="flex justify-between">
                                   <button
@@ -608,7 +621,7 @@ export const Dashboard = () => {
                                             </button>
                                             <div className="p-5">
                                               <h3 className="text-lg font-bold text-black ">
-                                                Update User
+                                                Create User
                                               </h3>
                                             </div>
                                             <div className="flex px-16">

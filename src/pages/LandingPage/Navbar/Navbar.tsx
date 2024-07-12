@@ -2,7 +2,6 @@
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-
 import Drawer from "./Drawer";
 import Drawerdata from "./Drawerdata";
 import useAuthStore from "@/lib/hooks/useUserStore";
@@ -13,9 +12,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import { faCoins } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getWallet } from "@/lib/service/paymentService";
-import { getUserById } from "@/lib/service/adminService";
-
 interface NavigationItem {
   name: string;
   href: string;
@@ -56,9 +55,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Add state for drawer
   const [popoverOpen, setPopoverOpen] = useState(false); // Add state for popover
   const [currentLink, setCurrentLink] = useState("/");
-  const [fuCoin, setfuCoin] = useState(0);
-  const [isMyRequestAndOrderVisible, setIsMyRequestAndOrderVisible] = useState(false);
   const router = useRouter();
+  const [fuCoin, setfuCoin] = useState(0);
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     userInfo: state.userInfo,
@@ -77,25 +75,17 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const walletResponse = await getWallet(userInfo.id);
-        setfuCoin(walletResponse.data.data.balance);
-
-        const userResponse = await getUserById(userInfo.id);
-
-        if (userResponse.data.data.roleId === 4 || userResponse.data.data.roleId === 3) {
-          setIsMyRequestAndOrderVisible(true);
-        }
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      }
+      const data = await getWallet(userInfo.id);
+      // console.log(data.data.data.balance);
+      localStorage.setItem("walletId",data.data.data.id);
+      setfuCoin(data.data.data.balance);
     };
-
-    if (isLoggedIn && userInfo?.id) {
+    if(isLoggedIn){
       fetchData();
     }
-  }, [isLoggedIn, userInfo?.id]);
+  }, []);
 
+  // console.log(userInfo.username)
   return (
     <Disclosure as="nav" className="navbar">
       <>
@@ -146,7 +136,7 @@ const Navbar = () => {
             <div className="flex items-center">
               {isLoggedIn ? ( // Check if user is logged in
                 <div className="flex justify-between space-x-5">
-                  <Link href="/order" passHref>
+                  <Link href='/order' passHref>
                     <div className="flex justify-between mt-2 space-x-2">
                       <div>{fuCoin}</div>
                       <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
@@ -171,7 +161,7 @@ const Navbar = () => {
                         </div>
                       </PopoverTrigger>
                       <PopoverContent className="bg-white w-28 p-0 block text-center rounded-2xl space-y-2">
-                        {userInfo.username === "admin1" && (
+                        {userInfo.username == "admin1" && (
                           <Link href="/admin/dashboard" passHref>
                             <div className="border-b border-gray-200">
                               <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
@@ -188,16 +178,13 @@ const Navbar = () => {
                             </button>
                           </div>
                         </Link>
-                        
-                        {isMyRequestAndOrderVisible && (
-                          <Link href="/booking" passHref>
-                            <div className="border-b border-gray-200">
-                              <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
-                               My Booking
-                              </button>
-                            </div>
-                          </Link>
-                        )}
+                        <Link href="/booking" passHref>
+                          <div className="border-b border-gray-200">
+                            <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
+                              Booking
+                            </button>
+                          </div>
+                        </Link>
 
                         <div className="">
                           <button

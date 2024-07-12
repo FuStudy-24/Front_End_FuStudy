@@ -8,4 +8,13 @@ const createPayment = async (data, config) => {
   return await axios.post("Payment/create", data, config);
 };
 
-export { getWallet, createPayment };
+const addCoin = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return await axios.get(`Payment/${id}`, config);
+};
+
+export { getWallet, createPayment, addCoin };

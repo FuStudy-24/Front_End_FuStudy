@@ -5,8 +5,9 @@ interface UserInfo {
   id?: string;
   username?: string;
   email?: string;
+  roleName?: string;
   token?: string;
-  roleName?:string;
+
 }
 
 interface AuthState {
