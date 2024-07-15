@@ -36,7 +36,7 @@ const Testimonials = () => {
       try {
         const response = await getAllSubcription();
         const subcriptions = response.data.data;
-        setsubcriptionData(subcriptions);
+        setsubcriptionData(subcriptions.slice().reverse());
       } catch (error: any) {
         if (
           error.response &&
@@ -58,6 +58,12 @@ const Testimonials = () => {
   }, []);
 
   const handleModel = (id: any) => {
+    if (id === 3) {
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+      return;
+    }
     if (isLoggedIn) {
       setShowModal(true);
       console.log(id);
@@ -69,20 +75,21 @@ const Testimonials = () => {
       router.push("/login");
     }, 1000);
   };
+  console.log(subcriptionData);
 
-  const subPrice = (name:any) => {
-    switch (name) {
-      case "Premium":
-        return "$4";
-        break;
-      case "Basic":
-        return "$2";
-        break
-      default:
-        return "";
-        break;
-    }
-  }
+  // const subPrice = (name:any) => {
+  //   switch (name) {
+  //     case "Premium":
+  //       return "$4";
+  //       break;
+  //     case "Basic":
+  //       return "$2";
+  //       break
+  //     default:
+  //       return "";
+  //       break;
+  //   }
+  // }
 
   const handleSubcription = async () => {
     const token = userInfo.token;
@@ -143,7 +150,7 @@ const Testimonials = () => {
             </h3>
 
             <div className="isolate mx-auto grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-              {subcriptionData.map((items, i) => (
+              {subcriptionData.reverse().map((items, i) => (
                 <div
                   key={i}
                   className="ring-2 ring-blue-600 rounded-3xl p-8 xl:p-10"
@@ -169,10 +176,11 @@ const Testimonials = () => {
                   <p className="mt-6 flex items-baseline gap-x-1">
                     <span className="line-through text-2xl font-sans text-gray-500/70">
                       {/* {items.subcriptionName === "Free" ? "" : "$2"} */}
-                      {subPrice(items.subcriptionName)}
+                      {/* {subPrice(items.subcriptionName)} */}
                     </span>
                     <span className="text-5xl font-bold tracking-tight text-gray-900">
-                      {items.subcriptionPrice}
+                      {items.subcriptionPrice}{" "}
+                      <span className="text-2xl font-sans">fu</span>
                     </span>
                   </p>
                   <button
@@ -180,7 +188,7 @@ const Testimonials = () => {
                     className="flex justify-center mt-4 text-sm text-Blueviolet font-medium px-[40px] py-[12.5px] border-[0] rounded-[100px] bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
                     onClick={() => handleModel(items.id)}
                   >
-                    {items.subcriptionName === 'Free' ? "Started":"Buy Now"}
+                    {items.subcriptionName === "Free" ? "Started" : "Buy Now"}
                   </button>
                   {showModal ? (
                     <>
@@ -321,3 +329,4 @@ const Testimonials = () => {
 };
 
 export default Testimonials;
+
