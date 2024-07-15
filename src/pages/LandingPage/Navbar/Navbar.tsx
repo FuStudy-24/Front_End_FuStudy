@@ -77,9 +77,12 @@ const Navbar = () => {
     const fetchData = async () => {
       const data = await getWallet(userInfo.id);
       // console.log(data.data.data.balance);
+      localStorage.setItem("walletId",data.data.data.id);
       setfuCoin(data.data.data.balance);
     };
-    fetchData();
+    if(isLoggedIn){
+      fetchData();
+    }
   }, []);
 
   // console.log(userInfo.username)
@@ -175,10 +178,10 @@ const Navbar = () => {
                             </button>
                           </div>
                         </Link>
-                        <Link href="/question" passHref>
+                        <Link href="/booking" passHref>
                           <div className="border-b border-gray-200">
                             <button className="text-sm py-2 text-gray-700 hover:bg-gray-100 hover:rounded-full hover:px-2">
-                              Question
+                              Booking
                             </button>
                           </div>
                         </Link>

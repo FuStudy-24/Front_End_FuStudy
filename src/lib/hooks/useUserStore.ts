@@ -5,8 +5,9 @@ interface UserInfo {
   id?: string;
   username?: string;
   email?: string;
-  permission_id?: string;
+  roleName?: string;
   token?: string;
+
 }
 
 interface AuthState {
@@ -18,8 +19,8 @@ interface AuthState {
 }
 
 const useAuthStore = create<AuthState>((set, get) => {
-  const storedToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-  const storedUserInfo = typeof window !== 'undefined' ? localStorage.getItem('userInfo') : null;
+  const storedToken = typeof window !== 'undefined' ? sessionStorage.getItem('authToken') : null;
+  const storedUserInfo = typeof window !== 'undefined' ? sessionStorage.getItem('userInfo') : null;
   let initialUserInfo: UserInfo = {};
   try {
     if (storedUserInfo) {
@@ -36,13 +37,13 @@ const useAuthStore = create<AuthState>((set, get) => {
     userInfo: initialUserInfo,
     token: storedToken,
     login: (token, userInfo) => {
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      sessionStorage.setItem('authToken', token);
+      sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       set({ isLoggedIn: true, userInfo, token });
     },
     logout: () => {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userInfo');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('userInfo');
       set({ isLoggedIn: false, userInfo: {}, token: null });
     },
   };
