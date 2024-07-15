@@ -11,33 +11,53 @@ import {
 } from "@/components/ui/card";
 import useAuthStore from "@/lib/hooks/useUserStore";
 import { ToastContainer, toast } from "react-toastify";
+import Image from 'next/image';
 import "react-toastify/dist/ReactToastify.css";
-const Order = () => {
+
+interface ConfirmPackage {
+  fuCoin: number;
+  price: string;
+}
+
+interface FormData {
+  walletID: number;
+  productName: string;
+  description: string;
+  price: number;
+  returnUrl: string;
+  cancelUrl: string;
+}
+
+const Order: React.FC = () => {
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     userInfo: state.userInfo,
     logout: state.logout,
   }));
-  const [confirmPakage, setconfirmPakage] = useState({
+  
+  const [confirmPakage, setconfirmPakage] = useState<ConfirmPackage>({
     fuCoin: 0,
     price: "",
   });
-  const [formData, setformData] = useState({
+
+  const [formData, setformData] = useState<FormData>({
     walletID: 0,
     productName: "FuCoin",
     description: "Payment for FuCoin",
     price: 0,
-    returnUrl: "http://localhost:3000/success",
-    cancelUrl: "http://localhost:3000/fail",
+    returnUrl: "https://fustudy.azurewebsites.net/success",
+    cancelUrl: "https://fustudy.azurewebsites.net/fail",
   });
+// fustudy.azurewebsites.net
   useEffect(() => {
     const fetchData = async () => {
       const data = await getWallet(userInfo.id);
       console.log(data.data.data);
-      setformData({ ...formData, walletID: data.data.data.id });
+      setformData((prevFormData) => ({ ...prevFormData, walletID: data.data.data.id }));
     };
     fetchData();
-  }, []);
+  }, [userInfo.id]);
+
   const handlePackage = (coin: number, price: string) => {
     const data = {
       price: price,
@@ -45,15 +65,13 @@ const Order = () => {
     };
     setconfirmPakage(data);
   };
+
   const handleData = (price: number) => {
-    setformData({ ...formData, price: price });
+    setformData((prevFormData) => ({ ...prevFormData, price: price }));
   };
-  console.log(formData);
 
   const handlePayment = async () => {
     const token = userInfo.token;
-    console.log(token);
-
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -62,7 +80,6 @@ const Order = () => {
     try {
       const response = await createPayment(formData, config);
       console.log(response);
-
       const paymentUrl = response.data.data.checkoutUrl;
       const orderId = response.data.data.orderCode;
       localStorage.setItem("orderId", orderId);
@@ -73,27 +90,21 @@ const Order = () => {
         }
       }, 1000);
     } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        const err = error.response.data.message;
-        console.log(error);
+      if (error.response && error.response.data && error.response.data.message) {
+        console.log(error.response.data.message);
       } else {
         console.error("An unexpected error occurred:", error);
       }
     }
   };
+
   return (
     <>
       <div className="flex justify-center mt-32">
         <Card className="w-[700px] mt-10 px-5">
           <CardHeader>
             <CardTitle>Select Package</CardTitle>
-            <CardDescription>
-              Choose the amount of coin you want to purchase !
-            </CardDescription>
+            <CardDescription>Choose the amount of coin you want to purchase !</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex space-x-10 mt-5 text-white">
@@ -105,7 +116,7 @@ const Order = () => {
                 }}
               >
                 <div className="flex justify-between  space-x-2 w-16">
-                  <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                  <div className="loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
                     $
                   </div>
                   <div>50</div>
@@ -122,7 +133,7 @@ const Order = () => {
                 }}
               >
                 <div className="flex justify-between  space-x-2 w-16">
-                  <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                  <div className="loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
                     $
                   </div>
                   <div>100</div>
@@ -141,7 +152,7 @@ const Order = () => {
                 }}
               >
                 <div className="flex justify-between  space-x-2 w-16">
-                  <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                  <div className="loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
                     $
                   </div>
                   <div>200</div>
@@ -158,7 +169,7 @@ const Order = () => {
                 }}
               >
                 <div className="flex justify-between  space-x-2 w-16">
-                  <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                  <div className="loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
                     $
                   </div>
                   <div>500</div>
@@ -169,19 +180,9 @@ const Order = () => {
               </div>
             </div>
           </CardContent>
-          {/* <CardFooter className="flex justify-between">
-            <Button variant="outline">Cancel</Button>
-            <Button>Deploy</Button>
-          </CardFooter> */}
         </Card>
       </div>
-      <div
-        className={
-          confirmPakage.fuCoin > 0
-            ? "flex justify-center "
-            : "hidden justify-center "
-        }
-      >
+      <div className={confirmPakage.fuCoin > 0 ? "flex justify-center " : "hidden justify-center "}>
         <Card className="w-[700px] mt-10 px-5">
           <CardHeader>
             <CardTitle>Confirm information</CardTitle>
@@ -191,7 +192,7 @@ const Order = () => {
             <div className="flex justify-between my-5">
               <div className="flex space-x-10 p-5 bg-black rounded-2xl w-72 text-white">
                 <div className="flex justify-between  space-x-2 w-16">
-                  <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                  <div className="loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
                     $
                   </div>
                   <div>{confirmPakage.fuCoin}</div>
@@ -202,13 +203,6 @@ const Order = () => {
               </div>
               <div className="pr-5">
                 <table className="table-auto">
-                  {/* <thead>
-                  <tr>
-                    <th>Song</th>
-                    <th>Artist</th>
-                    <th>Year</th>
-                  </tr>
-                </thead> */}
                   <tbody>
                     <tr>
                       <td>Username:</td>
@@ -236,9 +230,7 @@ const Order = () => {
           <CardFooter className="flex justify-between">
             <button
               type="button"
-              onClick={() => {
-                handlePayment();
-              }}
+              onClick={handlePayment}
               className="text-sm text-Blueviolet font-medium w-full py-[12.5px] border-[0] rounded-xl bg-[#2ba8fb] text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-[#6fc5ff] hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
             >
               Pay now

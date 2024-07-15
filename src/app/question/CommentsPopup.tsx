@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { GetAllQuestionCommentsByQuestionId, CreateQuestionComment, DeleteQuestionComment, UpdateQuestionComment } from '@/lib/service/questionService';
 import useAuthStore from '@/lib/hooks/useUserStore';
-import { FaPaperPlane, FaStar, FaRegSmile, FaCamera, FaGift, FaStickyNote } from 'react-icons/fa'; // Import icons
+import { FaPaperPlane } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface CommentData {
   id: number;
@@ -37,7 +38,7 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
   const [pageSize] = useState(6); // Adjust page size as needed
   const { userInfo, token } = useAuthStore();
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     if (!question) return;
     setLoading(true);
     setError(null);
@@ -59,11 +60,11 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [question, pageIndex, pageSize]);
 
   useEffect(() => {
     fetchComments();
-  }, [question, pageIndex]);
+  }, [fetchComments]);
 
   if (!question) return null;
 
@@ -92,9 +93,10 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
     try {
       const response = await CreateQuestionComment(commentData, token);
       if (response.status === 201) {
-        setNewComment(""); // Clear the comment input field    
+        setNewComment(""); // Clear the comment input field
+        fetchComments(); // Reload comments after successful creation
       } else {
-        await fetchComments(); // Reload comments after successful creation
+        setError("Failed to create comment. Please try again.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -105,8 +107,9 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
     try {
       const response = await DeleteQuestionComment(commentId, token);
       if (response.status === 200) {
+        fetchComments(); // Reload comments after successful deletion
       } else {
-        await fetchComments(); // Reload comments after successful deletion
+        setError("Failed to delete comment. Please try again.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -116,7 +119,7 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
   const handleEditComment = (comment: CommentData) => {
     setEditCommentId(comment.id);
     setEditCommentContent(comment.content);
-  };  
+  };
 
   const handleUpdateComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,9 +135,9 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
       if (response.status === 200) {
         setEditCommentId(null);
         setEditCommentContent(""); // Clear the edit input field
-        await fetchComments(); 
+        fetchComments();
       } else {
-       // await fetchComments(); 
+        setError("Failed to update comment. Please try again.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -146,7 +149,13 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mx-4 flex flex-col">
         <div className="flex flex-col md:flex-row w-full">
           <div className="w-full md:w-1/2 pr-4">
-            <img src={question.image} alt={question.content} className="w-full h-40 object-cover mb-4 rounded-lg shadow-md" />
+            <Image
+              src={question.image}
+              alt={question.content}
+              className="w-full h-40 object-cover mb-4 rounded-lg shadow-md"
+              width={100}
+              height={100}
+            />
             <h2 className="text-2xl font-bold text-gray-800 mb-2">{question.categoryName}</h2>
             <p className="text-gray-600 mb-2">{question.content}</p>
           </div>
@@ -160,8 +169,8 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
             ) : error ? (
               <div className="text-red-600">{error}</div>
             ) : comments.length > 0 ? (
-              comments.map((comment, index) => (
-                <div key={index} className="mb-4 flex justify-between items-start group">
+              comments.map((comment) => (
+                <div key={comment.id} className="mb-4 flex justify-between items-start group">
                   <div>
                     <p className="text-gray-800"><strong>{comment.username}</strong></p>
                     <p className="text-gray-600">{comment.content}</p>

@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getWallet } from "@/lib/service/paymentService";
+import Image from "next/image";
+
 interface NavigationItem {
   name: string;
   href: string;
@@ -76,16 +78,28 @@ const Navbar = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getWallet(userInfo.id);
-      // console.log(data.data.data.balance);
-      localStorage.setItem("walletId",data.data.data.id);
+      localStorage.setItem("walletId", data.data.data.id);
       setfuCoin(data.data.data.balance);
     };
-    if(isLoggedIn){
+    if (isLoggedIn) {
       fetchData();
     }
+  }, [isLoggedIn, userInfo.id]);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.id = "hs-script-loader";
+    script.async = true;
+    script.defer = true;
+    script.src = "//js-na1.hs-scripts.com/46644174.js";
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
-  // console.log(userInfo.username)
   return (
     <Disclosure as="nav" className="navbar">
       <>
@@ -94,15 +108,19 @@ const Navbar = () => {
             <div className="flex flex-1 items-center sm:items-stretch sm:justify-start">
               {/* LOGO */}
               <div className="flex flex-shrink-0 items-center">
-                <img
+                <Image
                   className="block h-12 w-40 lg:hidden"
                   src={"/assets/logo/logo.svg"}
                   alt="dsign-logo"
+                  width={160}
+                  height={48}
                 />
-                <img
+                <Image
                   className="hidden h-full w-full lg:block"
                   src={"/assets/logo/logo.svg"}
                   alt="dsign-logo"
+                  width={160}
+                  height={48}
                 />
               </div>
 
@@ -139,7 +157,7 @@ const Navbar = () => {
                   <Link href='/order' passHref>
                     <div className="flex justify-between mt-2 space-x-2">
                       <div>{fuCoin}</div>
-                      <div className=" ]loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
+                      <div className="loader border-r-2 rounded-full border-yellow-500 bg-yellow-300 h-6 w-6 flex justify-center items-center text-yellow-700">
                         $
                       </div>
                     </div>

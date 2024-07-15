@@ -7,8 +7,7 @@ import { getQuestion } from "@/lib/service/questionService";
 
 interface DataType {
     content: string;
-   
-    imgSrc: string;
+    imageSrc: string; // Thay đổi tên thuộc tính để không chứa khoảng trắng
     category: string;
 }
 
@@ -28,7 +27,7 @@ export default class MultipleItems extends Component {
                 const formattedQuestionData = questionData.map((item: any) => ({
                     content: item.content,
                     heading2: "", // Assuming heading2 is not available
-                    imgSrc: item.image ? item.image : "",
+                    imageSrc: item.image ? item.image : "", // Sử dụng tên thuộc tính mới
                     category: item.categoryName,
                 }));
 
@@ -95,7 +94,7 @@ export default class MultipleItems extends Component {
                                 <div key={i}>
                                     <div className='bg-white m-3 px-3 pt-3 pb-12 my-20 shadow-courses rounded-2xl'>
                                         <div className="relative rounded-3xl">
-                                            <Image src={items.imgSrc} alt="gaby" width={389} height={262} className="m-auto clipPath" 
+                                            <Image src={items.imageSrc} alt="gaby" width={389} height={262} className="m-auto clipPath" 
                                             style={{ objectFit: 'cover', width: '100%', height: '300px' }} />
                                             <div className="absolute right-5 -bottom-2 bg-ultramarine rounded-full p-6">
                                                 <h3 className="text-white uppercase text-center text-sm font-medium">best <br /> seller</h3>

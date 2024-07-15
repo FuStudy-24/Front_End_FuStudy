@@ -125,7 +125,9 @@ const MultipleItems = () => {
             <div key={i}>
               <div className="m-3 py-14 md:my-10 text-center">
                 <div className="relative">
-                <img
+                <Image 
+                  width={100}
+                  height={100}
                 src={mentor.user.avatar}
                 alt="user-avatar"
                 className="w-32 h-32 rounded-full mb-[50px] inline-block m-auto "

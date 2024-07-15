@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   createQuestionByCoin,
   createQuestionBySubscription,
@@ -13,6 +13,7 @@ import { Button } from "@headlessui/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
 
 interface Question {
   id: string;
@@ -43,7 +44,7 @@ const MyQuestion: React.FC = () => {
 
   const { token, userInfo } = useAuthStore();
 
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
     if (!userInfo || !userInfo.id || !token) {
       setError("Authentication details are missing.");
       return;
@@ -59,9 +60,9 @@ const MyQuestion: React.FC = () => {
       console.error("Failed to fetch questions:", error);
       setError("Failed to load your questions");
     }
-  };
+  }, [userInfo, token]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await getAllCategory();
       if (response.status === 200) {
@@ -73,12 +74,12 @@ const MyQuestion: React.FC = () => {
       console.error("Failed to fetch categories:", error);
       setError("Failed to load categories");
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchQuestions();
     fetchCategories();
-  }, [userInfo, token]);
+  }, [fetchQuestions, fetchCategories]);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -188,13 +189,15 @@ const MyQuestion: React.FC = () => {
       {success && <div className="text-green-600 mb-4">{success}</div>}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {questions.length > 0 ? (
-          questions.map((question, index) => (
+          questions.map((question) => (
             <div
-              key={index}
+              key={question.id}
               className="relative bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 group"
             >
               {question.image && (
-                <img
+                <Image 
+                width={100}
+                height={100}
                   src={question.image}
                   alt="Question"
                   className="w-full h-40 object-cover mb-4 rounded-lg shadow-md"

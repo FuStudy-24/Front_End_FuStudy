@@ -31,6 +31,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Divide } from "lucide-react";
+
 const Profile = () => {
   const [checkEdit, setcheckEdit] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -53,7 +54,6 @@ const Profile = () => {
     price: 0,
   });
 
-  //all major
   const [allMajor, setallMajor] = useState([
     {
       id: 0,
@@ -61,19 +61,16 @@ const Profile = () => {
     },
   ]);
 
-  //major
   const [major, setmajor] = useState({
     majorName: "",
     id: "",
   });
 
-  //update major
   const [updateMajor, setupdateMajor] = useState({
     mentorId: 0,
     majorId: 0,
   });
 
-  //mentor info
   const [mentor, setmentor] = useState({
     academicLevel: "",
     workPlace: "",
@@ -82,7 +79,6 @@ const Profile = () => {
     id: 0,
   });
 
-  //update mentor
   const [updateMentor, setupdateMentor] = useState({
     academicLevel: "",
     workPlace: "",
@@ -90,7 +86,6 @@ const Profile = () => {
     file: null,
   });
 
-  //update form
   const [updateUser, setupdateUser] = useState({
     fullname: "",
     email: "",
@@ -100,7 +95,6 @@ const Profile = () => {
     dob: "",
   });
 
-  //userprofile
   const [accountProfile, setaccountProfile] = useState({
     email: "",
     fullname: "",
@@ -119,13 +113,9 @@ const Profile = () => {
 
   const formatDate = (stringDate: string) => {
     const datePart = stringDate.split("T")[0];
-
-    // Create a Date object from the date string
     const date = new Date(datePart);
-
-    // Get the day, month (0-indexed!), and year
     const day = date.getDate();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Add leading zero if necessary
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
@@ -134,12 +124,9 @@ const Profile = () => {
   const createDate = (stringDate: string) => {
     const datePart = stringDate.split("T")[0];
     const timePart = stringDate?.split("T")[1]?.split(".")[0] || "";
-    // Create a Date object from the date string
     const date = new Date(datePart);
-
-    // Get the day, month (0-indexed!), and year
     const day = date.getDate();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Add leading zero if necessary
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     const createDate = `${timePart}-${day}/${month}/${year}`;
     return createDate;
@@ -147,19 +134,11 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // user info
       try {
         const res = await getProfile(userInfo.id);
-        console.log(res.data.data);
-
         const data = res.data.data;
-        // console.log(data);
-
-        //user profile
         setaccountProfile((prevState) => {
-          // Destructure the data object to extract specific fields
           const { email, fullname, gender, identityCard, phone, dob } = data;
-          // Update updateUser with destructured properties
           return {
             ...prevState,
             email,
@@ -171,10 +150,7 @@ const Profile = () => {
           };
         });
         setupdateUser((prevState) => {
-          // Destructure the data object to extract specific fields
           const { email, fullname, gender, identityCard, phone, dob } = data;
-
-          // Update updateUser with destructured properties
           return {
             ...prevState,
             email,
@@ -186,40 +162,27 @@ const Profile = () => {
           };
         });
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       } finally {
         setLoading(false);
       }
 
-      //mentor info
-
       if (userInfo.roleName === "Mentor") {
         const resMentor = await getMentor(userInfo.id);
-        // console.log(mentor);
         const mentorData = resMentor.data.data[0];
         const { id } = mentorData;
-        // console.log(id);
-        // console.log(mentorData);
         const mentorId = id;
         const resMentorMajor = await getMentorMajor(id);
-        // console.log(resMentorMajor);
         const mentorMajor = resMentorMajor.data.data[0];
-        // console.log(mentorMajor);
-
         const resMajor = await getAllMajor();
-        // console.log(resMajor);
         const allMajor = resMajor.data.data;
-        // console.log(allMajor);
 
-        //major
         setmajor((prevState) => {
           const {
             id,
             major: { majorName },
           } = mentorMajor;
           localStorage.setItem("idMentorMajor", id);
-          // console.log(id);
-          // console.log(majorName);
           return {
             ...prevState,
             majorName,
@@ -229,11 +192,9 @@ const Profile = () => {
 
         setupdateMajor((prevState) => {
           const {
-            major: { id, majorName },
+            major: { id },
           } = mentorMajor;
           localStorage.setItem("idMajor", id);
-          // console.log(id);
-          // console.log(majorName);
           return {
             ...prevState,
             mentorId: mentorId,
@@ -242,7 +203,6 @@ const Profile = () => {
         });
         setallMajor(allMajor);
 
-        //mentor profile
         setmentor((prevState) => {
           const { skill, academicLevel, workPlace } = mentorData;
           return {
@@ -264,26 +224,19 @@ const Profile = () => {
         });
       }
 
-      //transaction
       try {
         const walletId = localStorage.getItem("walletId");
-        console.log(walletId);
-
         const resTransaction = await getTransaction(walletId);
-        // console.log(resTransaction);
         if (resTransaction.status === 200) {
           settransaction(resTransaction.data.data);
         }
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
 
-      // Subcription
       try {
         const response = await getUserSubcription(userInfo.id);
         const subData = response.data.data[0];
-        // console.log(subData);
-
         const subcriptionData = {
           status: "",
           startDate: "",
@@ -300,85 +253,68 @@ const Profile = () => {
         subcriptionData.startDate = formatDate(subData.startDate);
         subcriptionData.endDate = formatDate(subData.endDate);
         subcriptionData.price = subData.subcription.subcriptionPrice;
-        // console.log(subcriptionData);
         setsubcription(subcriptionData);
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     };
     fetchData();
-  }, [checkEdit]);
-  // console.log(major);
+  }, [checkEdit, userInfo.id, userInfo.roleName]);
 
-  //get input user profile
   const handleChange = (key: any, e: any) => {
     setupdateUser((prevState) => ({
       ...prevState,
-      [key]: e.target.value, // Use computed property name for dynamic updates
+      [key]: e.target.value,
     }));
   };
 
-  //get major
   const handleMajor = (id: any) => {
     setupdateMajor({ ...updateMajor, majorId: id });
   };
-  //get input mentor profile
+
   const handleChangeMentor = (key: any, e: any) => {
     setupdateMentor((prevState) => ({
       ...prevState,
-      [key]: e.target.value, // Use computed property name for dynamic updates
+      [key]: e.target.value,
     }));
   };
 
   const handleUpdate = async () => {
-    console.log(updateUser);
-    // console.log(updateMentor);
-    // console.log(updateMajor);
     const id = localStorage.getItem("idMentorMajor");
     const idMajor = localStorage.getItem("idMajor");
     const userData = JSON.stringify(updateUser);
     const mentorData = updateMentor;
     const majorData = JSON.stringify(updateMajor);
     const config = {
-      headers: { "Content-Type": "application/json" }, // Set the Content-Type header
+      headers: { "Content-Type": "application/json" },
     };
     try {
       const resUser = await updateProfile(userInfo.id, userData, config);
-      console.log(resUser);
-      console.log("asdasdas");
-
       if (userInfo.roleName === "Mentor") {
         const resMentor = await updateMentorInfo(userInfo.id, mentorData);
-        // console.log(resMentor);
         if (updateMajor.majorId.toString() !== idMajor) {
           const resMajor = await addMajor(majorData, config);
-          // console.log(resMajor);
           if (resMajor.status === 200) {
             const resDel = await deleteMajor(id);
-            // console.log(resDel);
           }
         }
       }
       setcheckEdit(!checkEdit);
       toast.success("Update Successful!");
     } catch (error: any) {
-      console.log(error);
-
-      // Handle login error
       if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
         const err = error.response.data.message;
-        console.log(error);
-
         toast.error(err);
       } else {
         console.error("An unexpected error occurred:", error);
       }
     }
   };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-2xl font-semibold">
@@ -399,10 +335,6 @@ const Profile = () => {
             <Card>
               <CardHeader>
                 <CardTitle>User Profile</CardTitle>
-                {/* <CardDescription>
-                  Make changes to your account here. Click save when you're
-                  done.
-                </CardDescription> */}
               </CardHeader>
               <CardContent className="flex space-y-2 space-x-10">
                 <div className="space-y-5">
@@ -508,9 +440,6 @@ const Profile = () => {
                   )}
                 </div>
               </CardContent>
-              {/* <CardFooter>
-                <Button>Save changes</Button>
-              </CardFooter> */}
             </Card>
           </TabsContent>
           <TabsContent value="password">
@@ -645,24 +574,6 @@ const Profile = () => {
                         </div>
                         <div className="space-y-1">
                           <Label htmlFor="username">Major</Label>
-                          {/* <Select>
-                            <SelectTrigger className="w-52">
-                              <SelectValue placeholder="Computer Science" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectLabel>Major</SelectLabel>
-                                {allMajor.map((item) => (
-                                  <SelectItem
-                                  
-                                    value={item.majorName}
-                                  >
-                                    {item.majorName}
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select> */}
                           <select
                             onChange={(e) => {
                               e.preventDefault();
@@ -673,7 +584,7 @@ const Profile = () => {
                             {allMajor.length > 0 ? (
                               allMajor.map((item) => (
                                 <option
-                                  key={item.id} // Add a key for better performance
+                                  key={item.id}
                                   onChange={() => handleMajor(item.id)}
                                   value={item.id}
                                 >
@@ -681,7 +592,7 @@ const Profile = () => {
                                 </option>
                               ))
                             ) : (
-                              <option value="">No majors available</option> // Or other placeholder
+                              <option value="">No majors available</option>
                             )}
                           </select>
                         </div>
@@ -710,13 +621,6 @@ const Profile = () => {
           <CardContent>
             <div className="grid w-full h-auto items-center gap-4">
               <table className="table-auto">
-                {/* <thead>
-                  <tr>
-                    <th>Song</th>
-                    <th>Artist</th>
-                    <th>Year</th>
-                  </tr>
-                </thead> */}
                 <tbody>
                   <tr>
                     <td>Type:</td>
@@ -750,10 +654,6 @@ const Profile = () => {
               </table>
             </div>
           </CardContent>
-          {/* <CardFooter className="flex justify-between">
-            <Button variant="outline">Cancel</Button>
-            <Button>Deploy</Button>
-          </CardFooter> */}
         </Card>
       </div>
       <div className="flex justify-center mt-5">
@@ -769,11 +669,9 @@ const Profile = () => {
 
             <div className="p-6 overflow-x-scroll px-0 pt-0 pb-2">
               <div className="p-3">
-                {/* Table */}
                 {transaction[0].type !== "" ? (
                   <div className="overflow-x-auto">
                     <table className="table-auto w-full">
-                      {/* Table header */}
                       <thead className="text-xs uppercase bg-opacity-50 rounded-sm">
                         <tr>
                           <th className="p-2">
@@ -803,7 +701,6 @@ const Profile = () => {
                           </th>
                         </tr>
                       </thead>
-                      {/* Table body */}
                       <tbody className="text-sm font-medium divide-y divide-slate-700">
                         {transaction.map((item, i) => (
                           <tr key={item.id}>
