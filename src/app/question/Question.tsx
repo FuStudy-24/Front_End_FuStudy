@@ -5,6 +5,7 @@ import { getQuestion, getAllQuestionComments} from "@/lib/service/questionServic
 import Link from 'next/link';
 
 import CommentsPopup from '@/app/question/CommentsPopup';
+import Image from 'next/image';
 
 interface CommentData {
   questionId: number | undefined;
@@ -82,7 +83,8 @@ const Question: React.FC = () => {
           <div 
             key={index} 
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 relative">
-            {question.image && <img src={question.image} alt="Question" className="w-full h-40 object-cover mb-4 rounded-lg shadow-md cursor-pointer" onClick={() => handleImageClick(question)} />}
+            {question.image && <Image   width={100}
+                height={100}  src={question.image} alt="Question" className="w-full h-40 object-cover mb-4 rounded-lg shadow-md cursor-pointer" onClick={() => handleImageClick(question)} />}
             <h2 className="text-2xl font-bold text-gray-800 mb-2 line-clamp-1">{question.content}</h2>
             <p className="text-gray-600 mb-2">{question.categoryName}</p>
             <div className="flex items-center space-x-4 mt-4">

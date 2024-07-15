@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 interface NavDashboardProps {
@@ -13,15 +14,19 @@ const Slidebar: React.FC<NavDashboardProps> = ({ page }) => {
           <a className="flex items-center gap-4 py-6 px-8" href="#/">
             <h6 className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white">
               <div className="flex flex-shrink-0 items-center">
-                <img
+                <Image
                   className="block h-12 w-40 lg:hidden"
                   src={"/assets/logo/logo.svg"}
                   alt="dsign-logo"
+                 width={40}
+                 height={40}
                 />
-                <img
+                <Image 
                   className="hidden h-full w-full lg:block"
                   src={"/assets/logo/logo.svg"}
                   alt="dsign-logo"
+                  width={40}
+                  height={40}
                 />
               </div>
             </h6>

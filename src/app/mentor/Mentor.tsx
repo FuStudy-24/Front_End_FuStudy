@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAllMentorVerify } from '@/lib/service/mentorService';
 import BookingModal from './BookingModal';
+import Image from 'next/image';
 
 interface User {
   fullname: string;
@@ -42,14 +43,16 @@ const Mentor: React.FC = () => {
           Meet with our Mentors
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {mentors.map((mentor, index) => (
+          {mentors.map((mentor) => (
             <div
-              key={index}
+              key={mentor.id} // Thêm thuộc tính key ở đây
               className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
             >
-              <img
+              <Image
                 src={mentor.user.avatar}
                 alt="user-avatar"
+                width={100}
+                height={100}
                 className="w-32 h-32 rounded-full mb-4 cursor-pointer"
                 onClick={() => {
                   setSelectedMentor(mentor);
@@ -60,10 +63,10 @@ const Mentor: React.FC = () => {
               <h4 className="text-lg font-normal text-gray-600 pt-2">{mentor.profession}</h4>
               <p className="text-md font-normal text-gray-600 pt-2">{mentor.academicLevel} at {mentor.workPlace}</p>
               <p className="text-md font-normal text-gray-600 pt-2">Skill: {mentor.skill}</p>
-              <p className="text-md font-normal text-gray-600 pt-2">ID: {mentor.id}</p>
+              {/* <p className="text-md font-normal text-gray-600 pt-2">ID: {mentor.id}</p> */}
               <div className="mt-4">
                 <a href="#" target="_blank" rel="noopener noreferrer">
-                  <img src="/assets/mentor/linkedin.svg" alt="linkedin-icon" className="w-6 h-6" />
+                  <Image src="/assets/mentor/linkedin.svg" alt="linkedin-icon" className="w-6 h-6" width={24} height={24} />
                 </a>
               </div>
             </div>

@@ -7,33 +7,33 @@ import "slick-carousel/slick/slick-theme.css";
 
 // IMAGES DATA FOR CAROUSEL
 interface Data {
-    imgSrc: string;
+    imageSrc: string; // Thay đổi tên thuộc tính để không chứa khoảng trắng
 }
 
 const data: Data[] = [
     {
-        imgSrc: "/assets/carousel/airbnb.svg"
+        imageSrc: "/assets/carousel/airbnb.svg"
     },
     {
-        imgSrc: "/assets/carousel/fedex.svg"
+        imageSrc: "/assets/carousel/fedex.svg"
     },
     {
-        imgSrc: "/assets/carousel/google.svg"
+        imageSrc: "/assets/carousel/google.svg"
     },
     {
-        imgSrc: "/assets/carousel/hubspot.svg"
+        imageSrc: "/assets/carousel/hubspot.svg"
     },
     {
-        imgSrc: "/assets/carousel/microsoft.svg"
+        imageSrc: "/assets/carousel/microsoft.svg"
     },
     {
-        imgSrc: "/assets/carousel/walmart.svg"
+        imageSrc: "/assets/carousel/walmart.svg"
     },
     {
-        imgSrc: "/assets/carousel/airbnb.svg"
+        imageSrc: "/assets/carousel/airbnb.svg"
     },
     {
-        imgSrc: "/assets/carousel/fedex.svg"
+        imageSrc: "/assets/carousel/fedex.svg"
     }
 ]
 
@@ -89,7 +89,7 @@ export default class MultipleItems extends Component {
                         <Slider {...settings}>
                             {data.map((item, i) =>
                                 <div key={i}>
-                                    <Image src={item.imgSrc} alt={item.imgSrc} width={116} height={36} />
+                                    <Image src={item.imageSrc} alt={item.imageSrc} width={116} height={36} />
                                 </div>
                             )}
                         </Slider>

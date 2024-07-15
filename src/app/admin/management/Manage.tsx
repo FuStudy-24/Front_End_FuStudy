@@ -516,7 +516,7 @@ export const Manage = () => {
                         {/* Table body */}
                         <tbody className="text-sm font-medium divide-y divide-slate-700">
                           {data.map((item) => (
-                            <tr>
+                            <tr key={item.id}>
                               <td className="p-2">
                                 <div className="flex items-center">
                                   <input type="checkbox" className="mr-5" />{" "}
@@ -578,7 +578,7 @@ export const Manage = () => {
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
                                   strokeWidth="2"
-                                  d="M13 5H1m0 0 4 4M1 5l4-4"
+                                  d="M4.5 5h8.5m0 0L9 1m3.5 4L9 9"
                                 />
                               </svg>
                               Previous
@@ -600,7 +600,7 @@ export const Manage = () => {
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
                                   strokeWidth="2"
-                                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                                  d="M4.5 5h8.5m0 0L9 1m3.5 4L9 9"
                                 />
                               </svg>
                             </a>

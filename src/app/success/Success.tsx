@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { addCoin } from "@/lib/service/paymentService";
 import useAuthStore from "@/lib/hooks/useUserStore";
-const Success = () => {
+
+const Success: React.FC = () => {
   const { userInfo, token } = useAuthStore();
+
   useEffect(() => {
     const fetchData = async () => {
       const orderId = localStorage.getItem("orderId");
@@ -18,7 +20,8 @@ const Success = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [token]);
+
   return (
     <>
       <div className="bg-gradient-to-r mt-20 from-purple-300 to-blue-200">
@@ -36,8 +39,7 @@ const Success = () => {
               </svg>
               <h1 className="text-6xl font-medium py-8">Payment Done!</h1>
               <p className="text-2xl pb-8 px-12 font-medium">
-                Thank you for completing your secure online payment. <br /> Have
-                a great day!
+                Thank you for completing your secure online payment. <br /> Have a great day!
               </p>
               <Link href="/" passHref>
                 <button className="bg-gradient-to-r from-purple-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 text-white font-semibold px-6 py-3 rounded-md mr-6">

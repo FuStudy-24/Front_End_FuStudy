@@ -9,7 +9,7 @@ import Image from "next/image";
 interface DataType {
     profession: string;
     comment: string;
-    imgSrc: string;
+    imageSrc: string;
     name: string;
 }
 
@@ -18,37 +18,37 @@ const postData: DataType[] = [
         name: "Robert Fox",
         profession: 'CEO, Parkview Int.Ltd',
         comment: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-        imgSrc: '/assets/testimonial/user.svg',
+        imageSrc: '/assets/testimonial/user.svg',
     },
     {
         name: "Leslie Alexander",
         profession: 'CEO, Parkview Int.Ltd',
         comment: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-        imgSrc: '/assets/mentor/user2.png',
+        imageSrc: '/assets/mentor/user2.png',
     },
     {
         name: "Cody Fisher",
         profession: 'CEO, Parkview Int.Ltd',
         comment: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-        imgSrc: '/assets/mentor/user3.png',
+        imageSrc: '/assets/mentor/user3.png',
     },
     {
         name: "Robert Fox",
         profession: 'CEO, Parkview Int.Ltd',
         comment: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-        imgSrc: '/assets/mentor/user1.png',
+        imageSrc: '/assets/mentor/user1.png',
     },
     {
         name: "Leslie Alexander",
         profession: 'CEO, Parkview Int.Ltd',
         comment: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-        imgSrc: '/assets/mentor/user2.png',
+        imageSrc: '/assets/mentor/user2.png',
     },
     {
         name: "Cody Fisher",
         profession: 'CEO, Parkview Int.Ltd',
         comment: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-        imgSrc: '/assets/mentor/user3.png',
+        imageSrc: '/assets/mentor/user3.png',
     },
 ]
 
@@ -109,7 +109,7 @@ export default class MultipleItems extends Component {
                             <div key={i}>
                                 <div className={`bg-white m-4 p-5 my-20 relative ${i % 2 ? 'middleDiv' : 'testimonial-shadow'}`}>
                                     <div className="absolute top-[-45px]">
-                                        <Image src={items.imgSrc} alt={items.imgSrc} width={100} height={100} className="inline-block" />
+                                        <Image src={items.imageSrc} alt={items.imageSrc} width={100} height={100} className="inline-block" />
                                     </div>
                                     <h4 className='text-base font-normal text-darkgray my-4'>{items.comment}</h4>
                                     <hr style={{ color: "#D7D5D5" }} />
