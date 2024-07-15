@@ -16,22 +16,27 @@ const Register = () => {
     gender: "male",
     roleName: "Student",
   });
+  const [isMentor, setIsMentor] = useState(false);
 
   const handleTutor = () => {
-    setFormData({ ...formData, roleName: "Mentor" });
+    setIsMentor(!isMentor);
   };
 
   const handleRegister = async () => {
-    console.log(formData);
+    const dataToSubmit = {
+      ...formData,
+      roleName: isMentor ? "Mentor" : "Student",
+    };
+
+    console.log(dataToSubmit);
     try {
-      const response = await postRegis(formData);
+      const response = await postRegis(dataToSubmit);
 
       console.log(response);
       toast.success("Registration successful!"); // Hiển thị thông báo thành công
       setTimeout(() => {
         router.push('/login');
       }, 1000);
-      // Xử lý khi đăng ký thành công, ví dụ: điều hướng tới trang đăng nhập hoặc hiển thị thông báo thành công
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.message) {
         const err = error.response.data.message;
