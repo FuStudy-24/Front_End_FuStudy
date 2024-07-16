@@ -7,9 +7,11 @@ const getUserById = async (id) => {
   return await axios.get(`ManageAccount/GetUserById/${id}`);
 };
 
-const getAllTransaction = async () => {
-  return await axios.get("Transaction/GetAllTransactions");
-}
+const getAllTransaction = async (index, size) => {
+  return await axios.get(
+    `Transaction/GetAllTransactions?PageIndex=${index}&PageSize=${size}`
+  );
+};
 
 const getAllMentor = async () => {
   return await axios.get("Mentor/GetAllMentor");
@@ -18,4 +20,16 @@ const getAllMentor = async () => {
 const addUser = async (data) => {
   return await axios.post("ManageAccount/CreateUser", data);
 };
-export { getAllUser, getUserById, addUser, getAllMentor, getAllTransaction };
+
+const verifyMentor = async (id) => {
+  return await axios.patch(`Mentor/VerifyMentor/${id}`);
+};
+
+export {
+  getAllUser,
+  getUserById,
+  addUser,
+  getAllMentor,
+  getAllTransaction,
+  verifyMentor,
+};

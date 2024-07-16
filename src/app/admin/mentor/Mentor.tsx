@@ -3,15 +3,21 @@ import NavDashboard from "@/components/NavDashboard";
 import Slidebar from "@/components/Slidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useAuthStore from "@/lib/hooks/useUserStore";
-import { getAllUser, addUser, getAllMentor } from "@/lib/service/adminService";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+import {
+  addUser,
+  getAllMentor,
+  verifyMentor,
+} from "@/lib/service/adminService";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Mentor = () => {
   const [showModal, setShowModal] = useState("");
   const [loading, setLoading] = useState(true);
-  const [data, setdata] = useState([
+  const [verifyCheck, setverifyCheck] = useState(false);
+  const [ data, setdata] = useState([
     {
       id: 0,
       userId: 0,
@@ -79,6 +85,19 @@ export const Mentor = () => {
     }));
   };
 
+  const handleVerify = async (id: any) => {
+    try {
+      const response = await verifyMentor(id);
+      console.log(response.data.data);
+      toast.success("Verify Successful!");
+      setTimeout(() => {
+        setverifyCheck(!verifyCheck);
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const createUser = async () => {
     console.log(createForm);
     const res = await addUser(createForm);
@@ -102,8 +121,7 @@ export const Mentor = () => {
       }
     };
     fetchData();
-  }, []);
-  console.log(data);
+  }, [verifyCheck]);
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-2xl font-semibold">
@@ -123,127 +141,6 @@ export const Mentor = () => {
         <div className="p-4 xl:ml-80">
           <NavDashboard page={"Mentor"} />
           <div className="mt-12">
-            {/* <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-              <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
-                <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    className="w-6 h-6 text-white"
-                  >
-                    <path d="M12 7.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z"></path>
-                    <path
-                      fill-rule="evenodd"
-                      d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 14.625v-9.75zM8.25 9.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM18.75 9a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75h-.008zM4.5 9.75A.75.75 0 015.25 9h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75V9.75z"
-                      clip-rule="evenodd"
-                    ></path>
-                    <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 00-.75-.75H2.25z"></path>
-                  </svg>
-                </div>
-                <div className="p-4 text-right">
-                  <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                    Today Money
-                  </p>
-                  <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    $53
-                  </h4>
-                </div>
-                <div className="border-t border-blue-gray-50 p-4">
-                  <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                    <strong className="text-green-500">+55%</strong>&nbsp;than
-                    last week
-                  </p>
-                </div>
-              </div>
-              <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
-                <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-pink-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    className="w-6 h-6 text-white"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="p-4 text-right">
-                  <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                    Today Users
-                  </p>
-                  <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    3
-                  </h4>
-                </div>
-                <div className="border-t border-blue-gray-50 p-4">
-                  <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                    <strong className="text-green-500">+3%</strong>&nbsp;than
-                    last month
-                  </p>
-                </div>
-              </div>
-              <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
-                <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-green-600 to-green-400 text-white shadow-green-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    className="w-6 h-6 text-white"
-                  >
-                    <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"></path>
-                  </svg>
-                </div>
-                <div className="p-4 text-right">
-                  <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                    New Clients
-                  </p>
-                  <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    4
-                  </h4>
-                </div>
-                <div className="border-t border-blue-gray-50 p-4">
-                  <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                    <strong className="text-red-500">-2%</strong>&nbsp;than
-                    yesterday
-                  </p>
-                </div>
-              </div>
-              <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
-                <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-orange-600 to-orange-400 text-white shadow-orange-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    className="w-6 h-6 text-white"
-                  >
-                    <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"></path>
-                  </svg>
-                </div>
-                <div className="p-4 text-right">
-                  <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                    Sales
-                  </p>
-                  <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                    $100
-                  </h4>
-                </div>
-                <div className="border-t border-blue-gray-50 p-4">
-                  <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                    <strong className="text-green-500">+5%</strong>&nbsp;than
-                    yesterday
-                  </p>
-                </div>
-              </div>
-            </div> */}
-
             <div className="mb-4 grid grid-cols-1 gap-6">
               <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none m-0 flex items-center justify-between p-6">
@@ -251,24 +148,6 @@ export const Mentor = () => {
                     <h6 className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-1">
                       Mentors
                     </h6>
-                    {/* <p className="antialiased font-sans text-sm leading-normal flex items-center gap-1 font-normal text-blue-gray-600">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="3"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className="h-4 w-4 text-blue-500"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.5 12.75l6 6 9-13.5"
-                        ></path>
-                      </svg>
-                      <strong>30 done</strong> this month
-                    </p> */}
                   </div>
                   <div className="flex space-x-5 items-center">
                     <button
@@ -513,280 +392,285 @@ export const Mentor = () => {
                         </thead>
                         {/* Table body */}
                         <tbody className="text-sm font-medium divide-y divide-slate-700">
-  {data.map((user, index) => (
-    <tr key={user.user.id}>
-      <td className="p-2">
-        <div className="flex items-center">
-          <input type="checkbox" className="mr-5" />{" "}
-          <div className="text-black">
-            {user.user.username}
-          </div>
-        </div>
-      </td>
-      <td className="p-2">
-        <div className="text-center">
-          {user.user.fullname}
-        </div>
-      </td>
-      <td className="p-2">
-        <div className="text-center">
-          {user.academicLevel}
-        </div>
-      </td>
-      <td className="p-2">
-        <div className="text-center">{user.skill}</div>
-      </td>
-      <td className="p-2">
-        <div className="text-center">
-          {user.workPlace}
-        </div>
-      </td>
-      <td className="p-2">
-        <div className="text-center">
-          {user.verifyStatus === true ? (
-            <button className="text-sm text-Blueviolet font-medium px-3 py-[12.5px] border-[0] rounded-[100px] bg-green-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]">
-              Verified
-            </button>
-          ) : (
-            <button className="text-sm text-Blueviolet font-medium px-3  py-[12.5px] border-[0] rounded-[100px] bg-gray-700 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-600 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]">
-              Not verified
-            </button>
-          )}
-        </div>
-      </td>
-      <td className="p-2">
-        <div className="flex justify-between">
-          <button
-            onClick={() => {
-              setShowModal("update");
-            }}
-            type="submit"
-            className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-xl bg-orange-500 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-orange-300 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
-          >
-            Update
-          </button>
-          {showModal === "update" ? (
-            <>
-              <div className=" fixed left-1/3 top-16 flex items-center justify-center w-[550px]">
-                <div className="relative p-4 w-full max-h-full">
-                  <div className="relative bg-white rounded-3xl shadow ">
-                    <button
-                      type="button"
-                      className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
-                      onClick={() => setShowModal("")}
-                    >
-                      <svg
-                        className="w-3 h-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                        />
-                      </svg>
-                      <span className="sr-only">
-                        Close modal
-                      </span>
-                    </button>
-                    <div className="p-5">
-                      <h3 className="text-lg font-bold text-black ">
-                        Create User
-                      </h3>
-                    </div>
-                    <div className="flex px-16">
-                      <div className="pr-10 border-r-2">
-                        <Avatar className="h-40 w-40">
-                          <AvatarImage src="https://github.com/shadcn.png" />
-                          <AvatarFallback>
-                            CN
-                          </AvatarFallback>
-                        </Avatar>
+                          {data.map((user, index) => (
+                            <tr key={user.user.id}>
+                              <td className="p-2">
+                                <div className="flex items-center">
+                                  <input type="checkbox" className="mr-5" />{" "}
+                                  <div className="text-black">
+                                    {user.user.username}
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-2">
+                                <div className="text-center">
+                                  {user.user.fullname}
+                                </div>
+                              </td>
+                              <td className="p-2">
+                                <div className="text-center">
+                                  {user.academicLevel}
+                                </div>
+                              </td>
+                              <td className="p-2">
+                                <div className="text-center">{user.skill}</div>
+                              </td>
+                              <td className="p-2">
+                                <div className="text-center">
+                                  {user.workPlace}
+                                </div>
+                              </td>
+                              <td className="p-2">
+                                <div className="text-center">
+                                  {user.verifyStatus === true ? (
+                                    <button className="text-sm text-Blueviolet font-medium px-3 py-[12.5px] border-[0] rounded-[100px] bg-green-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]">
+                                      Verified
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        handleVerify(user.id);
+                                      }}
+                                      className="text-sm text-Blueviolet font-medium px-3  py-[12.5px] border-[0] rounded-[100px] bg-gray-700 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-600 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                                    >
+                                      Not verified
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="p-2">
+                                <div className="flex justify-between">
+                                  <button
+                                    onClick={() => {
+                                      setShowModal("update");
+                                    }}
+                                    type="submit"
+                                    className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-xl bg-orange-500 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-orange-300 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                                  >
+                                    Update
+                                  </button>
+                                  {showModal === "update" ? (
+                                    <>
+                                      <div className=" fixed left-1/3 top-16 flex items-center justify-center w-[550px]">
+                                        <div className="relative p-4 w-full max-h-full">
+                                          <div className="relative bg-white rounded-3xl shadow ">
+                                            <button
+                                              type="button"
+                                              className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                              onClick={() => setShowModal("")}
+                                            >
+                                              <svg
+                                                className="w-3 h-3"
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 14 14"
+                                              >
+                                                <path
+                                                  stroke="currentColor"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  strokeWidth="2"
+                                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                                />
+                                              </svg>
+                                              <span className="sr-only">
+                                                Close modal
+                                              </span>
+                                            </button>
+                                            <div className="p-5">
+                                              <h3 className="text-lg font-bold text-black ">
+                                                Create User
+                                              </h3>
+                                            </div>
+                                            <div className="flex px-16">
+                                              <div className="pr-10 border-r-2">
+                                                <Avatar className="h-40 w-40">
+                                                  <AvatarImage src="https://github.com/shadcn.png" />
+                                                  <AvatarFallback>
+                                                    CN
+                                                  </AvatarFallback>
+                                                </Avatar>
 
-                        <div className="flex flex-col items-center justify-center mt-4">
-                          <label
-                            htmlFor="file"
-                            className="inline-flex items-center px-4 py-2 bg-[#2ba8fb] text-white rounded-xl hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer"
-                          >
-                            {" "}
-                            Browse file
-                          </label>
-                          <input
-                            id="file"
-                            type="file"
-                            className="hidden"
-                          />
-                        </div>
+                                                <div className="flex flex-col items-center justify-center mt-4">
+                                                  <label
+                                                    htmlFor="file"
+                                                    className="inline-flex items-center px-4 py-2 bg-[#2ba8fb] text-white rounded-xl hover:bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer"
+                                                  >
+                                                    {" "}
+                                                    Browse file
+                                                  </label>
+                                                  <input
+                                                    id="file"
+                                                    type="file"
+                                                    className="hidden"
+                                                  />
+                                                </div>
 
-                        <div className="pt-6 space-y-3">
-                          <label className="block text-gray-800 font-semibold text-sm">
-                            ID
-                          </label>
-                          <div className="mt-2">
-                            <input
-                              type="text"
-                              className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                            />
-                          </div>
-                          <label className="block text-gray-800 font-semibold text-sm">
-                            Phone
-                          </label>
-                          <div className="mt-2">
-                            <input
-                              type="text"
-                              className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="pl-10 pb-10 space-y-3">
-                        <label className="block text-gray-800 font-semibold text-sm">
-                          Username
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                          />
-                        </div>
-                        <label className="block text-gray-800 font-semibold text-sm">
-                          Password
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                          />
-                        </div>
-                        <label className="block text-gray-800 font-semibold text-sm">
-                          Fullname
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                          />
-                        </div>
-                        <label className="block text-gray-800 font-semibold text-sm">
-                          Email
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                          />
-                        </div>
-                        <label className="block text-gray-800 font-semibold text-sm">
-                          Gender
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-end pb-4 pr-14">
-                      <button
-                        type="button"
-                        className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
-                      >
-                        Create
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : null}
-          <button
-            onClick={() => {
-              setShowModal("delete");
-            }}
-            type="submit"
-            className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-xl bg-red-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-red-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
-          >
-            delete
-          </button>
-          {showModal === "delete" ? (
-            <>
-              <div className="overflow-y-auto fixed mt-14 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                <div className="relative p-4 w-full max-w-md max-h-full">
-                  <div className="relative bg-white rounded-3xl shadow ">
-                    <button
-                      type="button"
-                      className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
-                      onClick={() => setShowModal("")}
-                    >
-                      <svg
-                        className="w-3 h-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                        />
-                      </svg>
-                      <span className="sr-only">
-                        Close modal
-                      </span>
-                    </button>
-                    <div className="p-4 md:p-5 text-center">
-                      <svg
-                        className="mx-auto mb-4 text-gray-400 w-12 h-12 "
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                        />
-                      </svg>
-                      <h3 className="mb-5 text-lg font-normal text-gray-500 ">
-                        Are you sure you want to delete?
-                      </h3>
-                      <button
-                        type="button"
-                        className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
-                      >
-                        Yes, I am sure
-                      </button>
-                      <button
-                        onClick={() => setShowModal("")}
-                        type="button"
-                        className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
-                      >
-                        No, cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : null}
-        </div>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+                                                <div className="pt-6 space-y-3">
+                                                  <label className="block text-gray-800 font-semibold text-sm">
+                                                    ID
+                                                  </label>
+                                                  <div className="mt-2">
+                                                    <input
+                                                      type="text"
+                                                      className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                    />
+                                                  </div>
+                                                  <label className="block text-gray-800 font-semibold text-sm">
+                                                    Phone
+                                                  </label>
+                                                  <div className="mt-2">
+                                                    <input
+                                                      type="text"
+                                                      className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                    />
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className="pl-10 pb-10 space-y-3">
+                                                <label className="block text-gray-800 font-semibold text-sm">
+                                                  Username
+                                                </label>
+                                                <div className="mt-2">
+                                                  <input
+                                                    type="text"
+                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                  />
+                                                </div>
+                                                <label className="block text-gray-800 font-semibold text-sm">
+                                                  Password
+                                                </label>
+                                                <div className="mt-2">
+                                                  <input
+                                                    type="text"
+                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                  />
+                                                </div>
+                                                <label className="block text-gray-800 font-semibold text-sm">
+                                                  Fullname
+                                                </label>
+                                                <div className="mt-2">
+                                                  <input
+                                                    type="text"
+                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                  />
+                                                </div>
+                                                <label className="block text-gray-800 font-semibold text-sm">
+                                                  Email
+                                                </label>
+                                                <div className="mt-2">
+                                                  <input
+                                                    type="text"
+                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                  />
+                                                </div>
+                                                <label className="block text-gray-800 font-semibold text-sm">
+                                                  Gender
+                                                </label>
+                                                <div className="mt-2">
+                                                  <input
+                                                    type="text"
+                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                  />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="flex justify-end pb-4 pr-14">
+                                              <button
+                                                type="button"
+                                                className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
+                                              >
+                                                Create
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  ) : null}
+                                  <button
+                                    onClick={() => {
+                                      setShowModal("delete");
+                                    }}
+                                    type="submit"
+                                    className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-xl bg-red-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-red-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                                  >
+                                    delete
+                                  </button>
+                                  {showModal === "delete" ? (
+                                    <>
+                                      <div className="overflow-y-auto fixed mt-14 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div className="relative p-4 w-full max-w-md max-h-full">
+                                          <div className="relative bg-white rounded-3xl shadow ">
+                                            <button
+                                              type="button"
+                                              className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                              onClick={() => setShowModal("")}
+                                            >
+                                              <svg
+                                                className="w-3 h-3"
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 14 14"
+                                              >
+                                                <path
+                                                  stroke="currentColor"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  strokeWidth="2"
+                                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                                />
+                                              </svg>
+                                              <span className="sr-only">
+                                                Close modal
+                                              </span>
+                                            </button>
+                                            <div className="p-4 md:p-5 text-center">
+                                              <svg
+                                                className="mx-auto mb-4 text-gray-400 w-12 h-12 "
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 20 20"
+                                              >
+                                                <path
+                                                  stroke="currentColor"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  strokeWidth="2"
+                                                  d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                                />
+                                              </svg>
+                                              <h3 className="mb-5 text-lg font-normal text-gray-500 ">
+                                                Are you sure you want to delete?
+                                              </h3>
+                                              <button
+                                                type="button"
+                                                className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
+                                              >
+                                                Yes, I am sure
+                                              </button>
+                                              <button
+                                                onClick={() => setShowModal("")}
+                                                type="button"
+                                                className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
+                                              >
+                                                No, cancel
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  ) : null}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
                       </table>
                       <div className="flex items-center justify-between border-t border-slate-700 bg-white px-4 py-3 sm:px-6 text-black">
                         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
@@ -852,6 +736,7 @@ export const Mentor = () => {
             </div>
           </div>
         </div>
+        <ToastContainer />
       </div>
     </>
   );
