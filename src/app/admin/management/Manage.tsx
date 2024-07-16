@@ -6,10 +6,13 @@ import useAuthStore from "@/lib/hooks/useUserStore";
 import { addUser, getAllTransaction } from "@/lib/service/adminService";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import page from "./page";
 
 export const Manage = () => {
   const [showModal, setShowModal] = useState("");
   const [loading, setLoading] = useState(true);
+  const [pageIndex, setpageIndex] = useState(1);
+  const [pageSize, setpageSize] = useState(10);
   const [data, setdata] = useState([
     {
       id: 0,
@@ -24,7 +27,6 @@ export const Manage = () => {
       fullname: "",
     },
   ]);
-
   const [createForm, setcreateForm] = useState({
     username: "",
     password: "",
@@ -59,7 +61,8 @@ export const Manage = () => {
       [key]: e.target.value, // Use computed property name for dynamic updates
     }));
   };
-
+  console.log(pageIndex);
+  
   const createDate = (stringDate: string) => {
     const datePart = stringDate.split("T")[0];
     const timePart = stringDate?.split("T")[1]?.split(".")[0] || "";
@@ -81,6 +84,20 @@ export const Manage = () => {
     }));
   };
 
+  const handlePageIndex = (index: any) => {
+    if (pageIndex === 1) {
+      if (index === "next") {
+        console.log("asdasd");
+        setpageIndex((prev) => prev + 1);
+        return;
+      }
+      return;
+    }
+    if (index === "prev") {
+      setpageIndex((prev) => prev - 1);
+    }
+  };
+
   const createUser = async () => {
     console.log(createForm);
     const res = await addUser(createForm);
@@ -90,21 +107,23 @@ export const Manage = () => {
   const updateUser = async () => {
     console.log(updateUser);
   };
+  console.log(typeof pageSize);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getAllTransaction();
+        const response = await getAllTransaction(pageIndex, pageSize);
         console.log(response.data.data);
         const users = response.data.data;
         setdata(users);
       } catch (error) {
+        console.log(error);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [pageIndex]);
   console.log(data);
   if (loading) {
     return (
@@ -564,6 +583,10 @@ export const Manage = () => {
                           <div className="flex space-x-3">
                             <a
                               href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handlePageIndex("prev");
+                              }}
                               className="flex items-center justify-center w-28 px-3 h-8 text-sm font-medium  bg-white border rounded-lg   border-gray-700 text-gray-400 hover:bg-blue-600 hover:text-white"
                             >
                               <svg
@@ -578,13 +601,17 @@ export const Manage = () => {
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
                                   strokeWidth="2"
-                                  d="M4.5 5h8.5m0 0L9 1m3.5 4L9 9"
+                                  d="M13 5H1m0 0 4 4M1 5l4-4"
                                 />
                               </svg>
                               Previous
                             </a>
                             <a
                               href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handlePageIndex("next");
+                              }}
                               className="flex items-center justify-center w-28 px-3 h-8 text-sm font-medium  bg-white border rounded-lg   border-gray-700 text-gray-400 hover:bg-blue-600 hover:text-white"
                             >
                               Next
