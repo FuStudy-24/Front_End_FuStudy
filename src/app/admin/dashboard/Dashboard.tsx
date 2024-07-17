@@ -2,25 +2,35 @@
 import NavDashboard from "@/components/NavDashboard";
 import Slidebar from "@/components/Slidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useAuthStore from "@/lib/hooks/useUserStore";
-import { getAllUser, addUser } from "@/lib/service/adminService";
-import { faL } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "next/navigation";
+import {
+  activateUser,
+  addUser,
+  deactivateUser,
+  getAllUser,
+  updateUser,
+} from "@/lib/service/adminService";
 import { useEffect, useState } from "react";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export const Dashboard = () => {
   const [showModal, setShowModal] = useState("");
   const [loading, setLoading] = useState(true);
+  const [flag, setflag] = useState(true);
+  const [idUser, setidUser] = useState(0);
+  const [error, setError] = useState("");
   const [data, setdata] = useState([
     {
+      id: 0,
       fullname: "",
       password: "",
       email: "",
       avatar: "",
       gender: "",
       identityCard: "",
+      dob: "",
       phone: "",
       username: "",
+      status: "",
       role: {
         id: 0,
         roleName: "",
@@ -29,15 +39,31 @@ export const Dashboard = () => {
   ]);
 
   const [createForm, setcreateForm] = useState({
+    fullname: "stringst",
     username: "",
     password: "",
     email: "example@gmail.com",
-    fullname: "",
-    avatar: "string",
-    gender: "",
+    gender: "male",
+    dob: "2024-07-17T15:00:08.155Z",
     roleName: "",
-    identityCard: "079202035866",
-    phone: "0773850946",
+    identityCard: "004151580193",
+    phone: "0928803658",
+  });
+
+  const [updateData, setupdateData] = useState({
+    fullname: "string",
+    password: "string",
+    email: "string",
+    avatar: "string",
+    gender: "string",
+    identityCard: "string",
+    phone: "string",
+    dob: "",
+    username: "string",
+    role: {
+      id: 0,
+      roleName: "string",
+    },
   });
 
   const [updateForm, setupdateForm] = useState({
@@ -48,13 +74,6 @@ export const Dashboard = () => {
     phone: "",
     dob: "",
   });
-  const [popoverOpen, setPopoverOpen] = useState(true); // Add state for popover
-  const router = useRouter();
-  const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
-    isLoggedIn: state.isLoggedIn,
-    userInfo: state.userInfo,
-    logout: state.logout,
-  }));
 
   const onChangeCreate = (key: any, e: any) => {
     setcreateForm((prevState) => ({
@@ -72,14 +91,82 @@ export const Dashboard = () => {
 
   const createUser = async () => {
     console.log(createForm);
-    const res = await addUser(createForm);
-    console.log(res);
+    try {
+      const res = await addUser(createForm);
+      console.log(res);
+      setflag(!flag);
+      toast.success("Create Successful!");
+    } catch (error: any) {
+      
+      if (error.response && error.response.data) {
+        console.log(error.response.data);
+        const err = error.response.data.errors; 
+        toast.error(err);
+        setError(error.response.data.message);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+    }
   };
 
-  const updateUser = async () => {
-    console.log(updateUser);
+  const update = async () => {
+    console.log(idUser);
+    console.log(updateForm);
+    try {
+      const response = await updateUser(idUser, updateForm);
+      console.log(response);
+      setflag(!flag);
+      toast.success("Update Successful!");
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
   };
 
+  const updateStatus = async () => {
+    console.log(idUser);
+    try {
+      const response = await activateUser(idUser);
+      console.log(response);
+      setflag(!flag);
+      toast.success("Active Successful!");
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const err = error.response.data.message;
+        console.log(err);
+        console.log(error);
+        toast.error(err);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+    }
+  };
+
+  const deleteUser = async () => {
+    console.log(idUser);
+    try {
+      const response = await deactivateUser(idUser);
+      console.log(response);
+      setflag(!flag);
+      setShowModal("");
+      toast.success("Deactivate Successful!");
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  };
+
+  const formatDate = (stringDate: string) => {
+    const datePart = stringDate.split("T")[0];
+    const date = new Date(datePart);
+    const day = date.getDate();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -93,8 +180,7 @@ export const Dashboard = () => {
       }
     };
     fetchData();
-  }, []);
-  console.log(showModal);
+  }, [flag]);
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-2xl font-semibold">
@@ -110,9 +196,9 @@ export const Dashboard = () => {
   return (
     <>
       <div className="min-h-screen bg-gray-50/50">
-        <Slidebar page={"Home"}/>
+        <Slidebar page={"Home"} />
         <div className="p-4 xl:ml-80">
-        <NavDashboard page={"Home"}/>
+          <NavDashboard page={"Home"} />
           <div className="mt-12">
             <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
               <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -242,28 +328,10 @@ export const Dashboard = () => {
                     <h6 className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-1">
                       Users
                     </h6>
-                    {/* <p className="antialiased font-sans text-sm leading-normal flex items-center gap-1 font-normal text-blue-gray-600">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="3"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className="h-4 w-4 text-blue-500"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.5 12.75l6 6 9-13.5"
-                        ></path>
-                      </svg>
-                      <strong>30 done</strong> this month
-                    </p> */}
                   </div>
                   <div className="flex space-x-5 items-center">
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
                         setShowModal("create");
                       }}
                       type="submit"
@@ -351,27 +419,6 @@ export const Dashboard = () => {
                                   className="hidden"
                                 />
                               </div>
-
-                              {/* <div className="pt-6 space-y-3">
-                                <label className="block text-gray-800 font-semibold text-sm">
-                                  ID
-                                </label>
-                                <div className="mt-2">
-                                  <input
-                                    type="text"
-                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                  />
-                                </div>
-                                <label className="block text-gray-800 font-semibold text-sm">
-                                  Phone
-                                </label>
-                                <div className="mt-2">
-                                  <input
-                                    type="text"
-                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                  />
-                                </div>
-                              </div> */}
                             </div>
                             <div className="pl-10 pb-10 space-y-3">
                               <label className="block text-gray-800 font-semibold text-sm">
@@ -411,27 +458,8 @@ export const Dashboard = () => {
                                 >
                                   <option value={"Student"}>Student</option>
                                   <option value={"Mentor"}>Mentor</option>
-                                  <option value={"Moderator"}>Moderator</option>
                                 </select>
                               </div>
-                              {/* <label className="block text-gray-800 font-semibold text-sm">
-                                Email
-                              </label>
-                              <div className="mt-2">
-                                <input
-                                  type="text"
-                                  className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                />
-                              </div>
-                              <label className="block text-gray-800 font-semibold text-sm">
-                                Gender
-                              </label>
-                              <div className="mt-2">
-                                <input
-                                  type="text"
-                                  className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                />
-                              </div> */}
                             </div>
                           </div>
                           <div className="flex justify-end pb-4 pr-14">
@@ -442,13 +470,6 @@ export const Dashboard = () => {
                             >
                               Create
                             </button>
-                            {/* <button
-                              onClick={() => setShowModal(false)}
-                              type="button"
-                              className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
-                            >
-                              Cancel
-                            </button> */}
                           </div>
                         </div>
                       </div>
@@ -501,6 +522,11 @@ export const Dashboard = () => {
                             </th>
                             <th className="p-2">
                               <div className="font-semibold text-center">
+                                Status
+                              </div>
+                            </th>
+                            <th className="p-2">
+                              <div className="font-semibold text-center">
                                 action
                               </div>
                             </th>
@@ -508,30 +534,6 @@ export const Dashboard = () => {
                         </thead>
                         {/* Table body */}
                         <tbody className="text-sm font-medium divide-y divide-slate-700">
-                          {/* Row */}
-                          {/* <tr>
-                    <td className="p-2">
-                      <div className="flex items-center">
-                        <input type="checkbox" className="mr-5" />{" "}
-                        <div className="text-black">Github.com</div>
-                      </div>
-                    </td>
-                    <td className="p-2">
-                      <div className="text-center">2.4K</div>
-                    </td>
-                    <td className="p-2">
-                      <div className="text-center">$3,877</div>
-                    </td>
-                    <td className="p-2">
-                      <div className="text-center">267</div>
-                    </td>
-                    <td className="p-2">
-                      <div className="text-center">4.7%</div>
-                    </td>
-                    <td className="p-2">
-                      <div className="text-center">4.7%</div>
-                    </td>
-                  </tr> */}
                           {data.map((user) => (
                             <tr key={user.username}>
                               <td className="p-2">
@@ -567,19 +569,58 @@ export const Dashboard = () => {
                                 <div className="text-center">{user.phone}</div>
                               </td>
                               <td className="p-2">
+                                {user.status ? (
+                                  <button className="text-sm w-20 text-Blueviolet font-medium px-3 py-[12.5px] border-[0] rounded-[100px] bg-green-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]">
+                                    Active
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      setidUser(user.id);
+                                      updateStatus();
+                                    }}
+                                    className="text-sm w-20 text-Blueviolet font-medium px-3  py-[12.5px] border-[0] rounded-[100px] bg-gray-700 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-green-600 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                                  >
+                                    Inactive
+                                  </button>
+                                )}
+                              </td>
+                              <td className="p-2">
                                 <div className="flex justify-between">
                                   <button
                                     onClick={() => {
                                       setShowModal("update");
+                                      setidUser(user.id);
+                                      setupdateData(user);
+                                      setupdateForm((prevState) => {
+                                        const {
+                                          email,
+                                          fullname,
+                                          gender,
+                                          identityCard,
+                                          phone,
+                                          dob,
+                                        } = user;
+                                        return {
+                                          ...prevState,
+                                          email,
+                                          fullname,
+                                          gender,
+                                          identityCard,
+                                          phone,
+                                          dob: formatDate(dob),
+                                        };
+                                      });
                                     }}
                                     type="submit"
-                                    className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-xl bg-orange-500 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-orange-300 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                                    className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-[100px] bg-orange-500 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-orange-300 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
                                   >
                                     Update
                                   </button>
                                   {showModal === "update" ? (
                                     <>
-                                      <div className=" fixed left-1/3 top-16 flex items-center justify-center w-[550px]">
+                                      <div className=" fixed left-1/3 top-8 flex items-center justify-center w-[550px]">
                                         <div className="relative p-4 w-full max-h-full">
                                           <div className="relative bg-white rounded-3xl shadow ">
                                             <button
@@ -634,52 +675,22 @@ export const Dashboard = () => {
                                                     className="hidden"
                                                   />
                                                 </div>
-
-                                                <div className="pt-6 space-y-3">
-                                                  <label className="block text-gray-800 font-semibold text-sm">
-                                                    ID
-                                                  </label>
-                                                  <div className="mt-2">
-                                                    <input
-                                                      type="text"
-                                                      className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                                    />
-                                                  </div>
-                                                  <label className="block text-gray-800 font-semibold text-sm">
-                                                    Phone
-                                                  </label>
-                                                  <div className="mt-2">
-                                                    <input
-                                                      type="text"
-                                                      className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                                    />
-                                                  </div>
-                                                </div>
                                               </div>
                                               <div className="pl-10 pb-10 space-y-3">
-                                                <label className="block text-gray-800 font-semibold text-sm">
-                                                  Username
-                                                </label>
-                                                <div className="mt-2">
-                                                  <input
-                                                    type="text"
-                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                                  />
-                                                </div>
-                                                <label className="block text-gray-800 font-semibold text-sm">
-                                                  Password
-                                                </label>
-                                                <div className="mt-2">
-                                                  <input
-                                                    type="text"
-                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                                                  />
-                                                </div>
                                                 <label className="block text-gray-800 font-semibold text-sm">
                                                   Fullname
                                                 </label>
                                                 <div className="mt-2">
                                                   <input
+                                                    defaultValue={
+                                                      updateData.fullname
+                                                    }
+                                                    onChange={(e) => {
+                                                      onChangeUpdate(
+                                                        "fullname",
+                                                        e
+                                                      );
+                                                    }}
                                                     type="text"
                                                     className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
                                                   />
@@ -689,6 +700,15 @@ export const Dashboard = () => {
                                                 </label>
                                                 <div className="mt-2">
                                                   <input
+                                                    defaultValue={
+                                                      updateData.email
+                                                    }
+                                                    onChange={(e) => {
+                                                      onChangeUpdate(
+                                                        "email",
+                                                        e
+                                                      );
+                                                    }}
                                                     type="text"
                                                     className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
                                                   />
@@ -698,6 +718,48 @@ export const Dashboard = () => {
                                                 </label>
                                                 <div className="mt-2">
                                                   <input
+                                                    defaultValue={
+                                                      updateData.gender
+                                                    }
+                                                    onChange={(e) => {
+                                                      onChangeUpdate(
+                                                        "gender",
+                                                        e
+                                                      );
+                                                    }}
+                                                    type="text"
+                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                  />
+                                                </div>
+                                                <label className="block text-gray-800 font-semibold text-sm">
+                                                  DOB
+                                                </label>
+                                                <div className="mt-2">
+                                                  <input
+                                                    defaultValue={formatDate(
+                                                      updateData.dob
+                                                    )}
+                                                    onChange={(e) => {
+                                                      onChangeUpdate("dob", e);
+                                                    }}
+                                                    type="date"
+                                                    className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                                                  />
+                                                </div>
+                                                <label className="block text-gray-800 font-semibold text-sm">
+                                                  ID
+                                                </label>
+                                                <div className="mt-2">
+                                                  <input
+                                                    defaultValue={
+                                                      updateData.identityCard
+                                                    }
+                                                    onChange={(e) => {
+                                                      onChangeUpdate(
+                                                        "identityCard",
+                                                        e
+                                                      );
+                                                    }}
                                                     type="text"
                                                     className="block w-40 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
                                                   />
@@ -707,17 +769,13 @@ export const Dashboard = () => {
                                             <div className="flex justify-end pb-4 pr-14">
                                               <button
                                                 type="button"
+                                                onClick={() => {
+                                                  update();
+                                                }}
                                                 className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
                                               >
-                                                Create
+                                                Update
                                               </button>
-                                              {/* <button
-                              onClick={() => setShowModal(false)}
-                              type="button"
-                              className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 "
-                            >
-                              Cancel
-                            </button> */}
                                             </div>
                                           </div>
                                         </div>
@@ -727,11 +785,12 @@ export const Dashboard = () => {
                                   <button
                                     onClick={() => {
                                       setShowModal("delete");
+                                      setidUser(user.id);
                                     }}
                                     type="submit"
-                                    className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-xl bg-red-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-red-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
+                                    className="text-sm text-Blueviolet font-medium px-4 py-[12.5px] border-[0] rounded-[100px] bg-red-600 text-[#ffffff] font-[Bold] [transition:all_0.5s] hover:bg-red-400 hover:[box-shadow:0_0_20px_#6fc5ff50] hover:scale-110 active:bg-[#3d94cf] active:[transition:all_0.25s] active:[box-shadow:none] active:scale-[0.98]"
                                   >
-                                    delete
+                                    Delete
                                   </button>
                                   {showModal === "delete" ? (
                                     <>
@@ -783,6 +842,10 @@ export const Dashboard = () => {
                                               </h3>
                                               <button
                                                 type="button"
+                                                onClick={(e) => {
+                                                  e.preventDefault();
+                                                  deleteUser();
+                                                }}
                                                 className="text-white rounded-full bg-[#2ba8fb] hover:bg-[#6fc5ff] focus:ring-4 focus:outline-none focus:ring-red-300  font-medium text-sm inline-flex items-center px-5 py-2.5 text-center"
                                               >
                                                 Yes, I am sure
@@ -811,7 +874,7 @@ export const Dashboard = () => {
                           <div>
                             <p className="text-sm">
                               Showing <span className="font-medium">1</span> to{" "}
-                              <span className="font-medium">10</span> of{" "}
+                              {/* <span className="font-medium">10</span> of{" "} */}
                               <span className="font-medium">{data.length}</span>{" "}
                               results
                             </p>
@@ -871,6 +934,7 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 };

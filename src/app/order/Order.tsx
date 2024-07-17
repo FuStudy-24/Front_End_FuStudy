@@ -111,7 +111,7 @@ const Order: React.FC = () => {
               <div
                 className="flex space-x-10 p-5 bg-black rounded-2xl w-72"
                 onClick={() => {
-                  handleData(2000);
+                  handleData(49000);
                   handlePackage(50, "49.000 VND");
                 }}
               >

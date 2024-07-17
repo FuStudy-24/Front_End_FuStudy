@@ -18,7 +18,19 @@ const getAllMentor = async () => {
 };
 
 const addUser = async (data) => {
-  return await axios.post("ManageAccount/CreateUser", data);
+  return await axios.post("ManageAccount/CreateUserForAdmin", data);
+};
+
+const updateUser = async (id, data) => {
+  return await axios.put(`ManageAccount/UpdateUser/${id}`, data);
+};
+
+const activateUser = async (id) => {
+  return await axios.patch(`ManageAccount/ActivateUser/${id}`);
+};
+
+const deactivateUser = async (id) => {  // Ensure semicolon is present
+  return await axios.patch(`ManageAccount/Deactivate/${id}`);
 };
 
 const verifyMentor = async (id) => {
@@ -32,4 +44,7 @@ export {
   getAllMentor,
   getAllTransaction,
   verifyMentor,
+  updateUser,
+  activateUser,
+  deactivateUser,
 };

@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // CAROUSEL DATA
 
-const Testimonials = () => {
+const Subcription = () => {
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     userInfo: state.userInfo,
@@ -61,7 +61,7 @@ const Testimonials = () => {
     if (id === 3) {
       setTimeout(() => {
         router.push("/");
-      }, 1000);
+      }, 100);
       return;
     }
     if (isLoggedIn) {
@@ -135,7 +135,7 @@ const Testimonials = () => {
   }
 
   return (
-    <div className="pt-40 pb-10 sm:pb-32 lg:py-32" id="testimonial">
+    <div className="pt-40 pb-10 sm:pb-32 lg:py-32" id="subcription">
       <div className="mx-auto max-w-7xl sm:py-4 lg:px-8">
         <section className="flex items-center justify-center mt-10 pb-10">
           <div
@@ -328,5 +328,5 @@ const Testimonials = () => {
   );
 };
 
-export default Testimonials;
+export default Subcription;
 

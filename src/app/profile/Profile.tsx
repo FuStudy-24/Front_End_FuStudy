@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,28 +9,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAuthStore from "@/lib/hooks/useUserStore";
-import { getUserSubcription } from "@/lib/service/subcriptionService";
 import {
-  getProfile,
-  updateProfile,
-  getTransaction,
-} from "@/lib/service/profileService";
-import {
-  getMentor,
-  getMentorMajor,
-  getAllMajor,
-  updateMentorInfo,
   addMajor,
   deleteMajor,
+  getAllMajor,
+  getMentor,
+  getMentorMajor,
+  updateMentorInfo,
 } from "@/lib/service/mentorService";
+import {
+  getProfile,
+  getTransaction,
+  updateProfile,
+} from "@/lib/service/profileService";
+import { getUserSubcription } from "@/lib/service/subcriptionService";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Divide } from "lucide-react";
 
 const Profile = () => {
   const [checkEdit, setcheckEdit] = useState(false);
@@ -112,6 +111,9 @@ const Profile = () => {
   }));
 
   const formatDate = (stringDate: string) => {
+    if (stringDate === null) {
+      return;
+    }
     const datePart = stringDate.split("T")[0];
     const date = new Date(datePart);
     const day = date.getDate();
@@ -122,6 +124,9 @@ const Profile = () => {
   };
 
   const createDate = (stringDate: string) => {
+    if (stringDate === null) {
+      return;
+    }
     const datePart = stringDate.split("T")[0];
     const timePart = stringDate?.split("T")[1]?.split(".")[0] || "";
     const date = new Date(datePart);
@@ -137,6 +142,8 @@ const Profile = () => {
       try {
         const res = await getProfile(userInfo.id);
         const data = res.data.data;
+        // console.log(data);
+
         setaccountProfile((prevState) => {
           const { email, fullname, gender, identityCard, phone, dob } = data;
           return {
@@ -146,7 +153,7 @@ const Profile = () => {
             gender,
             identityCard,
             phone,
-            dob: formatDate(dob),
+            dob: dob,
           };
         });
         setupdateUser((prevState) => {
@@ -158,7 +165,7 @@ const Profile = () => {
             gender,
             identityCard,
             phone,
-            dob: formatDate(dob),
+            dob: dob,
           };
         });
       } catch (error) {
@@ -176,33 +183,34 @@ const Profile = () => {
         const mentorMajor = resMentorMajor.data.data[0];
         const resMajor = await getAllMajor();
         const allMajor = resMajor.data.data;
-
-        setmajor((prevState) => {
-          const {
-            id,
-            major: { majorName },
-          } = mentorMajor;
-          localStorage.setItem("idMentorMajor", id);
-          return {
-            ...prevState,
-            majorName,
-            id,
-          };
-        });
-
-        setupdateMajor((prevState) => {
-          const {
-            major: { id },
-          } = mentorMajor;
-          localStorage.setItem("idMajor", id);
-          return {
-            ...prevState,
-            mentorId: mentorId,
-            majorId: id,
-          };
-        });
+        console.log(allMajor);
+        if(mentorMajor) {
+          setmajor((prevState) => {
+            const {
+              id,
+              major: { majorName },
+            } = mentorMajor;
+            localStorage.setItem("idMentorMajor", id);
+            return {
+              ...prevState,
+              majorName,
+              id,
+            };
+          });
+  
+          setupdateMajor((prevState) => {
+            const {
+              major: { id },
+            } = mentorMajor;
+            localStorage.setItem("idMajor", id);
+            return {
+              ...prevState,
+              mentorId: mentorId,
+              majorId: id,
+            };
+          });
+        }
         setallMajor(allMajor);
-
         setmentor((prevState) => {
           const { skill, academicLevel, workPlace } = mentorData;
           return {
@@ -250,8 +258,8 @@ const Profile = () => {
         subcriptionData.type = subData.subcription.subcriptionName;
         subcriptionData.currentMeeting = subData.currentMeeting;
         subcriptionData.currentQuestion = subData.currentQuestion;
-        subcriptionData.startDate = formatDate(subData.startDate);
-        subcriptionData.endDate = formatDate(subData.endDate);
+        subcriptionData.startDate = subData.startDate;
+        subcriptionData.endDate = subData.endDate;
         subcriptionData.price = subData.subcription.subcriptionPrice;
         setsubcription(subcriptionData);
       } catch (error) {
@@ -371,7 +379,7 @@ const Profile = () => {
                       <Label htmlFor="name">DOB</Label>
                       <Input
                         id="password"
-                        defaultValue={accountProfile.dob}
+                        defaultValue={formatDate(accountProfile.dob)}
                         disabled
                       />
                     </div>
@@ -492,7 +500,7 @@ const Profile = () => {
                         onChange={(e) => {
                           handleChange("dob", e);
                         }}
-                        defaultValue={accountProfile.dob}
+                        defaultValue={formatDate(accountProfile.dob)}
                       />
                     </div>
                   </div>
@@ -636,11 +644,11 @@ const Profile = () => {
                   </tr>
                   <tr>
                     <td>Start Date:</td>
-                    <td>{subcription.startDate}</td>
+                    <td>{formatDate(subcription.startDate)}</td>
                   </tr>
                   <tr>
                     <td>Renewal Date:</td>
-                    <td>{subcription.endDate}</td>
+                    <td>{formatDate(subcription.endDate)}</td>
                   </tr>
                   <tr>
                     <td>Current Meeting:</td>
@@ -791,9 +799,7 @@ const Profile = () => {
                   </div>
                 ) : (
                   <>
-                    <div className="text-center text-black">
-                      Not available
-                    </div>
+                    <div className="text-center text-black">Not available</div>
                   </>
                 )}
               </div>

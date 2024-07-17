@@ -6,7 +6,7 @@ import Footer from "@/pages/LandingPage/Footer/Footer";
 import Mentor from "@/pages/LandingPage/Mentor/mentor";
 import Navbar from "@/pages/LandingPage/Navbar/Navbar";
 import Newsletter from "@/pages/LandingPage/Newsletter/newsletter";
-import Testimonials from "@/pages/LandingPage/Testimonials/testimonials";
+import Subcription from "@/pages/LandingPage/Testimonials/subcription";
 const page = () => {
   return (
     <main>
@@ -16,7 +16,7 @@ const page = () => {
       <Course />
       <Mentor />
       <Newsletter />
-      <Testimonials />
+      <Subcription />
       <Footer />
     </main>
   );
