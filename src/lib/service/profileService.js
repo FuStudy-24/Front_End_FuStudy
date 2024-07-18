@@ -8,8 +8,8 @@ const updateProfile = async (id, data, config) => {
   return await axios.put(`ManageAccount/UpdateUser/${id}`, data, config);
 };
 
-const getTransaction = async (id) => {
-  return await axios.get(`Transaction/GetAllTransactionByWalletId/${id}`);
+const getTransaction = async (id,index,size) => {
+  return await axios.get(`Transaction/GetAllTransactionByWalletId/${id}?PageIndex=${index}&PageSize=${size}`);
 };
 
 export { getProfile, updateProfile, getTransaction };

@@ -1,15 +1,19 @@
 "use client";
 import NavDashboard from "@/components/NavDashboard";
 import Slidebar from "@/components/Slidebar";
-import useAuthStore from "@/lib/hooks/useUserStore";
 import { getAllTransaction } from "@/lib/service/adminService";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import LineChart from "./LineChart";
 
 export const Manage = () => {
   const [loading, setLoading] = useState(true);
   const [pageIndex, setpageIndex] = useState(1);
   const [pageSize, setpageSize] = useState(10);
+  const dataChart = [
+    { date: '2024-07-15', total: 100 },
+    { date: '2024-07-16', total: 120 },
+    { date: '2024-07-17', total: 80 },
+  ];
   const [data, setdata] = useState([
     {
       id: 0,
@@ -26,28 +30,34 @@ export const Manage = () => {
   ]);
   console.log(pageIndex);
 
+  const formatCurrency = (amount: any) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
   const createDate = (stringDate: string) => {
     const datePart = stringDate.split("T")[0];
     const timePart = stringDate?.split("T")[1]?.split(".")[0] || "";
     const date = new Date(datePart);
     const day = date.getDate();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); 
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     const createDate = `${timePart}-${day}/${month}/${year}`;
     return createDate;
   };
 
   const handlePageIndex = (index: any) => {
-    if (pageIndex === 1) {
-      if (index === "next") {
-        console.log("asdasd");
-        setpageIndex((prev) => prev + 1);
-        return;
-      }
+    if (index === "next") {
+      console.log("asdasd");
+      setpageIndex((prev) => prev + 1);
       return;
     }
-    if (index === "prev") {
-      setpageIndex((prev) => prev - 1);
+    if (pageIndex != 1) {
+      if (index === "prev") {
+        setpageIndex((prev) => prev - 1);
+      }
     }
   };
 
@@ -58,10 +68,11 @@ export const Manage = () => {
       try {
         const response = await getAllTransaction(pageIndex, pageSize);
         console.log(response.data.data);
-        const users = response.data.data;
-        setdata(users);
+        const transaction = response.data.data;
+        setdata(transaction);
       } catch (error) {
         console.log(error);
+        setpageIndex((prev) => prev - 1);
       } finally {
         setLoading(false);
       }
@@ -88,6 +99,10 @@ export const Manage = () => {
         <div className="p-4 xl:ml-80">
           <NavDashboard page={"Management"} />
           <div className="mt-12">
+            <div>
+              <h1 className="flex justify-center">Total Money by Day Line Chart</h1>
+              <LineChart/>
+            </div>
             <div className="mb-4 grid grid-cols-1 gap-6">
               <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
                 <div className="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none m-0 flex items-center justify-between p-6">
@@ -150,7 +165,7 @@ export const Manage = () => {
                             </th>
                             <th className="p-2">
                               <div className="font-semibold text-center">
-                                ammount
+                                amount
                               </div>
                             </th>
                             <th className="p-2">
@@ -185,7 +200,7 @@ export const Manage = () => {
                               </td>
                               <td className="p-2">
                                 <div className="text-center">
-                                  {item.ammount}
+                                  {formatCurrency(item.ammount)}
                                 </div>
                               </td>
                               <td className="p-2">

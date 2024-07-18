@@ -35,14 +35,15 @@ const Register = () => {
       console.log(response);
       toast.success("Registration successful!"); // Hiển thị thông báo thành công
       setTimeout(() => {
-        router.push('/login');
+        router.push("/login");
       }, 1000);
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.message) {
-        const err = error.response.data.message;
-        toast.error(err);
-      } else {
-        console.error("An unexpected error occurred:", error);
+      const err = error.response.data.errors;
+      if (err.Username) {
+        toast.error(err.Username[0]);
+      } 
+      if (err.Password) {
+        toast.error(err.Password[0]);
       }
     }
   };
@@ -60,7 +61,9 @@ const Register = () => {
           <h1 className="text-5xl font-bold text-left tracking-wide text-white">
             FuStudy
           </h1>
-          <p className="text-3xl my-4 text-white">Study for the bright future</p>
+          <p className="text-3xl my-4 text-white">
+            Study for the bright future
+          </p>
         </div>
       </div>
       <div className="lg:w-1/2 w-full flex items-center justify-center md:px-16 px-0 z-0 bg-white">
@@ -102,7 +105,10 @@ const Register = () => {
 
             <div className="flex items-center justify-center pb-2 pt-4 text-xs text-gray-400 space-x-1">
               <span>Already have an account? </span>
-              <Link className="hover:underline hover:text-blue-500" href="/login">
+              <Link
+                className="hover:underline hover:text-blue-500"
+                href="/login"
+              >
                 Log in
               </Link>
             </div>
@@ -132,9 +138,11 @@ const RegisterInput = ({
   formData: FormDataState;
   setFormData: React.Dispatch<React.SetStateAction<FormDataState>>;
 }) => {
-  const handleChange = (field: keyof FormDataState) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [field]: event.target.value });
-  };
+  const handleChange =
+    (field: keyof FormDataState) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [field]: event.target.value });
+    };
 
   return (
     <>
