@@ -44,7 +44,7 @@ const Subcription = () => {
           error.response.data.message
         ) {
           const err = error.response.data.message;
-          console.log(error);
+         // console.log(error);
           setError(err);
           toast.error(err);
         } else {
@@ -66,7 +66,7 @@ const Subcription = () => {
     }
     if (isLoggedIn) {
       setShowModal(true);
-      console.log(id);
+     // console.log(id);
       setsubId(id);
       return;
     }
@@ -75,7 +75,7 @@ const Subcription = () => {
       router.push("/login");
     }, 1000);
   };
-  console.log(subcriptionData);
+  //console.log(subcriptionData);
 
   // const subPrice = (name:any) => {
   //   switch (name) {
@@ -93,8 +93,8 @@ const Subcription = () => {
 
   const handleSubcription = async () => {
     const token = userInfo.token;
-    console.log(token);
-    console.log(subId);
+    //console.log(token);
+    //console.log(subId);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -104,11 +104,11 @@ const Subcription = () => {
     const data = {
       subcriptionId: subId,
     };
-    console.log(data);
+    //console.log(data);
     const jsonData = JSON.stringify(data);
     try {
       const response = await purchaseSubcription(jsonData, config);
-      console.log(response);
+     // console.log(response);
     } catch (error: any) {
       if (
         error.response &&

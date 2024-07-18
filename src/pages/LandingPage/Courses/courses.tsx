@@ -31,7 +31,7 @@ export default class MultipleItems extends Component {
                     category: item.categoryName,
                 }));
 
-                console.log('Formatted Question Data:', formattedQuestionData);
+                //console.log('Formatted Question Data:', formattedQuestionData);
 
                 this.setState({ postData: formattedQuestionData, loading: false });
             } else {

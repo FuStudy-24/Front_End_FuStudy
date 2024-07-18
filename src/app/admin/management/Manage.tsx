@@ -28,7 +28,6 @@ export const Manage = () => {
       fullname: "",
     },
   ]);
-  console.log(pageIndex);
 
   const formatCurrency = (amount: any) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -50,7 +49,6 @@ export const Manage = () => {
 
   const handlePageIndex = (index: any) => {
     if (index === "next") {
-      console.log("asdasd");
       setpageIndex((prev) => prev + 1);
       return;
     }
@@ -61,13 +59,11 @@ export const Manage = () => {
     }
   };
 
-  console.log(typeof pageSize);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getAllTransaction(pageIndex, pageSize);
-        console.log(response.data.data);
+        // console.log(response.data.data);
         const transaction = response.data.data;
         setdata(transaction);
       } catch (error) {
@@ -79,7 +75,7 @@ export const Manage = () => {
     };
     fetchData();
   }, [pageIndex]);
-  console.log(data);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-2xl font-semibold">

@@ -52,7 +52,7 @@ const Order: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getWallet(userInfo.id);
-      console.log(data.data.data);
+      //console.log(data.data.data);
       setformData((prevFormData) => ({ ...prevFormData, walletID: data.data.data.id }));
     };
     fetchData();

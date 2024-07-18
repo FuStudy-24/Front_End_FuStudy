@@ -97,7 +97,7 @@ export const Dashboard = () => {
 
   const handlePageIndex = (index: any) => {
     if (index === "next") {
-      console.log("asdasd");
+      // console.log("asdasd");
       setpageIndex((prev) => prev + 1);
       return;
     }
@@ -123,16 +123,16 @@ export const Dashboard = () => {
   };
 
   const createUser = async () => {
-    console.log(createForm);
+    //console.log(createForm);
     try {
       const res = await addUser(createForm);
-      console.log(res);
+      //console.log(res);
       setflag(!flag);
       setShowModal("");
       toast.success("Create Successful!");
     } catch (error: any) {
       if (error.response && error.response.data) {
-        console.log(error.response.data);
+        // console.log(error.response.data);
         const err = error.response.data.errors;
         toast.error(err);
         setError(error.response.data.message);
@@ -143,11 +143,11 @@ export const Dashboard = () => {
   };
 
   const update = async () => {
-    console.log(idUser);
-    console.log(updateForm);
+   // console.log(idUser);
+   // console.log(updateForm);
     try {
       const response = await updateUser(idUser, updateForm);
-      console.log(response);
+     // console.log(response);
       setflag(!flag);
       setShowModal("");
       toast.success("Update Successful!");
@@ -157,10 +157,10 @@ export const Dashboard = () => {
   };
 
   const updateStatus = async () => {
-    console.log(idUser);
+   // console.log(idUser);
     try {
       const response = await activateUser(idUser);
-      console.log(response);
+     // console.log(response);
       setflag(!flag);
       toast.success("Active Successful!");
     } catch (error: any) {
@@ -170,8 +170,8 @@ export const Dashboard = () => {
         error.response.data.message
       ) {
         const err = error.response.data.message;
-        console.log(err);
-        console.log(error);
+       // console.log(err);
+      //  console.log(error);
         toast.error(err);
       } else {
         console.error("An unexpected error occurred:", error);
@@ -180,15 +180,15 @@ export const Dashboard = () => {
   };
 
   const deleteUser = async () => {
-    console.log(idUser);
+   // console.log(idUser);
     try {
       const response = await deactivateUser(idUser);
-      console.log(response);
+      //console.log(response);
       setflag(!flag);
       setShowModal("");
       toast.success("Deactivate Successful!");
     } catch (error: any) {
-      console.log(error.response.data);
+    //  console.log(error.response.data);
     }
   };
 
@@ -238,9 +238,9 @@ export const Dashboard = () => {
 
         //notVerifyMentor
         const resMentor = await getAllMentor("", "");
-        console.log(resMentor);
+        // console.log(resMentor);
         const statusMentor = resMentor.data.data;
-        console.log(statusMentor);
+        // console.log(statusMentor);
         let verify = 0,
           notVerify = 0;
 

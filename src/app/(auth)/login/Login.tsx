@@ -18,16 +18,16 @@ const Login = () => {
   const login = useAuthStore((state) => state.login);
 
   const hanndleLogin = async () => {
-    console.log(formData);
+   // (formData);
     setLoading(true);
     setError("");
     try {
       const response = await postLogin(formData);
-      console.log(response);
+     // (response);
 
       const { token, user } = response.data.data; // Chú ý thay đổi đường dẫn để truy cập `data`
 
-      console.log(token, user.username);
+    //  (token, user.username);
 
       const userInfo = { ...user, token };
       login(token, userInfo);
@@ -45,7 +45,7 @@ const Login = () => {
         error.response.data.message
       ) {
         const err = error.response.data.message;
-        console.log(error);
+       // (error);
 
         toast.error(err);
         setError(error.response.data.message);

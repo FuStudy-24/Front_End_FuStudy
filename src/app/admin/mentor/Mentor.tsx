@@ -42,7 +42,6 @@ export const Mentor = () => {
 
   const handlePageIndex = (index: any) => {
     if (index === "next") {
-      console.log("asdasd");
       setpageIndex((prev) => prev + 1);
       return;
     }
@@ -56,7 +55,7 @@ export const Mentor = () => {
   const handleVerify = async (id: any) => {
     try {
       const response = await verifyMentor(id);
-      console.log(response.data.data);
+      //console.log(response.data.data);
       toast.success("Verify Successful!");
       setTimeout(() => {
         setverifyCheck(!verifyCheck);
@@ -70,7 +69,7 @@ export const Mentor = () => {
     const fetchData = async () => {
       try {
         const response = await getAllMentor(pageIndex,pageSize);
-        console.log(response.data.data);
+        // console.log(response.data.data);
         const users = response.data.data;
         setdata(users);
       } catch (error) {

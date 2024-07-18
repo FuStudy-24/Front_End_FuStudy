@@ -28,11 +28,11 @@ const Register = () => {
       roleName: isMentor ? "Mentor" : "Student",
     };
 
-    console.log(dataToSubmit);
+   // (dataToSubmit);
     try {
       const response = await postRegis(dataToSubmit);
 
-      console.log(response);
+     // (response);
       toast.success("Registration successful!"); // Hiển thị thông báo thành công
       setTimeout(() => {
         router.push("/login");

@@ -114,7 +114,6 @@ const Profile = () => {
 
   const handlePageIndex = (index: any) => {
     if (index === "next") {
-      console.log("asdasd");
       setpageIndex((prev) => prev + 1);
       return;
     }
@@ -205,7 +204,7 @@ const Profile = () => {
         const mentorMajor = resMentorMajor.data.data[0];
         const resMajor = await getAllMajor();
         const allMajor = resMajor.data.data;
-        console.log(allMajor);
+        // console.log(allMajor);
         if (mentorMajor) {
           setmajor((prevState) => {
             const {

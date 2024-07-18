@@ -24,7 +24,7 @@ const LineChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getAllTransaction("", "");
-      console.log(response);
+      // console.log(response);
       const transactionData = response.data.data;
       const dates: string[] = [];
       const amount: number[] = [];
@@ -45,9 +45,9 @@ const LineChart = () => {
       dailyAmounts.forEach((dailyAmount: any) => {
         amount.push(dailyAmount.amount); 
       });
-      console.log(dates);
-      console.log(dailyAmounts);
-      console.log(amount);
+      // console.log(dates);
+      // console.log(dailyAmounts);
+      // console.log(amount);
       setdata({ labels: dates, datasets: [{ label: "Daily Amount", data: amount }] });
     };
     fetchData();
