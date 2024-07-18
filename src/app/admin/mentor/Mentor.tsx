@@ -41,7 +41,7 @@ export const Mentor = () => {
   const handleVerify = async (id: any) => {
     try {
       const response = await verifyMentor(id);
-      console.log(response.data.data);
+      //console.log(response.data.data);
       toast.success("Verify Successful!");
       setTimeout(() => {
         setverifyCheck(!verifyCheck);

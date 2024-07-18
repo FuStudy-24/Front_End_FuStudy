@@ -24,7 +24,7 @@ export const Manage = () => {
       fullname: "",
     },
   ]);
-  console.log(pageIndex);
+ // console.log(pageIndex);
 
   const createDate = (stringDate: string) => {
     const datePart = stringDate.split("T")[0];
