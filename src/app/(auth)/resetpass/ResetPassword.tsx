@@ -41,7 +41,7 @@ export default function ResetPassword() {
 
     setformData(updatedFormData); // Update state with new formData
 
-    console.log("formData:", updatedFormData); // Log updated formData
+  //  ("formData:", updatedFormData); // Log updated formData
 
     try {
       const res = await resetPass(updatedFormData);
@@ -55,7 +55,7 @@ export default function ResetPassword() {
       }
     }
   };
-  console.log(formData);
+ // (formData);
   return (
     <div className="flex justify-center mt-40">
       <Card className="w-[450px] block content-center px-7">

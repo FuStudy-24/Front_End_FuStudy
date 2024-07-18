@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // CAROUSEL DATA
 
-const Testimonials = () => {
+const Subcription = () => {
   const { isLoggedIn, userInfo, logout } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     userInfo: state.userInfo,
@@ -44,7 +44,7 @@ const Testimonials = () => {
           error.response.data.message
         ) {
           const err = error.response.data.message;
-          console.log(error);
+         // console.log(error);
           setError(err);
           toast.error(err);
         } else {
@@ -61,12 +61,12 @@ const Testimonials = () => {
     if (id === 3) {
       setTimeout(() => {
         router.push("/");
-      }, 1000);
+      }, 100);
       return;
     }
     if (isLoggedIn) {
       setShowModal(true);
-      console.log(id);
+     // console.log(id);
       setsubId(id);
       return;
     }
@@ -75,7 +75,7 @@ const Testimonials = () => {
       router.push("/login");
     }, 1000);
   };
-  console.log(subcriptionData);
+  //console.log(subcriptionData);
 
   // const subPrice = (name:any) => {
   //   switch (name) {
@@ -93,8 +93,8 @@ const Testimonials = () => {
 
   const handleSubcription = async () => {
     const token = userInfo.token;
-    console.log(token);
-    console.log(subId);
+    //console.log(token);
+    //console.log(subId);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -104,11 +104,11 @@ const Testimonials = () => {
     const data = {
       subcriptionId: subId,
     };
-    console.log(data);
+    //console.log(data);
     const jsonData = JSON.stringify(data);
     try {
       const response = await purchaseSubcription(jsonData, config);
-      console.log(response);
+     // console.log(response);
     } catch (error: any) {
       if (
         error.response &&
@@ -135,7 +135,7 @@ const Testimonials = () => {
   }
 
   return (
-    <div className="pt-40 pb-10 sm:pb-32 lg:py-32" id="testimonial">
+    <div className="pt-40 pb-10 sm:pb-32 lg:py-32" id="subcription">
       <div className="mx-auto max-w-7xl sm:py-4 lg:px-8">
         <section className="flex items-center justify-center mt-10 pb-10">
           <div
@@ -328,5 +328,5 @@ const Testimonials = () => {
   );
 };
 
-export default Testimonials;
+export default Subcription;
 

@@ -10,11 +10,11 @@ const Success: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const orderId = localStorage.getItem("orderId");
-      console.log(orderId);
+      //console.log(orderId);
       try {
         const response = await addCoin(orderId, token);
-        console.log(response);
-        console.log(1);
+       // console.log(response);
+       // console.log(1);
       } catch (error) {
         console.log(error);
       }

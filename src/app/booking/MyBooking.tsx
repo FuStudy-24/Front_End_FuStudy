@@ -15,17 +15,17 @@ const MyBooking: React.FC = () => {
   }));
 
   const handleCountdownComplete = (bookingId: number) => {
-    console.log('Countdown complete for bookingId:', bookingId);
+    //console.log('Countdown complete for bookingId:', bookingId);
     setJoinRoom(bookingId.toString());
   };
 
   const handleJoinRoom = () => {
-    console.log('Joining room...');
+   // console.log('Joining room...');
     setShowCalling(true);
   };
 
   useEffect(() => {
-    console.log('userInfo:', userInfo);
+    //console.log('userInfo:', userInfo);
   }, [userInfo]);
 
   if (!userInfo) {

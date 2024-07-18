@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,32 +9,33 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAuthStore from "@/lib/hooks/useUserStore";
-import { getUserSubcription } from "@/lib/service/subcriptionService";
 import {
-  getProfile,
-  updateProfile,
-  getTransaction,
-} from "@/lib/service/profileService";
-import {
-  getMentor,
-  getMentorMajor,
-  getAllMajor,
-  updateMentorInfo,
   addMajor,
   deleteMajor,
+  getAllMajor,
+  getMentor,
+  getMentorMajor,
+  updateMentorInfo,
 } from "@/lib/service/mentorService";
+import {
+  getProfile,
+  getTransaction,
+  updateProfile,
+} from "@/lib/service/profileService";
+import { getUserSubcription } from "@/lib/service/subcriptionService";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Divide } from "lucide-react";
 
 const Profile = () => {
   const [checkEdit, setcheckEdit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [pageIndex, setpageIndex] = useState(1);
+  const [pageSize, setpageSize] = useState(10);
   const [transaction, settransaction] = useState([
     {
       id: 0,
@@ -111,7 +112,29 @@ const Profile = () => {
     logout: state.logout,
   }));
 
+  const handlePageIndex = (index: any) => {
+    if (index === "next") {
+      setpageIndex((prev) => prev + 1);
+      return;
+    }
+    if (pageIndex != 1) {
+      if (index === "prev") {
+        setpageIndex((prev) => prev - 1);
+      }
+    }
+  };
+  
+  const formatCurrency = (amount: any) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
   const formatDate = (stringDate: string) => {
+    if (stringDate === null) {
+      return;
+    }
     const datePart = stringDate.split("T")[0];
     const date = new Date(datePart);
     const day = date.getDate();
@@ -122,6 +145,9 @@ const Profile = () => {
   };
 
   const createDate = (stringDate: string) => {
+    if (stringDate === null) {
+      return;
+    }
     const datePart = stringDate.split("T")[0];
     const timePart = stringDate?.split("T")[1]?.split(".")[0] || "";
     const date = new Date(datePart);
@@ -137,6 +163,8 @@ const Profile = () => {
       try {
         const res = await getProfile(userInfo.id);
         const data = res.data.data;
+        // console.log(data);
+
         setaccountProfile((prevState) => {
           const { email, fullname, gender, identityCard, phone, dob } = data;
           return {
@@ -146,7 +174,7 @@ const Profile = () => {
             gender,
             identityCard,
             phone,
-            dob: formatDate(dob),
+            dob: dob,
           };
         });
         setupdateUser((prevState) => {
@@ -158,7 +186,7 @@ const Profile = () => {
             gender,
             identityCard,
             phone,
-            dob: formatDate(dob),
+            dob: dob,
           };
         });
       } catch (error) {
@@ -176,33 +204,34 @@ const Profile = () => {
         const mentorMajor = resMentorMajor.data.data[0];
         const resMajor = await getAllMajor();
         const allMajor = resMajor.data.data;
+        // console.log(allMajor);
+        if (mentorMajor) {
+          setmajor((prevState) => {
+            const {
+              id,
+              major: { majorName },
+            } = mentorMajor;
+            localStorage.setItem("idMentorMajor", id);
+            return {
+              ...prevState,
+              majorName,
+              id,
+            };
+          });
 
-        setmajor((prevState) => {
-          const {
-            id,
-            major: { majorName },
-          } = mentorMajor;
-          localStorage.setItem("idMentorMajor", id);
-          return {
-            ...prevState,
-            majorName,
-            id,
-          };
-        });
-
-        setupdateMajor((prevState) => {
-          const {
-            major: { id },
-          } = mentorMajor;
-          localStorage.setItem("idMajor", id);
-          return {
-            ...prevState,
-            mentorId: mentorId,
-            majorId: id,
-          };
-        });
+          setupdateMajor((prevState) => {
+            const {
+              major: { id },
+            } = mentorMajor;
+            localStorage.setItem("idMajor", id);
+            return {
+              ...prevState,
+              mentorId: mentorId,
+              majorId: id,
+            };
+          });
+        }
         setallMajor(allMajor);
-
         setmentor((prevState) => {
           const { skill, academicLevel, workPlace } = mentorData;
           return {
@@ -226,12 +255,13 @@ const Profile = () => {
 
       try {
         const walletId = localStorage.getItem("walletId");
-        const resTransaction = await getTransaction(walletId);
+        const resTransaction = await getTransaction(walletId,pageIndex,pageSize);
         if (resTransaction.status === 200) {
           settransaction(resTransaction.data.data);
         }
       } catch (error) {
         console.log(error);
+        setpageIndex((prev) => prev - 1);
       }
 
       try {
@@ -250,8 +280,8 @@ const Profile = () => {
         subcriptionData.type = subData.subcription.subcriptionName;
         subcriptionData.currentMeeting = subData.currentMeeting;
         subcriptionData.currentQuestion = subData.currentQuestion;
-        subcriptionData.startDate = formatDate(subData.startDate);
-        subcriptionData.endDate = formatDate(subData.endDate);
+        subcriptionData.startDate = subData.startDate;
+        subcriptionData.endDate = subData.endDate;
         subcriptionData.price = subData.subcription.subcriptionPrice;
         setsubcription(subcriptionData);
       } catch (error) {
@@ -259,7 +289,7 @@ const Profile = () => {
       }
     };
     fetchData();
-  }, [checkEdit, userInfo.id, userInfo.roleName]);
+  }, [checkEdit, userInfo.id, userInfo.roleName,pageIndex]);
 
   const handleChange = (key: any, e: any) => {
     setupdateUser((prevState) => ({
@@ -371,7 +401,7 @@ const Profile = () => {
                       <Label htmlFor="name">DOB</Label>
                       <Input
                         id="password"
-                        defaultValue={accountProfile.dob}
+                        defaultValue={formatDate(accountProfile.dob)}
                         disabled
                       />
                     </div>
@@ -492,7 +522,7 @@ const Profile = () => {
                         onChange={(e) => {
                           handleChange("dob", e);
                         }}
-                        defaultValue={accountProfile.dob}
+                        defaultValue={formatDate(accountProfile.dob)}
                       />
                     </div>
                   </div>
@@ -636,11 +666,11 @@ const Profile = () => {
                   </tr>
                   <tr>
                     <td>Start Date:</td>
-                    <td>{subcription.startDate}</td>
+                    <td>{formatDate(subcription.startDate)}</td>
                   </tr>
                   <tr>
                     <td>Renewal Date:</td>
-                    <td>{subcription.endDate}</td>
+                    <td>{formatDate(subcription.endDate)}</td>
                   </tr>
                   <tr>
                     <td>Current Meeting:</td>
@@ -710,7 +740,9 @@ const Profile = () => {
                               </div>
                             </td>
                             <td className="p-2">
-                              <div className="text-center">{item.ammount}</div>
+                              <div className="text-center">
+                                {formatCurrency(item.ammount)}
+                              </div>
                             </td>
                             <td className="p-2">
                               <div className="text-center">{item.type}</div>
@@ -734,7 +766,7 @@ const Profile = () => {
                         <div>
                           <p className="text-sm">
                             Showing <span className="font-medium">1</span> to{" "}
-                            <span className="font-medium">10</span> of{" "}
+                            {/* <span className="font-medium">10</span> of{" "} */}
                             <span className="font-medium">
                               {transaction.length}
                             </span>{" "}
@@ -745,6 +777,10 @@ const Profile = () => {
                         <div className="flex space-x-3">
                           <a
                             href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageIndex("prev");
+                            }}
                             className="flex items-center justify-center w-28 px-3 h-8 text-sm font-medium  bg-white border rounded-lg   border-gray-700 text-gray-400 hover:bg-blue-600 hover:text-white"
                           >
                             <svg
@@ -766,6 +802,10 @@ const Profile = () => {
                           </a>
                           <a
                             href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageIndex("next");
+                            }}
                             className="flex items-center justify-center w-28 px-3 h-8 text-sm font-medium  bg-white border rounded-lg   border-gray-700 text-gray-400 hover:bg-blue-600 hover:text-white"
                           >
                             Next
@@ -781,7 +821,7 @@ const Profile = () => {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth="2"
-                                d="M1 5h12m0 0L9 1m4 4L9 9"
+                                d="M4.5 5h8.5m0 0L9 1m3.5 4L9 9"
                               />
                             </svg>
                           </a>
@@ -791,9 +831,7 @@ const Profile = () => {
                   </div>
                 ) : (
                   <>
-                    <div className="text-center text-black">
-                      Not available
-                    </div>
+                    <div className="text-center text-black">Not available</div>
                   </>
                 )}
               </div>

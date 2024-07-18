@@ -52,7 +52,7 @@ const Order: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getWallet(userInfo.id);
-      console.log(data.data.data);
+      //console.log(data.data.data);
       setformData((prevFormData) => ({ ...prevFormData, walletID: data.data.data.id }));
     };
     fetchData();
@@ -111,7 +111,7 @@ const Order: React.FC = () => {
               <div
                 className="flex space-x-10 p-5 bg-black rounded-2xl w-72"
                 onClick={() => {
-                  handleData(2000);
+                  handleData(49000);
                   handlePackage(50, "49.000 VND");
                 }}
               >

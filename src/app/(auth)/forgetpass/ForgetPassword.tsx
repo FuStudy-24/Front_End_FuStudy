@@ -25,12 +25,12 @@ function ForgetPassword() {
   };
 
   const handleForgetPass = async () => {
-    console.log(data);
+    //(data);
     try {
       const reponse = await forgetPass(data);
       toast.success("Please check your email!");
     } catch (error: any) {
-      console.log(error);
+     // (error);
       
       if (
         error.response &&
