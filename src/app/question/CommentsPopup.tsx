@@ -47,9 +47,10 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
       if (response.status === 200) {
         setComments(response.data.data);
       } else if (response.status === 404) {
-        setComments([]); // No comments found for this question
+       
       } else {
-        setError("Failed to load comments. Please try again later.");
+        //setError("Failed to load comments. Please try again later.");
+        setComments([]); // No comments found for this question
       }
     } catch (err: any) {
       if (err.response?.status === 404) {
@@ -94,9 +95,10 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
       const response = await CreateQuestionComment(commentData, token);
       if (response.status === 201) {
         setNewComment(""); // Clear the comment input field
-        fetchComments(); // Reload comments after successful creation
+       
       } else {
-        setError("Failed to create comment. Please try again.");
+        fetchComments(); // Reload comments after successful creation
+        // setError("Failed to create comment. Please try again.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -107,9 +109,10 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
     try {
       const response = await DeleteQuestionComment(commentId, token);
       if (response.status === 200) {
-        fetchComments(); // Reload comments after successful deletion
+       
       } else {
-        setError("Failed to delete comment. Please try again.");
+        fetchComments(); // Reload comments after successful deletion
+        // setError("Failed to delete comment. Please try again.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
@@ -137,7 +140,8 @@ const CommentsPopup: React.FC<CommentsPopupProps> = ({ question, onClose }) => {
         setEditCommentContent(""); // Clear the edit input field
         fetchComments();
       } else {
-        setError("Failed to update comment. Please try again.");
+        fetchComments(); // Reload comments after successful deletion
+       // setError("Failed to update comment. Please try again.");
       }
     } catch (err: any) {
       setError(`Error: ${err.message}`);
